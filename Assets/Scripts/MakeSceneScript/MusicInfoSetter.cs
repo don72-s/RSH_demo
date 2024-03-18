@@ -86,7 +86,8 @@ public class MusicInfoSetter : MonoBehaviour
 
         StopAllCoroutines();
 
-        unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer);
+        //test
+        //unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer);
 
         int startIdx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * 4 ;
         int endIdx = startIdx + int.Parse(sectionLengthInputter.text) * BPM_Multiplyer * 4;
@@ -110,28 +111,55 @@ public class MusicInfoSetter : MonoBehaviour
 
         if (LoadedSectionList == null) return;
 
-        //todo : duringTime 설정해야 함. => 기본상태 채보 다음으로 순위 미룸.
+        //todo : duringTime 설정해야 함. => 기본상태 채보 다음으로 순위 미룸.[차지하는 악보 마디 ㅇㅇ]
 
-        int startIdx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * 4;
-
-
-        int halfCounter = LoadedSectionList.Count / 2;
-
+        int idx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * 4;
 
         for (int i = 0; i < LoadedSectionList.Count / 2; i++) {
 
             NoteType type = LoadedSectionList[i].GetNoteType();
 
-            noteArray[startIdx].noteType = type;
+            noteArray[idx].noteType = type;
+            noteArray[idx].waitingUnit = int.Parse(sectionLengthInputter.text) * 4;
+            noteArray[idx].effectTimeUnit = 0;
 
-            type = type == NoteType.INVERSE_UPPER_NOTE ? NoteType.DOWN_NOTE : type;
-            type = type == NoteType.INVERSE_DOWN_NOTE ? NoteType.UPPER_NOTE : type;
-
-            noteArray[startIdx + halfCounter].noteType = type;
-
-            startIdx++;
+            idx++;
 
         }
+
+        noteArray[int.Parse(sectionNumInputter.text) * BPM_Multiplyer * 4].effectTimeUnit = int.Parse(sectionLengthInputter.text);
+
+        if (idx < noteArray.Length)
+        {
+            Debug.Log("idx : " + idx);
+            noteArray[idx].effectTimeUnit = int.Parse(sectionLengthInputter.text);
+            noteArray[idx].noteType = NoteType.NONE;
+            noteArray[idx].waitingUnit = 0;
+        }
+
+        for (int i = idx + 1; i < LoadedSectionList.Count && i < noteArray.Length; i++) {
+
+            noteArray[i].effectTimeUnit = 0;
+            noteArray[i].noteType = NoteType.NONE;
+            noteArray[i].waitingUnit = 0;
+        }
+
+        btn_Load_Section();
+        btn_BGM_SectionPlay();
+
+    }
+
+    public void btn_ClearSection() {
+
+        btn_Load_Section();
+
+        for (int i = 0; i < LoadedSectionList.Count; i++) { 
+            LoadedSectionList[i].SetNoteType(NoteType.NONE);
+        }
+
+        btn_Save_Section();
+
+        btn_BGM_Pause();
 
     }
 
@@ -193,6 +221,8 @@ public class MusicInfoSetter : MonoBehaviour
         int cnt = 0;
 
         audioPlayer.clip = bgmClip;
+        audioPlayer.time = 0;
+
 
         float audioLength = audioPlayer.clip.length;
 
@@ -200,17 +230,30 @@ public class MusicInfoSetter : MonoBehaviour
 
         yield return new WaitForSeconds(_offset);
 
+
+        int flagcnter = 0;
+
         while (audioPlayer.isPlaying || audioPlayer.time < audioLength) {
 
             if (audioPlayer.time > cmpTime)
             {
                 cmpTime += _unitBPMSecond;
 
-                //if (cnt % _bpmMultiCount == 0) audioPlayer.PlayOneShot(downFXClip, 1f);
+                
+                if (noteArray[cnt].effectTimeUnit != 0) {
+
+                    if (flagcnter % 2 == 0) {
+
+                        
+                        display_Button(cnt);
+
+                    }
+
+                    flagcnter++;
+
+                } Debug.Log("넘기는 마디 수 : " + noteArray[cnt].effectTimeUnit);
 
                 StartCoroutine(PlayNote(noteArray[cnt]));
-
-                //if isEndSection => arrow reset? or just tile display?=>이쪽이 더 나아보이기도 함.
 
                 debugText.text = "curCnt : " + cnt + " / arrLength : " + noteArray.Length;
 
@@ -225,6 +268,50 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
 
+    #region 임시 디스플레이 전용 코루틴
+
+    public void display_Button(int _cnt)
+    {
+
+        int startIdx = _cnt;
+        int endIdx = _cnt + noteArray[_cnt].effectTimeUnit * BPM_Multiplyer * 4;
+
+        NoteInfo[] sectionArr = new NoteInfo[endIdx - startIdx];
+
+        Array.Copy(noteArray, startIdx, sectionArr, 0, endIdx - startIdx);
+
+        LoadedSectionList = BoarderSystem.SetNotes(sectionArr, BPM_Multiplyer);
+
+        StartCoroutine(ButtonDisplayer());
+
+    }
+
+    private IEnumerator ButtonDisplayer()
+    {
+
+        ClearBoarderImg();
+
+        int cnt = 0;
+
+        double cmpTime = audioPlayer.time;
+
+        while (cnt < LoadedSectionList.Count)
+        {
+            if (audioPlayer.time > cmpTime)
+            {
+                cmpTime += unitBPMSecond;
+                LoadedSectionList[cnt].SetBoarderImg(true);
+                cnt++;
+            }
+
+            yield return null;
+        }
+
+    }
+
+#endregion
+
+
 
     public enum NoteType { NONE, DOWN_NOTE, UPPER_NOTE, INVERSE_DOWN_NOTE, INVERSE_UPPER_NOTE};
     private IEnumerator PlayNote(NoteInfo _noteInfo) {
@@ -234,22 +321,22 @@ public class MusicInfoSetter : MonoBehaviour
 
             case NoteType.DOWN_NOTE:
                 audioPlayer.PlayOneShot(downFXClip);
-                StartCoroutine(WaitInput(downFXClip, _noteInfo.delayTimeUnit));
+                StartCoroutine(WaitInput(downFXClip, _noteInfo.waitingUnit, true));
                 break;
 
             case NoteType.UPPER_NOTE:
                 audioPlayer.PlayOneShot(upperFXClip);
-                StartCoroutine(WaitInput(upperFXClip, _noteInfo.delayTimeUnit));
+                StartCoroutine(WaitInput(upperFXClip, _noteInfo.waitingUnit, true));
                 break;
 
             case NoteType.INVERSE_DOWN_NOTE:
                 audioPlayer.PlayOneShot(downFXClip);
-                StartCoroutine(WaitInput(upperFXClip, _noteInfo.delayTimeUnit));
+                StartCoroutine(WaitInput(upperFXClip, _noteInfo.waitingUnit, true));
                 break;
 
             case NoteType.INVERSE_UPPER_NOTE:
                 audioPlayer.PlayOneShot(upperFXClip);
-                StartCoroutine(WaitInput(downFXClip, _noteInfo.delayTimeUnit));
+                StartCoroutine(WaitInput(downFXClip, _noteInfo.waitingUnit, true));
                 break;
 
             default:
@@ -262,11 +349,22 @@ public class MusicInfoSetter : MonoBehaviour
 
     //todo : 판정 확인점으로 바꿔야 하는 함수, playoneshot을 이용하면 pause가 풀림. 이걸 우회할 방법 고려.!!
     //todo : 채보시에는 필요 없음!!!
-    private IEnumerator WaitInput(AudioClip _snd, int _waitUnitTime) {
+    private IEnumerator WaitInput(AudioClip _snd, int _waitUnitTime, bool _isAuto) {
 
-        //yield return new WaitForSeconds((float)(unitBPMSecond * BPM_Multiplyer * _waitUnitTime));//다음마디는 기본적으로 8
-        //audioPlayer.PlayOneShot(_snd);
-        yield return null;
+        float curTime = audioPlayer.time;
+        float destTime = curTime + (float)(unitBPMSecond * BPM_Multiplyer * _waitUnitTime);
+
+        while (curTime < destTime) {
+
+
+            yield return null;
+
+            if(audioPlayer.isPlaying) curTime += Time.deltaTime;
+
+
+        }
+
+        if(_isAuto) audioPlayer.PlayOneShot(_snd);
 
     }
 
@@ -275,8 +373,8 @@ public class MusicInfoSetter : MonoBehaviour
     internal struct NoteInfo {
 
         public NoteType noteType;
-        public int delayTimeUnit;
-        public int duringUnit;
+        public int waitingUnit;
+        public int effectTimeUnit;
 
     }
 
@@ -295,53 +393,11 @@ public class MusicInfoSetter : MonoBehaviour
         int arrCount = beatInBGM + BPM_Multiplyer;
 
 
-        //todo : 나머지 정리
         if (noteArray == null)
         {
 
             noteArray = new NoteInfo[arrCount];
 
-
-
-            #region 채보부분에서 할 작업.
-
-
-            int delayMultiplyer = int.Parse(sectionLengthInputter.text) * 4;
-
-
-            noteArray[0].noteType = NoteType.DOWN_NOTE;
-            noteArray[0].delayTimeUnit = delayMultiplyer;
-
-
-            noteArray[BPM_Multiplyer].noteType = NoteType.DOWN_NOTE;
-            noteArray[BPM_Multiplyer].delayTimeUnit = delayMultiplyer;
-
-
-            noteArray[BPM_Multiplyer * 2].noteType = NoteType.INVERSE_DOWN_NOTE;
-            noteArray[BPM_Multiplyer * 2].delayTimeUnit = delayMultiplyer;
-
-
-            noteArray[BPM_Multiplyer * 3].noteType = NoteType.INVERSE_DOWN_NOTE;//노트종류
-            noteArray[BPM_Multiplyer * 3].delayTimeUnit = delayMultiplyer;//판정이 얼마나 뒤에 실행될지 결정하는 딜레이
-
-
-            noteArray[BPM_Multiplyer * 4].noteType = NoteType.INVERSE_UPPER_NOTE;
-            noteArray[BPM_Multiplyer * 4].delayTimeUnit = delayMultiplyer;
-
-
-            noteArray[BPM_Multiplyer * 5].noteType = NoteType.INVERSE_UPPER_NOTE;
-            noteArray[BPM_Multiplyer * 5].delayTimeUnit = delayMultiplyer;
-
-
-            noteArray[BPM_Multiplyer * 6].noteType = NoteType.INVERSE_UPPER_NOTE;
-            noteArray[BPM_Multiplyer * 6].delayTimeUnit = delayMultiplyer;
-
-
-            noteArray[BPM_Multiplyer * 7].noteType = NoteType.INVERSE_UPPER_NOTE;//노트종류
-            noteArray[BPM_Multiplyer * 7].delayTimeUnit = delayMultiplyer;//판정이 얼마나 뒤에 실행될지 결정하는 딜레이
-
-
-            #endregion
 
         }
 
