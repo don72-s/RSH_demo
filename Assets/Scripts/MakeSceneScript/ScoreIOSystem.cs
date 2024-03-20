@@ -38,53 +38,6 @@ public class ScoreIOSystem : MonoBehaviour
 
     }
 
-    private void Update()
-    {
-        //todo : 디버그용
-        if (Input.GetKeyDown(KeyCode.A)) {
-
-            MusicInfoSetter.NoteType[] notearrtest = new MusicInfoSetter.NoteType[14];
-
-            notearrtest[1] = MusicInfoSetter.NoteType.DOWN_NOTE;
-            notearrtest[3] = MusicInfoSetter.NoteType.UPPER_NOTE;
-            notearrtest[5] = MusicInfoSetter.NoteType.INVERSE_UPPER_NOTE;
-            notearrtest[7] = MusicInfoSetter.NoteType.DOWN_NOTE;
-            notearrtest[9] = MusicInfoSetter.NoteType.INVERSE_DOWN_NOTE;
-
-            SetNotes(notearrtest, 8);
-        }
-
-        if (Input.GetKeyDown(KeyCode.S))
-        {
-
-            MusicInfoSetter.NoteType[] notearrtest = new MusicInfoSetter.NoteType[18];
-
-            notearrtest[1] = MusicInfoSetter.NoteType.DOWN_NOTE;
-            notearrtest[3] = MusicInfoSetter.NoteType.UPPER_NOTE;
-            notearrtest[5] = MusicInfoSetter.NoteType.INVERSE_UPPER_NOTE;
-            notearrtest[7] = MusicInfoSetter.NoteType.DOWN_NOTE;
-            notearrtest[9] = MusicInfoSetter.NoteType.INVERSE_DOWN_NOTE;
-
-            SetNotes(notearrtest, 8);
-        }
-
-        if (Input.GetKeyDown(KeyCode.D))
-        {
-
-            MusicInfoSetter.NoteType[] notearrtest = new MusicInfoSetter.NoteType[64];
-
-            notearrtest[1] = MusicInfoSetter.NoteType.DOWN_NOTE;
-            notearrtest[3] = MusicInfoSetter.NoteType.UPPER_NOTE;
-            notearrtest[5] = MusicInfoSetter.NoteType.INVERSE_UPPER_NOTE;
-            notearrtest[7] = MusicInfoSetter.NoteType.DOWN_NOTE;
-            notearrtest[9] = MusicInfoSetter.NoteType.INVERSE_DOWN_NOTE;
-
-            SetNotes(notearrtest, 8);
-        }
-    }
-
-
-
 
 
     private List<ButtonScript> retButtonList;

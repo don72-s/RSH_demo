@@ -107,6 +107,22 @@ public class MusicInfoSetter : MonoBehaviour
 
 
 
+    public void btn_expertScore() {
+
+        if (noteArray == null) return;
+
+        int[] ddddd = new int[noteArray.Length];
+
+        for (int i = 0; i < ddddd.Length; i++) {
+
+            ddddd[i] = (int)noteArray[i].noteType;
+
+        }
+
+        NoteDataManager.AndroidSaveData(ddddd);
+
+    }
+
     public void btn_Save_Section() {
 
         if (LoadedSectionList == null) return;
@@ -251,7 +267,7 @@ public class MusicInfoSetter : MonoBehaviour
 
                     flagcnter++;
 
-                } Debug.Log("넘기는 마디 수 : " + noteArray[cnt].effectTimeUnit);
+                }
 
                 StartCoroutine(PlayNote(noteArray[cnt]));
 

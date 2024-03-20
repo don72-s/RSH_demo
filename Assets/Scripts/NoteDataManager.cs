@@ -49,6 +49,16 @@ public static class NoteDataManager
         }
     }
 
+    public static void AndroidSaveData(int[] _noteArray)
+    {
+
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream fileStream = new FileStream(Path.Combine(Application.persistentDataPath, "noteData.dat"), FileMode.Create);
+        formatter.Serialize(fileStream, new NoteData(_noteArray));
+        fileStream.Close();
+
+    }
+
     public static int[] AndroidMapLoadData() {
 
         if (File.Exists(Path.Combine(Application.persistentDataPath, "noteData.dat")))

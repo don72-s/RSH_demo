@@ -1,8 +1,13 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - ButtonScript
     - InputManager
+    - LowerButtonScript
+    - MusicInfoSetter
     - NoteDisplayere
+    - SceneLoader
+    - ScoreIOSystem
     - SoundManager
     - noteScr
     Unity.2D.Animation.Editor.dll:
@@ -26,11 +31,89 @@ ScriptsOnlyBuild:
     - UnityEngine.EventSystems.StandaloneInputModule
     - UnityEngine.UI.Button
     - UnityEngine.UI.CanvasScaler
+    - UnityEngine.UI.ContentSizeFitter
     - UnityEngine.UI.GraphicRaycaster
+    - UnityEngine.UI.GridLayoutGroup
     - UnityEngine.UI.Image
     - UnityEngine.UI.InputField
+    - UnityEngine.UI.Mask
+    - UnityEngine.UI.ScrollRect
+    - UnityEngine.UI.Scrollbar
     - UnityEngine.UI.Text
   sceneClasses:
+    Assets/Scenes/MakeScene.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 82
+      Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 11326}
+    - Class: 114
+      Script: {instanceID: 11358}
+    - Class: 114
+      Script: {instanceID: 11692}
+    - Class: 114
+      Script: {instanceID: 11698}
+    - Class: 114
+      Script: {instanceID: 11872}
+    - Class: 114
+      Script: {instanceID: 11954}
+    - Class: 114
+      Script: {instanceID: 11964}
+    - Class: 114
+      Script: {instanceID: 12324}
+    - Class: 114
+      Script: {instanceID: 12518}
+    - Class: 114
+      Script: {instanceID: 12938}
+    - Class: 114
+      Script: {instanceID: 13094}
+    - Class: 114
+      Script: {instanceID: 13392}
+    - Class: 114
+      Script: {instanceID: 13754}
+    - Class: 114
+      Script: {instanceID: 14044}
+    - Class: 114
+      Script: {instanceID: 14326}
+    - Class: 114
+      Script: {instanceID: 15060}
+    - Class: 114
+      Script: {instanceID: 15178}
+    - Class: 114
+      Script: {instanceID: 25980}
+    - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
+      Script: {instanceID: 0}
     Assets/Scenes/SampleScene 1.unity:
     - Class: 1
       Script: {instanceID: 0}
@@ -59,23 +142,25 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11692}
     - Class: 114
-      Script: {instanceID: 12516}
+      Script: {instanceID: 12518}
     - Class: 114
-      Script: {instanceID: 13300}
+      Script: {instanceID: 13304}
     - Class: 114
-      Script: {instanceID: 13376}
+      Script: {instanceID: 13380}
     - Class: 114
-      Script: {instanceID: 13388}
+      Script: {instanceID: 13392}
     - Class: 114
-      Script: {instanceID: 13750}
+      Script: {instanceID: 13754}
     - Class: 114
-      Script: {instanceID: 14184}
+      Script: {instanceID: 14190}
     - Class: 114
-      Script: {instanceID: 14320}
+      Script: {instanceID: 14326}
     - Class: 114
-      Script: {instanceID: 14562}
+      Script: {instanceID: 14568}
     - Class: 114
-      Script: {instanceID: 15054}
+      Script: {instanceID: 15060}
+    - Class: 114
+      Script: {instanceID: 25980}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -221,6 +306,12 @@ ScriptsOnlyBuild:
     className: SignalAsset
   - hash:
       serializedVersion: 2
+      Hash: eb5bd70cef3106cf0f9257d0e95719df
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: LowerButtonScript
+  - hash:
+      serializedVersion: 2
       Hash: 0dbc3be398b4869a5c8d0d8481ee402c
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
@@ -353,6 +444,12 @@ ScriptsOnlyBuild:
     className: SpriteSkinEntity
   - hash:
       serializedVersion: 2
+      Hash: 9b6bba6174696f0006ae3eb690816a47
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ScoreIOSystem
+  - hash:
+      serializedVersion: 2
       Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
     assemblyName: Unity.TextMeshPro.dll
     namespaceName: TMPro
@@ -459,6 +556,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: TimelineAsset
+  - hash:
+      serializedVersion: 2
+      Hash: eb5bd70cef3106cf0f9257d0e95719df
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ButtonScript
   - hash:
       serializedVersion: 2
       Hash: d8b04f92adf581b960a3532259e18ac9
@@ -599,17 +702,24 @@ ScriptsOnlyBuild:
     className: ToggleGroup
   - hash:
       serializedVersion: 2
+      Hash: 1dac4323d6f8324e5c1a4d96f0d834e8
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: MusicInfoSetter
+  - hash:
+      serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
   - hash:
       serializedVersion: 2
-      Hash: eea197751710ee48ee10cb8b54398de6
+      Hash: 2e8591ed05ccd0a04f3538adf80f0857
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: MusicInfoSetter
+    className: SceneLoader
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene 1.unity
+  - Assets/Scenes/MakeScene.unity
   playerPath: C:/Users/ASUS/Desktop/rhsh.apk
