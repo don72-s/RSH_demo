@@ -12,10 +12,10 @@ public class LowerButtonScript : ButtonScript
         boarderImg.raycastTarget = false;
     }
 
-    public override void SetNoteType(MusicInfoSetter.NoteType _noteType)
+    public override void SetNoteType(NoteType _noteType)
     {
-        if (_noteType == MusicInfoSetter.NoteType.INVERSE_UPPER_NOTE) _noteType = MusicInfoSetter.NoteType.DOWN_NOTE;
-        else if (_noteType == MusicInfoSetter.NoteType.INVERSE_DOWN_NOTE) _noteType = MusicInfoSetter.NoteType.UPPER_NOTE;
+        if (_noteType == NoteType.INVERSE_UPPER_NOTE) _noteType = NoteType.DOWN_NOTE;
+        else if (_noteType == NoteType.INVERSE_DOWN_NOTE) _noteType = NoteType.UPPER_NOTE;
         base.SetNoteType(_noteType);
     }
 

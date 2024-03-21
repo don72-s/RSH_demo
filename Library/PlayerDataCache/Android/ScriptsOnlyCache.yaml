@@ -1,6 +1,7 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
+    - AudioDictonary
     - ButtonScript
     - InputManager
     - LowerButtonScript
@@ -89,15 +90,17 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 13754}
     - Class: 114
-      Script: {instanceID: 14044}
+      Script: {instanceID: 13964}
     - Class: 114
-      Script: {instanceID: 14326}
+      Script: {instanceID: 14046}
     - Class: 114
-      Script: {instanceID: 15060}
+      Script: {instanceID: 14328}
     - Class: 114
-      Script: {instanceID: 15178}
+      Script: {instanceID: 15062}
     - Class: 114
-      Script: {instanceID: 25980}
+      Script: {instanceID: 15180}
+    - Class: 114
+      Script: {instanceID: 23692}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -152,15 +155,17 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 13754}
     - Class: 114
-      Script: {instanceID: 14190}
+      Script: {instanceID: 13964}
     - Class: 114
-      Script: {instanceID: 14326}
+      Script: {instanceID: 14192}
     - Class: 114
-      Script: {instanceID: 14568}
+      Script: {instanceID: 14328}
     - Class: 114
-      Script: {instanceID: 15060}
+      Script: {instanceID: 14570}
     - Class: 114
-      Script: {instanceID: 25980}
+      Script: {instanceID: 15062}
+    - Class: 114
+      Script: {instanceID: 23692}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -558,13 +563,19 @@ ScriptsOnlyBuild:
     className: TimelineAsset
   - hash:
       serializedVersion: 2
+      Hash: 2e8591ed05ccd0a04f3538adf80f0857
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SceneLoader
+  - hash:
+      serializedVersion: 2
       Hash: eb5bd70cef3106cf0f9257d0e95719df
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: ButtonScript
   - hash:
       serializedVersion: 2
-      Hash: d8b04f92adf581b960a3532259e18ac9
+      Hash: 21e83542fdb36ca4104da094c20df572
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SoundManager
@@ -702,7 +713,7 @@ ScriptsOnlyBuild:
     className: ToggleGroup
   - hash:
       serializedVersion: 2
-      Hash: 1dac4323d6f8324e5c1a4d96f0d834e8
+      Hash: 122b7e7e5cdecc6064e83a81eeeab8b3
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MusicInfoSetter
@@ -714,10 +725,10 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   - hash:
       serializedVersion: 2
-      Hash: 2e8591ed05ccd0a04f3538adf80f0857
+      Hash: abe4b09296eb9791c9428136e45b8d0d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: SceneLoader
+    className: AudioDictonary
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene 1.unity

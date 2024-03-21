@@ -32,12 +32,18 @@ public class NoteDisplayere : MonoBehaviour
 
     public void StartMovingMethod() { 
 
-
         StopAllCoroutines();
         SwapArrow();
         StartCoroutine(moveArrow(movingTime));
 
+    }
 
+    public void StartMovingMethod(float _totalMoveTime)
+    {
+
+        StopAllCoroutines();
+        SwapArrow();
+        StartCoroutine(moveArrow(_totalMoveTime));
 
     }
 

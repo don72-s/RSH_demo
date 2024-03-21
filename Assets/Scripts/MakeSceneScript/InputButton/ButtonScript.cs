@@ -8,7 +8,7 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
 {
 
     protected Image myImg;
-    private MusicInfoSetter.NoteType noteType;
+    private NoteType noteType;
 
 
     [SerializeField]
@@ -17,12 +17,12 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
     [SerializeField]
     List<NoteIcon> spriteList;
 
-    private Dictionary<MusicInfoSetter.NoteType, Sprite> noteSpriteDic;
+    private Dictionary<NoteType, Sprite> noteSpriteDic;
 
     [System.Serializable]
     public struct NoteIcon {
 
-        public MusicInfoSetter.NoteType noteType;
+        public NoteType noteType;
         public Sprite sprite;
 
     }
@@ -32,10 +32,10 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
     // Start is called before the first frame update
     protected virtual void Awake()
     {
-        noteType = MusicInfoSetter.NoteType.NONE;
+        noteType = NoteType.NONE;
         myImg = gameObject.GetComponent<Image>();
 
-        noteSpriteDic = new Dictionary<MusicInfoSetter.NoteType, Sprite>();
+        noteSpriteDic = new Dictionary<NoteType, Sprite>();
 
         foreach (NoteIcon _icon in spriteList) {
 
@@ -63,24 +63,24 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
 
             switch (noteType) {
 
-                case MusicInfoSetter.NoteType.NONE:
-                    SetNoteType(MusicInfoSetter.NoteType.DOWN_NOTE);
+                case NoteType.NONE:
+                    SetNoteType(NoteType.DOWN_NOTE);
                     break;
 
-                case MusicInfoSetter.NoteType.DOWN_NOTE:
-                    SetNoteType(MusicInfoSetter.NoteType.UPPER_NOTE);
+                case NoteType.DOWN_NOTE:
+                    SetNoteType(NoteType.UPPER_NOTE);
                     break;
 
-                case MusicInfoSetter.NoteType.UPPER_NOTE:
-                    SetNoteType(MusicInfoSetter.NoteType.INVERSE_DOWN_NOTE);
+                case NoteType.UPPER_NOTE:
+                    SetNoteType(NoteType.INVERSE_DOWN_NOTE);
                     break;
 
-                case MusicInfoSetter.NoteType.INVERSE_DOWN_NOTE:
-                    SetNoteType(MusicInfoSetter.NoteType.INVERSE_UPPER_NOTE);
+                case NoteType.INVERSE_DOWN_NOTE:
+                    SetNoteType(NoteType.INVERSE_UPPER_NOTE);
                     break;
 
-                case MusicInfoSetter.NoteType.INVERSE_UPPER_NOTE:
-                    SetNoteType(MusicInfoSetter.NoteType.DOWN_NOTE);
+                case NoteType.INVERSE_UPPER_NOTE:
+                    SetNoteType(NoteType.DOWN_NOTE);
                     break;
 
                 default:
@@ -90,7 +90,7 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
 
         } else if (eventData.button == PointerEventData.InputButton.Right) {
 
-            SetNoteType(MusicInfoSetter.NoteType.NONE);
+            SetNoteType(NoteType.NONE);
 
         }
     }
@@ -98,16 +98,16 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
 
 
     public void ClearNoteState() {
-        SetNoteType(MusicInfoSetter.NoteType.NONE);
+        SetNoteType(NoteType.NONE);
     }
 
-    virtual public void SetNoteType(MusicInfoSetter.NoteType _noteType) {
+    virtual public void SetNoteType(NoteType _noteType) {
 
         myImg.sprite = noteSpriteDic[_noteType];
         noteType = _noteType;
     }
 
-    public MusicInfoSetter.NoteType GetNoteType() {
+    public NoteType GetNoteType() {
 
         return noteType;
 

@@ -9,6 +9,22 @@ public class MusicInfoSetter : MonoBehaviour
 
     AudioSource audioPlayer;
 
+    AudioClip bgmClip;
+    AudioClip upperSEClip;
+    AudioClip lowerSEClip;
+
+
+    [SerializeField]
+    BGM_TYPE bgmType;
+    [SerializeField]
+    SE_TYPYE upperSeType;
+    [SerializeField]
+    SE_TYPYE lowerSeType;
+
+    [SerializeField]
+    AudioDictonary audioClipDic;
+
+
     [SerializeField]
     ScoreIOSystem BoarderSystem;
 
@@ -29,7 +45,8 @@ public class MusicInfoSetter : MonoBehaviour
     public float BPM;               //곡의 bpm [ 노래 자체 고유값, 임의 변경은 거의 불가능 ]
     public int BPM_Multiplyer;      //한마디의 큰 비트는 4개[기본], 각 큰 비트 사이를 몇개의 세분 비트로 쪼갤지 결정하는 입력변수.
 
-    public int beats_In_A_Score;
+    public int scoreUnit = 4;
+
 
     double unitBPMSecond;
 
@@ -42,6 +59,30 @@ public class MusicInfoSetter : MonoBehaviour
         unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer) ;
         
         StartCoroutine(playBeatTest(offsetSecond, unitBPMSecond, BPM_Multiplyer));
+
+    }
+
+
+    public string loadFileName;
+
+    /// <summary>
+    /// 불러오고 맵 초기설정
+    /// </summary>
+    public void btn_Setup_And_LoadNoteData() { 
+    
+        StageInfo stageInfo = NoteDataManager.LoadData(loadFileName);
+        if (stageInfo == null) return;
+
+        offsetSecond = stageInfo.offsetSecond;
+        BPM = stageInfo.bpm;
+        BPM_Multiplyer = stageInfo.bpmMultiplier;
+        scoreUnit = stageInfo.scoreUnit;
+        
+        noteArray = stageInfo.noteArray;
+
+        bgmClip = audioClipDic.GetBGMClip(stageInfo.bgmType);
+        upperSEClip = audioClipDic.GetSEClip(stageInfo.upperSeType);
+        lowerSEClip = audioClipDic.GetSEClip(stageInfo.lowerSeType);
 
     }
 
@@ -67,13 +108,13 @@ public class MusicInfoSetter : MonoBehaviour
 
         unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer);
 
-        float startTime = (float) (int.Parse(sectionNumInputter.text) * BPM_Multiplyer * 4 * unitBPMSecond);
-        float duringTime = (float)(int.Parse(sectionLengthInputter.text) * BPM_Multiplyer * 8 * unitBPMSecond);
+        float startTime = (float) (int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit * unitBPMSecond);
+        float duringTime = (float)(int.Parse(sectionLengthInputter.text) * BPM_Multiplyer * scoreUnit * 2 * unitBPMSecond);
 
 
         debugText.text = "curSection : " + int.Parse(sectionNumInputter.text) + " ~ " + (int.Parse(sectionNumInputter.text) + (int.Parse(sectionLengthInputter.text) * 2) - 1);
 
-        int startIdx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * 4;
+        int startIdx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit;
 
         StartCoroutine(playSection(startIdx, offsetSecond, startTime, startTime + duringTime, unitBPMSecond));
     }
@@ -89,8 +130,8 @@ public class MusicInfoSetter : MonoBehaviour
         //test
         //unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer);
 
-        int startIdx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * 4 ;
-        int endIdx = startIdx + int.Parse(sectionLengthInputter.text) * BPM_Multiplyer * 4;
+        int startIdx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit;
+        int endIdx = startIdx + int.Parse(sectionLengthInputter.text) * BPM_Multiplyer * scoreUnit;
 
 
         debugText.text = "LoadedSection : " + int.Parse(sectionNumInputter.text) + " ~ " + (int.Parse(sectionNumInputter.text) + (int.Parse(sectionLengthInputter.text) * 2) - 1);
@@ -111,17 +152,11 @@ public class MusicInfoSetter : MonoBehaviour
 
         if (noteArray == null) return;
 
-        int[] ddddd = new int[noteArray.Length];
-
-        for (int i = 0; i < ddddd.Length; i++) {
-
-            ddddd[i] = (int)noteArray[i].noteType;
-
-        }
-
-        NoteDataManager.AndroidSaveData(ddddd);
+        NoteDataManager.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
 
     }
+
+    public string saveFileName = "st1";
 
     public void btn_Save_Section() {
 
@@ -129,21 +164,21 @@ public class MusicInfoSetter : MonoBehaviour
 
         //todo : duringTime 설정해야 함. => 기본상태 채보 다음으로 순위 미룸.[차지하는 악보 마디 ㅇㅇ]
 
-        int idx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * 4;
+        int idx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit;
 
         for (int i = 0; i < LoadedSectionList.Count / 2; i++) {
 
             NoteType type = LoadedSectionList[i].GetNoteType();
 
             noteArray[idx].noteType = type;
-            noteArray[idx].waitingUnit = int.Parse(sectionLengthInputter.text) * 4;
+            noteArray[idx].waitingUnit = int.Parse(sectionLengthInputter.text) * scoreUnit;
             noteArray[idx].effectTimeUnit = 0;
 
             idx++;
 
         }
 
-        noteArray[int.Parse(sectionNumInputter.text) * BPM_Multiplyer * 4].effectTimeUnit = int.Parse(sectionLengthInputter.text);
+        noteArray[int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit].effectTimeUnit = int.Parse(sectionLengthInputter.text);
 
         if (idx < noteArray.Length)
         {
@@ -290,7 +325,7 @@ public class MusicInfoSetter : MonoBehaviour
     {
 
         int startIdx = _cnt;
-        int endIdx = _cnt + noteArray[_cnt].effectTimeUnit * BPM_Multiplyer * 4;
+        int endIdx = _cnt + noteArray[_cnt].effectTimeUnit * BPM_Multiplyer * scoreUnit;
 
         NoteInfo[] sectionArr = new NoteInfo[endIdx - startIdx];
 
@@ -327,32 +362,29 @@ public class MusicInfoSetter : MonoBehaviour
 
 #endregion
 
-
-
-    public enum NoteType { NONE, DOWN_NOTE, UPPER_NOTE, INVERSE_DOWN_NOTE, INVERSE_UPPER_NOTE};
     private IEnumerator PlayNote(NoteInfo _noteInfo) {
 
 
         switch (_noteInfo.noteType) {
 
             case NoteType.DOWN_NOTE:
-                audioPlayer.PlayOneShot(downFXClip);
-                StartCoroutine(WaitInput(downFXClip, _noteInfo.waitingUnit, true));
+                audioPlayer.PlayOneShot(lowerSEClip);
+                StartCoroutine(WaitInput(lowerSEClip, _noteInfo.waitingUnit, true));
                 break;
 
             case NoteType.UPPER_NOTE:
-                audioPlayer.PlayOneShot(upperFXClip);
-                StartCoroutine(WaitInput(upperFXClip, _noteInfo.waitingUnit, true));
+                audioPlayer.PlayOneShot(upperSEClip);
+                StartCoroutine(WaitInput(upperSEClip, _noteInfo.waitingUnit, true));
                 break;
 
             case NoteType.INVERSE_DOWN_NOTE:
-                audioPlayer.PlayOneShot(downFXClip);
-                StartCoroutine(WaitInput(upperFXClip, _noteInfo.waitingUnit, true));
+                audioPlayer.PlayOneShot(lowerSEClip);
+                StartCoroutine(WaitInput(upperSEClip, _noteInfo.waitingUnit, true));
                 break;
 
             case NoteType.INVERSE_UPPER_NOTE:
-                audioPlayer.PlayOneShot(upperFXClip);
-                StartCoroutine(WaitInput(downFXClip, _noteInfo.waitingUnit, true));
+                audioPlayer.PlayOneShot(upperSEClip);
+                StartCoroutine(WaitInput(lowerSEClip, _noteInfo.waitingUnit, true));
                 break;
 
             default:
@@ -385,20 +417,17 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
 
-
-    internal struct NoteInfo {
-
-        public NoteType noteType;
-        public int waitingUnit;
-        public int effectTimeUnit;
-
-    }
-
     private NoteInfo[] noteArray = null;
 
     public void InitNoteSheet() {
 
-        if (bgmClip == null) return;
+        if (bgmClip == null) { 
+        
+            bgmClip = audioClipDic.GetBGMClip(bgmType);
+            upperSEClip = audioClipDic.GetSEClip(upperSeType);
+            lowerSEClip = audioClipDic.GetSEClip(lowerSeType);
+
+        }
 
         float bgmTime = bgmClip.length;
         Debug.Log(bgmTime);
@@ -414,7 +443,10 @@ public class MusicInfoSetter : MonoBehaviour
 
             noteArray = new NoteInfo[arrCount];
 
-
+            for (int i = 0; i < arrCount; i++) {
+                noteArray[i] = new NoteInfo();
+            }
+            
         }
 
 
@@ -424,11 +456,5 @@ public class MusicInfoSetter : MonoBehaviour
     public void ClearNoteSheet() {
         noteArray = null;
     }
-
-
-
-    public AudioClip bgmClip;
-    public AudioClip downFXClip;
-    public AudioClip upperFXClip;
 
 }

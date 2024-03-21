@@ -34,6 +34,15 @@ public class InputManager : MonoBehaviour
 
     }
 
+
+    public void initSeClip(AudioClip _upperSnd, AudioClip _lowewrSnd) { 
+    
+        up = _upperSnd;
+        down = _lowewrSnd;
+
+    }
+
+
     private void Update()
     {
 

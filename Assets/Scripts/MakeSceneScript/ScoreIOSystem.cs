@@ -43,7 +43,7 @@ public class ScoreIOSystem : MonoBehaviour
     private List<ButtonScript> retButtonList;
 
     //todo : 범위를 tite하게 지정해야 함. => 구간을 출력하는거기 때문. 매개변수 추가? or 범위만큼만 세팅? && 가로 버튼 갯수 : bpm multiplyer와 같은 숫자로 받아서 설정
-    public List<ButtonScript> SetNotes(MusicInfoSetter.NoteType[] _arr, int _bpmMultiplyer) {
+    public List<ButtonScript> SetNotes(NoteType[] _arr, int _bpmMultiplyer) {
 
         retButtonList = new List<ButtonScript>();
 
@@ -53,10 +53,10 @@ public class ScoreIOSystem : MonoBehaviour
         return retButtonList;
     }
 
-    internal List<ButtonScript> SetNotes(MusicInfoSetter.NoteInfo[] _arr, int _bpmMultiplyer)
+    internal List<ButtonScript> SetNotes(NoteInfo[] _arr, int _bpmMultiplyer)
     {
 
-        MusicInfoSetter.NoteType[] _noteTypeArr = new MusicInfoSetter.NoteType[_arr.Length];
+        NoteType[] _noteTypeArr = new NoteType[_arr.Length];
 
         for (int i = 0; i < _noteTypeArr.Length; i++) {
             _noteTypeArr[i] = _arr[i].noteType;
@@ -66,7 +66,7 @@ public class ScoreIOSystem : MonoBehaviour
 
     }
 
-    private void SetButtonUI(List<ButtonScript> _buttonsList, GridLayoutGroup _parentObject, MusicInfoSetter.NoteType[] _arr, GameObject _btnObject, int _rowCount, List<ButtonScript> _retList) {
+    private void SetButtonUI(List<ButtonScript> _buttonsList, GridLayoutGroup _parentObject, NoteType[] _arr, GameObject _btnObject, int _rowCount, List<ButtonScript> _retList) {
 
         int cnt = _arr.Length;
 

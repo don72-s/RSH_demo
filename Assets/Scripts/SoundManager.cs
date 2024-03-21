@@ -1,6 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.IO;
 using UnityEngine;
+using UnityEngine.Networking;
 using UnityEngine.UI;
 
 public class SoundManager : MonoBehaviour
@@ -14,6 +16,17 @@ public class SoundManager : MonoBehaviour
 
     public Text t;
 
+    [SerializeField]
+    AudioDictonary audioDic;
+
+    private AudioClip upperClip;
+    private AudioClip lowerClip;
+
+
+    StageInfo stageData;
+
+
+    private NoteInfo[] stageNoteArr;
 
     public void Pause()
     {
@@ -23,20 +36,19 @@ public class SoundManager : MonoBehaviour
         nDisplayer.ClearDisplayedNotes();
     }
 
+
+
+
+
     public void playbgm() {
 
-        nDisplayer.ClearDisplayedNotes();
 
-        StopAllCoroutines();
+        nDisplayer.ClearDisplayedNotes();
         nDisplayer.StopAllCoroutines();
 
-        bpmStacker = syncOffset;
-        curBpmComparer = int.Parse(editPageField.text) * 32 * bpmUnit;
-        bpmIndexer = int.Parse(editPageField.text) * 32;
+        StopAllCoroutines();
 
-        bpmStacker += curBpmComparer;
-
-        bgmplayer.time = curBpmComparer;
+        bgmplayer.Stop();
         bgmplayer.Play();
 
         StartCoroutine(playBGMReader());
@@ -44,7 +56,7 @@ public class SoundManager : MonoBehaviour
 
     public List<GameObject> noteButtons;
 
-    public void setArrayPart() {
+/*    public void setArrayPart() {
 
         int baseIdx = int.Parse(editPageField.text) * 32;
 
@@ -55,97 +67,179 @@ public class SoundManager : MonoBehaviour
 
         }
 
+    }*/
+
+    public string LoadFileName;
+
+
+    public void btn_androidLoadCheck() {
+
+        StartCoroutine(loaddd());
     }
 
-    public void SaveNodeData() { 
-        NoteDataManager.SaveData(noteArr);
+    public void btn_androidLoadCheck222()
+    {
+
+        StartCoroutine(loaddd2());
+    }
+
+    IEnumerator loaddd() {
+
+        // "StreamingAssets" 폴더에 있는 파일의 경로
+        string streamingAssetsPath = Path.Combine(Application.streamingAssetsPath, "stage1Note.dat");
+
+        // 파일을 UnityWebRequest를 사용하여 로드
+        UnityWebRequest www = UnityWebRequest.Get(streamingAssetsPath);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+             t.text = "Failed to load file: ";
+        }
+        else
+        {
+            // UnityWebRequest를 통해 로드한 파일의 바이트 데이터
+            byte[] fileBytes = www.downloadHandler.data;
+
+            // 파일을 "Application.persistentDataPath"로 저장
+            string persistentDataPath = Path.Combine(Application.persistentDataPath, "stage1Note.dat");
+            File.WriteAllBytes(persistentDataPath, fileBytes);
+
+            t.text = "File copied to persistent data path:"+ persistentDataPath;
+        }
+    }
+
+    IEnumerator loaddd2()
+    {
+
+        // "StreamingAssets" 폴더에 있는 파일의 경로
+        string streamingAssetsPath = "jar:file://" + Application.dataPath + "!/assets/stage1Note.dat";
+
+        // 파일을 UnityWebRequest를 사용하여 로드
+        UnityWebRequest www = UnityWebRequest.Get(streamingAssetsPath);
+        yield return www.SendWebRequest();
+
+        if (www.isNetworkError || www.isHttpError)
+        {
+            t.text = "Failed to load file: ";
+        }
+        else
+        {
+            // UnityWebRequest를 통해 로드한 파일의 바이트 데이터
+            byte[] fileBytes = www.downloadHandler.data;
+
+            // 파일을 "Application.persistentDataPath"로 저장
+            string persistentDataPath = Path.Combine(Application.persistentDataPath, "stage1Note.dat");
+            File.WriteAllBytes(persistentDataPath, fileBytes);
+
+            t.text = "File copied to persistent data path:";
+        }
     }
 
     public void LoadNodeData() {
-        noteArr = NoteDataManager.LoadData();
+
+        //stageData = NoteDataManager.LoadData(LoadFileName);
+        stageData = NoteDataManager.AndroidLoadData("stage1Note.dat");
+
+        if (stageData == null) {
+
+            Debug.LogWarning("파일을 읽어올 수 없음.");
+            return;
+
+        }
+
+        stageNoteArr = stageData.noteArray;
+
+        bpmUnit = (float)(60 / ((double)stageData.bpm * stageData.bpmMultiplier));
+
+        bgmplayer.clip = audioDic.GetBGMClip(stageData.bgmType);
+
+        upperClip = audioDic.GetSEClip(stageData.upperSeType);
+        lowerClip = audioDic.GetSEClip(stageData.lowerSeType);
+
+        inputm.initSeClip(upperClip, lowerClip);
+
         Debug.Log("loaded");
     }
 
-    public void androidMapLoad() {
+/*    public void androidMapLoad() {
         t.text = Application.persistentDataPath;
         noteArr = NoteDataManager.AndroidMapLoadData();
-    }
+    }*/
 
     public GameObject d;
 
     public InputField editPageField;
 
-    public void setSyncOffset() {
 
-        syncOffset = float.Parse(inf.text);
-
-    }
 
     public InputField inf;
 
-    float bpmStacker = 0;
-    public float syncOffset = 0;
-
-    float curBpmComparer = 0;
 
     //const float bpmUnit = 0.53571428f; - base BPM
-    const float bpmUnit = 0.1339285714285714f;// 1/4 BPM
-    int bpmIndexer = 0;
+    float bpmUnit = 0.1339285714285714f;
 
     private IEnumerator playBGMReader() {
+
+        yield return new WaitForSeconds(stageData.offsetSecond);
+
+        int bpmIndexer = 0;
+        float bpmStacker = 0;
+        int displayeIndexer = 0;
+        float curBpmComparer = 0;
 
 
         while (bpmStacker < 150) {
 
             t.text = " " + bpmIndexer;
 
-            if (curBpmComparer <= bpmStacker) {
+            while (curBpmComparer < bpmStacker) {
 
-                if (bpmIndexer % 16 == 0) {
-                    nDisplayer.StartMovingMethod();
+                curBpmComparer += bpmUnit;
 
-                    if (bpmIndexer % 32 == 0) { 
-                        nDisplayer.ClearDisplayedNotes();
-                    }
+
+                if (stageNoteArr[bpmIndexer].effectTimeUnit != 0) {
+
+                    if(displayeIndexer % 2 == 0) nDisplayer.ClearDisplayedNotes();
+
+                    nDisplayer.StartMovingMethod(stageNoteArr[bpmIndexer].effectTimeUnit * bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit);
+
+                    displayeIndexer++;
 
                 }
 
 
-                while (curBpmComparer <= bpmStacker)
+                switch (stageNoteArr[bpmIndexer].noteType)
                 {
-                    curBpmComparer += bpmUnit;
+
+                    case NoteType.NONE:
+                        break;
+
+                    case NoteType.DOWN_NOTE:
+                        StartCoroutine(LowewrNote());
+                        break;
+
+                    case NoteType.UPPER_NOTE:
+                        StartCoroutine(UpperNote());
+                        break;
+
+                    case NoteType.INVERSE_DOWN_NOTE:
+                        StartCoroutine(InverseLowewrNote());
+                        break;
+
+                    case NoteType.INVERSE_UPPER_NOTE:
+                        StartCoroutine(InverseUpperNote());
+                        break;
 
 
-                    switch (noteArr[bpmIndexer++])
-                    {
-
-                        case 0:
-                            break;
-
-                        case 1:
-                            StartCoroutine(LowewrNote());
-                            break;
-
-                        case 2:
-                            StartCoroutine(UpperNote());
-                            break;
-
-                        case 3:
-                            StartCoroutine(InverseLowewrNote());
-                            break;
-
-                        case 4:
-                            StartCoroutine(InverseUpperNote());
-                            break;
-
-
-
-                    }
 
                 }
 
+                bpmIndexer++;
+                
 
             }
+
 
             bpmStacker += Time.deltaTime;
 
@@ -206,150 +300,5 @@ public class SoundManager : MonoBehaviour
 
     }
 
-
-
-    int[] noteArr = {
-
-                     
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0,
-                     0,0,0,0, 0,0,0,0, 0,0,0,0, 0,0,0,0
-
-
-    };
 
 }
