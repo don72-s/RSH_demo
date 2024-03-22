@@ -82,25 +82,25 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12518}
     - Class: 114
-      Script: {instanceID: 12938}
+      Script: {instanceID: 12920}
     - Class: 114
-      Script: {instanceID: 13094}
+      Script: {instanceID: 12940}
     - Class: 114
-      Script: {instanceID: 13392}
+      Script: {instanceID: 13096}
     - Class: 114
-      Script: {instanceID: 13754}
+      Script: {instanceID: 13394}
     - Class: 114
-      Script: {instanceID: 13964}
+      Script: {instanceID: 13756}
     - Class: 114
-      Script: {instanceID: 14046}
+      Script: {instanceID: 13966}
     - Class: 114
-      Script: {instanceID: 14328}
+      Script: {instanceID: 14048}
     - Class: 114
-      Script: {instanceID: 15062}
+      Script: {instanceID: 14330}
     - Class: 114
-      Script: {instanceID: 15180}
+      Script: {instanceID: 15064}
     - Class: 114
-      Script: {instanceID: 23692}
+      Script: {instanceID: 15182}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -147,25 +147,25 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12518}
     - Class: 114
-      Script: {instanceID: 13304}
+      Script: {instanceID: 12920}
     - Class: 114
-      Script: {instanceID: 13380}
+      Script: {instanceID: 13306}
     - Class: 114
-      Script: {instanceID: 13392}
+      Script: {instanceID: 13382}
     - Class: 114
-      Script: {instanceID: 13754}
+      Script: {instanceID: 13394}
     - Class: 114
-      Script: {instanceID: 13964}
+      Script: {instanceID: 13756}
     - Class: 114
-      Script: {instanceID: 14192}
+      Script: {instanceID: 13966}
     - Class: 114
-      Script: {instanceID: 14328}
+      Script: {instanceID: 14194}
     - Class: 114
-      Script: {instanceID: 14570}
+      Script: {instanceID: 14330}
     - Class: 114
-      Script: {instanceID: 15062}
+      Script: {instanceID: 14572}
     - Class: 114
-      Script: {instanceID: 23692}
+      Script: {instanceID: 15064}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -429,6 +429,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: Selectable
+  - hash:
+      serializedVersion: 2
+      Hash: abe4b09296eb9791c9428136e45b8d0d
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: AudioDictonary
   - hash:
       serializedVersion: 2
       Hash: d4020bafcd3ccbb5601a6e6c8ac78be0
@@ -723,12 +729,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: abe4b09296eb9791c9428136e45b8d0d
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: AudioDictonary
   platform: 13
   scenePathNames:
   - Assets/Scenes/SampleScene 1.unity

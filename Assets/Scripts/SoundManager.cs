@@ -37,9 +37,6 @@ public class SoundManager : MonoBehaviour
     }
 
 
-
-
-
     public void playbgm() {
 
 
@@ -52,36 +49,18 @@ public class SoundManager : MonoBehaviour
         bgmplayer.Play();
 
         StartCoroutine(playBGMReader());
+
     }
 
     public List<GameObject> noteButtons;
 
-/*    public void setArrayPart() {
-
-        int baseIdx = int.Parse(editPageField.text) * 32;
-
-        for (int i = 0; i < 16; i++)
-        {
-
-            noteArr[baseIdx + i] = noteButtons[i].GetComponent<noteScr>().myType;
-
-        }
-
-    }*/
 
     public string LoadFileName;
-
-
     public void btn_androidLoadCheck() {
 
         StartCoroutine(loaddd());
     }
 
-    public void btn_androidLoadCheck222()
-    {
-
-        StartCoroutine(loaddd2());
-    }
 
     IEnumerator loaddd() {
 
@@ -109,32 +88,7 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-    IEnumerator loaddd2()
-    {
-
-        // "StreamingAssets" 폴더에 있는 파일의 경로
-        string streamingAssetsPath = "jar:file://" + Application.dataPath + "!/assets/stage1Note.dat";
-
-        // 파일을 UnityWebRequest를 사용하여 로드
-        UnityWebRequest www = UnityWebRequest.Get(streamingAssetsPath);
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
-        {
-            t.text = "Failed to load file: ";
-        }
-        else
-        {
-            // UnityWebRequest를 통해 로드한 파일의 바이트 데이터
-            byte[] fileBytes = www.downloadHandler.data;
-
-            // 파일을 "Application.persistentDataPath"로 저장
-            string persistentDataPath = Path.Combine(Application.persistentDataPath, "stage1Note.dat");
-            File.WriteAllBytes(persistentDataPath, fileBytes);
-
-            t.text = "File copied to persistent data path:";
-        }
-    }
+   
 
     public void LoadNodeData() {
 
@@ -162,46 +116,40 @@ public class SoundManager : MonoBehaviour
         Debug.Log("loaded");
     }
 
-/*    public void androidMapLoad() {
-        t.text = Application.persistentDataPath;
-        noteArr = NoteDataManager.AndroidMapLoadData();
-    }*/
-
     public GameObject d;
 
     public InputField editPageField;
 
-
-
     public InputField inf;
 
-
-    //const float bpmUnit = 0.53571428f; - base BPM
     float bpmUnit = 0.1339285714285714f;
 
     private IEnumerator playBGMReader() {
 
-        yield return new WaitForSeconds(stageData.offsetSecond);
+        yield return new WaitForSeconds(0.95f);
 
         int bpmIndexer = 0;
         float bpmStacker = 0;
         int displayeIndexer = 0;
         float curBpmComparer = 0;
 
+        int curEffectTimeUnit = 0;
 
-        while (bpmStacker < 150) {
+        while (bpmStacker < 150) {// todo : 150 = 노래 길이로 수정
 
-            t.text = " " + bpmIndexer;
+            //t.text = " " + bpmIndexer;
 
             while (curBpmComparer < bpmStacker) {
 
                 curBpmComparer += bpmUnit;
 
 
+
                 if (stageNoteArr[bpmIndexer].effectTimeUnit != 0) {
 
                     if(displayeIndexer % 2 == 0) nDisplayer.ClearDisplayedNotes();
 
+                    curEffectTimeUnit = stageNoteArr[bpmIndexer].effectTimeUnit;
                     nDisplayer.StartMovingMethod(stageNoteArr[bpmIndexer].effectTimeUnit * bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit);
 
                     displayeIndexer++;
@@ -216,19 +164,19 @@ public class SoundManager : MonoBehaviour
                         break;
 
                     case NoteType.DOWN_NOTE:
-                        StartCoroutine(LowewrNote());
+                        StartCoroutine(LowewrNote(curEffectTimeUnit));
                         break;
 
                     case NoteType.UPPER_NOTE:
-                        StartCoroutine(UpperNote());
+                        StartCoroutine(UpperNote(curEffectTimeUnit));
                         break;
 
                     case NoteType.INVERSE_DOWN_NOTE:
-                        StartCoroutine(InverseLowewrNote());
+                        StartCoroutine(InverseLowewrNote(curEffectTimeUnit));
                         break;
 
                     case NoteType.INVERSE_UPPER_NOTE:
-                        StartCoroutine(InverseUpperNote());
+                        StartCoroutine(InverseUpperNote(curEffectTimeUnit));
                         break;
 
 
@@ -250,53 +198,159 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    IEnumerator LowewrNote() {
+    IEnumerator LowewrNote(int _watingUnit) {
 
         inputm.PlayDown();
         nDisplayer.DisplayLowerNote();
 
-        yield return new WaitForSeconds(bpmUnit * 16);
+        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2  ));
 
+        //판정라인
+        //Debug.Log("ppp");
         //inputm.PlayDown();
+        //inputm.PlayDown();
+
+        float curTime = 0;
+
+        while (curTime < bpmUnit * 3) {
+
+            t.text = "start!";
+
+
+            curTime += Time.deltaTime;
+
+            if (inputm.isLower()) {
+
+                inputm.useLower();
+                t.text = "currect!";
+                inputm.PlayDown();
+                yield break;
+
+            }
+
+            yield return null;
+
+        }
+
+        //inputm.PlayUp();
+
+        t.text = " failied ";
+
+
 
     }
 
-    IEnumerator UpperNote()
+    IEnumerator UpperNote(int _watingUnit)
     {
 
         inputm.PlayUp();
         nDisplayer.DisplayUpperNote();
 
-        yield return new WaitForSeconds(bpmUnit * 16);
+        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2));
+
+        float curTime = 0;
+
+        while (curTime < bpmUnit * 3)
+        {
+
+            t.text = "start!";
+
+
+            curTime += Time.deltaTime;
+
+            if (inputm.isUpper())
+            {
+
+                inputm.useUpper();
+                t.text = "currect!";
+                inputm.PlayUp();
+                yield break;
+
+            }
+
+            yield return null;
+
+        }
 
         //inputm.PlayUp();
+        t.text = " failied ";
 
     }
 
 
-    IEnumerator InverseLowewrNote()
+    IEnumerator InverseLowewrNote(int _watingUnit)
     {
 
         inputm.PlayDown();
         Handheld.Vibrate();
         nDisplayer.DisplayInverseLowerNote();
 
-        yield return new WaitForSeconds(bpmUnit * 16);
+        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2));
 
-        //inputm.PlayDown();
+        float curTime = 0;
+
+        while (curTime < bpmUnit * 3)
+        {
+
+            t.text = "start!";
+
+
+            curTime += Time.deltaTime;
+
+            if (inputm.isUpper())
+            {
+
+                inputm.useUpper();
+                t.text = "currect!";
+                inputm.PlayUp();
+                yield break;
+
+            }
+
+            yield return null;
+
+        }
+        t.text = " failied ";
+
+        //inputm.PlayUp();
 
     }
 
-    IEnumerator InverseUpperNote()
+    IEnumerator InverseUpperNote(int _watingUnit)
     {
 
         inputm.PlayUp();
         Handheld.Vibrate();
-        nDisplayer.DisplayInverseUpperNote ();
+        nDisplayer.DisplayInverseUpperNote();
 
-        yield return new WaitForSeconds(bpmUnit * 16);
+        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit);
 
-        //inputm.PlayUp();
+        float curTime = 0;
+
+        while (curTime < bpmUnit * 3)
+        {
+
+            t.text = "start!";
+
+
+            curTime += Time.deltaTime;
+
+            if (inputm.isLower())
+            {
+
+                inputm.useLower();
+                t.text = "currect!";
+                inputm.PlayDown();
+                yield break;
+
+            }
+
+            yield return null;
+
+        }
+        t.text = " failied ";
+
+        //inputm.PlayDown();
 
     }
 

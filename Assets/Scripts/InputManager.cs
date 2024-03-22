@@ -40,6 +40,8 @@ public class InputManager : MonoBehaviour
         up = _upperSnd;
         down = _lowewrSnd;
 
+        lowerFlag = false;
+        upperFlag = false;
     }
 
 
@@ -49,95 +51,130 @@ public class InputManager : MonoBehaviour
 
         Vector3 vec = Input.gyro.rotationRate;
 
+        //롱노트 반응 => 추후 기회되면 추가.
+        /*        if (!isPlaying && vec.z > delayOffset && Input.touchCount >= 1) { 
 
-        if (!isPlaying && vec.z > delayOffset && Input.touchCount >= 1) {
+                    PlayGazing();
+                    StartCoroutine(playSnd(1.5f));
 
-            PlayGazing();
-            StartCoroutine(playSnd(1.5f));
+                }
+        */
+
+        //에디터 디버그
+        if (!isLowerPlaying && Input.GetKeyDown(KeyCode.Space))
+        {
+            Debug.Log("pushed");
+            StartCoroutine(playLowerSnd());
 
         }
 
-        if (!isDownPlaying && vec.z > delayOffset) {
 
-            PlayDown();
-            StartCoroutine(playDownSnd());
+        if (!isUpperPlaying && Input.GetKeyDown(KeyCode.B))
+        {
+            Debug.Log("pushed");
+            StartCoroutine(playUpperSnd());
 
         }
 
-        if (!isPlaying && vec.z < -delayOffset * 1.5f)
+        if (!isLowerPlaying && vec.z > delayOffset) {
+
+            //PlayDown();
+            StartCoroutine(playLowerSnd());
+
+        }
+
+        if (!isUpperPlaying && vec.z < -delayOffset * 1.5f)
         {
 
-            PlayUp();
-            StartCoroutine(playSnd());
+            //PlayUp();
+            StartCoroutine(playUpperSnd());
 
         }
 
     }
 
+    public bool isUpper() {
+        return upperFlag;
+    }
 
-    private bool isPlaying = false;
-    private float waitTime = 0.25f;
-    private float curTime = 0;
-    private IEnumerator playSnd() {
+    public void useUpper() {
+        upperFlag = false;
+    }
 
-        if (!isPlaying) {
 
-            isPlaying = !isPlaying;
+    public bool isLower()
+    {
+        return lowerFlag;
+    }
+    public void useLower()
+    {
+        lowerFlag = false;
+    }
 
-            while (curTime < waitTime) {
 
-                curTime += Time.deltaTime;
-                yield return null;
-            
-            }
 
-            curTime = 0;
-            isPlaying = false;
+
+
+    private bool lowerFlag = false;
+    private bool upperFlag = false;
+
+
+    private bool isUpperPlaying = false;
+    private float upperWaitTime = 0.25f;
+    private IEnumerator playUpperSnd() {
+
+        if (!isUpperPlaying) {
+
+            isUpperPlaying = true;
+            upperFlag = true;
+
+            yield return new WaitForSeconds(Time.deltaTime);
+
+            upperFlag = false;
+
+            yield return new WaitForSeconds(upperWaitTime / 2);
+
+            isUpperPlaying = false;
 
 
         }
     
     }
 
-
-    private bool isDownPlaying = false;
-    private float DownwaitTime = 0.25f;
-    private float DowncurTime = 0;
-    private IEnumerator playDownSnd()
+    private bool isLowerPlaying = false;
+    private float lowerWaitTime = 0.25f;
+    private IEnumerator playLowerSnd()
     {
 
-        if (!isDownPlaying)
+        if (!isLowerPlaying)
         {
 
-            isDownPlaying = !isDownPlaying;
+            isLowerPlaying = true;
+            lowerFlag = true;
 
-            while (DowncurTime < DownwaitTime)
-            {
+            yield return new WaitForSeconds(Time.deltaTime);
 
-                DowncurTime += Time.deltaTime;
-                yield return null;
+            lowerFlag = false;
 
-            }
+            yield return new WaitForSeconds(lowerWaitTime / 2);
 
-            DowncurTime = 0;
-            isDownPlaying = false;
-
+            isLowerPlaying = false;
 
         }
 
     }
 
 
-    private IEnumerator playSnd(float needDelta)
+    /*private IEnumerator playSnd(float needDelta)
     {
 
         int breakCount = 10;
         int curCount = 0;
 
-        if (!isPlaying)
+        if (!isUpperPlaying)
         {
 
-            isPlaying = !isPlaying;
+            isUpperPlaying = !isUpperPlaying;
 
 
             while (curCount <= breakCount && Input.touchCount >= 1)
@@ -157,12 +194,12 @@ public class InputManager : MonoBehaviour
 
             }
 
-            isPlaying = false;
+            isUpperPlaying = false;
             StopGazing();
 
         }
 
-    }
+    }*/
 
 
 
@@ -178,15 +215,15 @@ public class InputManager : MonoBehaviour
 
     }
 
-    public void PlayGazing() {
+/*    public void PlayGazing() {
         audioPlayer.clip = down;
         audioPlayer.loop = true;
         audioPlayer.Play();
-    }
+    }*/
 
-    public void StopGazing() {
+/*    public void StopGazing() {
         audioPlayer.Stop();
         audioPlayer.loop = false;
-    }
+    }*/
 
 }
