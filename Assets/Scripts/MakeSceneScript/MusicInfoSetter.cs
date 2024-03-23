@@ -63,14 +63,19 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
 
-    public string loadFileName;
+    public string loadFileName = "stage1Note.dat";
 
     /// <summary>
     /// 불러오고 맵 초기설정
     /// </summary>
-    public void btn_Setup_And_LoadNoteData() { 
-    
+    public void btn_Setup_And_LoadNoteData() {
+
+#if UNITY_EDITOR
         StageInfo stageInfo = NoteDataManager.LoadData(loadFileName);
+#elif UNITY_ANDROID
+        StageInfo stageInfo = NoteDataManager.AndroidLoadData("stage1Note.dat");
+#endif
+
         if (stageInfo == null) return;
 
         offsetSecond = stageInfo.offsetSecond;
@@ -152,7 +157,16 @@ public class MusicInfoSetter : MonoBehaviour
 
         if (noteArray == null) return;
 
+#if UNITY_EDITOR
+
         NoteDataManager.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
+
+#elif UNITY_ANDROID
+
+        NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType);
+
+#endif
+
 
     }
 
@@ -161,8 +175,6 @@ public class MusicInfoSetter : MonoBehaviour
     public void btn_Save_Section() {
 
         if (LoadedSectionList == null) return;
-
-        //todo : duringTime 설정해야 함. => 기본상태 채보 다음으로 순위 미룸.[차지하는 악보 마디 ㅇㅇ]
 
         int idx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit;
 
@@ -319,7 +331,7 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
 
-    #region 임시 디스플레이 전용 코루틴
+#region 임시 디스플레이 전용 코루틴
 
     public void display_Button(int _cnt)
     {
@@ -328,6 +340,8 @@ public class MusicInfoSetter : MonoBehaviour
         int endIdx = _cnt + noteArray[_cnt].effectTimeUnit * BPM_Multiplyer * scoreUnit;
 
         NoteInfo[] sectionArr = new NoteInfo[endIdx - startIdx];
+
+        if (noteArray.Length < startIdx + endIdx - startIdx) return;
 
         Array.Copy(noteArray, startIdx, sectionArr, 0, endIdx - startIdx);
 

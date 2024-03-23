@@ -83,7 +83,7 @@ public class InputManager : MonoBehaviour
 
         }
 
-        if (!isUpperPlaying && vec.z < -delayOffset * 1.5f)
+        if (!isUpperPlaying && vec.z < -delayOffset)
         {
 
             //PlayUp();

@@ -80,7 +80,7 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
                     break;
 
                 case NoteType.INVERSE_UPPER_NOTE:
-                    SetNoteType(NoteType.DOWN_NOTE);
+                    SetNoteType(NoteType.NONE);
                     break;
 
                 default:

@@ -7,54 +7,69 @@ public class NoteDisplayere : MonoBehaviour
 {
 
     public GameObject ArrowGroup;
-    public GameObject ArrowUpperHead;
-    public GameObject ArrowLowerHead;
+
+    [SerializeField]
+    GameObject ArrowIconParent;
+
+
+    [SerializeField]
+    GameObject ArrowIconObject;
+    [SerializeField]
+    Sprite UpperIconImg;
+    [SerializeField]
+    Sprite LowerIconImg;
+    [SerializeField]
+    Sprite UpperInverseIconImg;
+    [SerializeField]
+    Sprite LowerInverseIconImg;
+
+    private int noteIdx = 0;
+    List<GameObject> ArrowIconLists;
+    List<Image> ArrowIconImgLists;
+
 
     RectTransform rect;
     Vector3 startPos;
     Vector3 endPos;
-    float movingTime;
 
-    private float startArrowPosX;
     private void Start()
     {
+
+        ArrowIconLists = new List<GameObject>();
+        ArrowIconImgLists = new List<Image>();
+
+
         rect = ArrowGroup.GetComponent<RectTransform>();
 
         startPos = rect.localPosition;
         endPos = -rect.localPosition;
-        movingTime =  0.53571428f * 4;
 
-        defaultColor = displayNoteLists[0].GetComponent<Image>().color;
+        //defaultColor = ArrowIconLists[0].GetComponent<Image>().color;
 
+        for (int i = 0; i < 16; i++)
+        {
+            ArrowIconLists.Add(Instantiate(ArrowIconObject));
+            ArrowIconImgLists.Add(ArrowIconLists[i].GetComponent<Image>());
+            ArrowIconLists[i].transform.SetParent(ArrowIconParent.transform);
+            ArrowIconLists[i].transform.localScale = Vector3.one;
+        }
+
+        ClearDisplayedNotes();
     }
 
     private float startTime;
-
-    public void StartMovingMethod() { 
-
-        StopAllCoroutines();
-        SwapArrow();
-        StartCoroutine(moveArrow(movingTime));
-
-    }
 
     public void StartMovingMethod(float _totalMoveTime)
     {
 
         StopAllCoroutines();
-        SwapArrow();
         StartCoroutine(moveArrow(_totalMoveTime));
 
     }
 
-    private void SwapArrow() {
 
-        ArrowUpperHead.SetActive(!ArrowUpperHead.activeSelf);
-        ArrowLowerHead.SetActive(!ArrowLowerHead.activeSelf);
 
-    }
-
-    private IEnumerator moveArrow(float _allTime) { 
+    private IEnumerator moveArrow(float _movingTime) { 
     
         startTime = Time.time;
 
@@ -62,10 +77,10 @@ public class NoteDisplayere : MonoBehaviour
         
             float curDurTime = Time.time - startTime;
 
-            if (curDurTime < _allTime)
+            if (curDurTime < _movingTime)
             {
 
-                float timeRatio = curDurTime / _allTime;
+                float timeRatio = curDurTime / _movingTime;
                 rect.localPosition = Vector3.Lerp(startPos, endPos, timeRatio);
 
             }
@@ -80,49 +95,59 @@ public class NoteDisplayere : MonoBehaviour
 
     }
 
-
-    private int noteIdx = 0;
-    public List<GameObject> displayNoteLists;
-    public List<Image> displayImgLists;
-
     public void DisplayUpperNote() {
-        displayNoteLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, 107, 0);
-        displayImgLists[noteIdx].color = defaultColor;
-        displayNoteLists[noteIdx].SetActive(true);
+        CheckObjectPool();
+        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, 25, 0);
+        ArrowIconImgLists[noteIdx].sprite = UpperIconImg;
+        ArrowIconLists[noteIdx].SetActive(true);
         noteIdx++;
     }
 
     public void DisplayLowerNote()
     {
-        displayNoteLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, 74, 0);
-        displayImgLists[noteIdx].color = defaultColor;
-        displayNoteLists[noteIdx].SetActive(true);
+        CheckObjectPool();
+        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, -25, 0);
+        ArrowIconImgLists[noteIdx].sprite = LowerIconImg;
+        ArrowIconLists[noteIdx].SetActive(true);
         noteIdx++;
     }
 
     public void DisplayInverseUpperNote()
     {
-        displayNoteLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, 107, 0);
-        displayImgLists[noteIdx].color = Color.red;
-        displayNoteLists[noteIdx].SetActive(true);
+        CheckObjectPool();
+        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, 25, 0);
+        ArrowIconImgLists[noteIdx].sprite = UpperInverseIconImg;
+        ArrowIconLists[noteIdx].SetActive(true);
         noteIdx++;
     }
 
     public void DisplayInverseLowerNote()
     {
-        displayNoteLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, 74, 0);
-        displayImgLists[noteIdx].color = Color.red;
-        displayNoteLists[noteIdx].SetActive(true);
+        CheckObjectPool();
+        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, -25, 0);
+        ArrowIconImgLists[noteIdx].sprite = LowerInverseIconImg;
+        ArrowIconLists[noteIdx].SetActive(true);
         noteIdx++;
     }
 
+    public void CheckObjectPool() {
+
+        if (noteIdx >= ArrowIconLists.Count) {
+
+            GameObject tmpObj = Instantiate(ArrowIconObject);
+            ArrowIconLists.Add(tmpObj);
+            ArrowIconImgLists.Add(tmpObj.GetComponent<Image>());
+            tmpObj.transform.SetParent(ArrowIconParent.transform);
+            tmpObj.transform.localScale = Vector3.one;
+        }
+
+    }
+
     public void ClearDisplayedNotes() {
-        foreach (GameObject note in displayNoteLists) { 
+        foreach (GameObject note in ArrowIconLists) { 
             note.SetActive(false);
         }
         noteIdx = 0;
     }
-
-    private Color defaultColor;
 
 }

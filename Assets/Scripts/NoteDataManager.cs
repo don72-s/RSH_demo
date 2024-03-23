@@ -152,7 +152,7 @@ public static class NoteDataManager
 
 
 
-    public static void SaveData(int[] _noteArray, string _fileName = "noteData.dat")
+    /*public static void SaveData(int[] _noteArray, string _fileName = "noteData.dat")
     {
         BinaryFormatter formatter = new BinaryFormatter();
         FileStream fileStream = new FileStream(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName), FileMode.Create);
@@ -210,6 +210,6 @@ public static class NoteDataManager
             return null;
         }
 
-    }
+    }*/
 
 }

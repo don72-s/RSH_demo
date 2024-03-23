@@ -92,8 +92,11 @@ public class SoundManager : MonoBehaviour
 
     public void LoadNodeData() {
 
-        //stageData = NoteDataManager.LoadData(LoadFileName);
+#if UNITY_EDITOR
+        stageData = NoteDataManager.LoadData(LoadFileName);
+#elif UNITY_ANDROID
         stageData = NoteDataManager.AndroidLoadData("stage1Note.dat");
+#endif
 
         if (stageData == null) {
 
@@ -203,7 +206,7 @@ public class SoundManager : MonoBehaviour
         inputm.PlayDown();
         nDisplayer.DisplayLowerNote();
 
-        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2  ));
+        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2 ));
 
         //판정라인
         //Debug.Log("ppp");
@@ -212,7 +215,7 @@ public class SoundManager : MonoBehaviour
 
         float curTime = 0;
 
-        while (curTime < bpmUnit * 3) {
+        while (curTime < bpmUnit * 4) {
 
             t.text = "start!";
 
@@ -222,7 +225,7 @@ public class SoundManager : MonoBehaviour
             if (inputm.isLower()) {
 
                 inputm.useLower();
-                t.text = "currect!";
+                t.text = "correct";
                 inputm.PlayDown();
                 yield break;
 
@@ -250,7 +253,7 @@ public class SoundManager : MonoBehaviour
 
         float curTime = 0;
 
-        while (curTime < bpmUnit * 3)
+        while (curTime < bpmUnit * 4)
         {
 
             t.text = "start!";
@@ -262,7 +265,7 @@ public class SoundManager : MonoBehaviour
             {
 
                 inputm.useUpper();
-                t.text = "currect!";
+                t.text = "correct";
                 inputm.PlayUp();
                 yield break;
 
@@ -289,7 +292,7 @@ public class SoundManager : MonoBehaviour
 
         float curTime = 0;
 
-        while (curTime < bpmUnit * 3)
+        while (curTime < bpmUnit * 4)
         {
 
             t.text = "start!";
@@ -301,7 +304,7 @@ public class SoundManager : MonoBehaviour
             {
 
                 inputm.useUpper();
-                t.text = "currect!";
+                t.text = "correct";
                 inputm.PlayUp();
                 yield break;
 
@@ -323,11 +326,11 @@ public class SoundManager : MonoBehaviour
         Handheld.Vibrate();
         nDisplayer.DisplayInverseUpperNote();
 
-        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit);
+        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2));
 
         float curTime = 0;
 
-        while (curTime < bpmUnit * 3)
+        while (curTime < bpmUnit * 4)
         {
 
             t.text = "start!";
@@ -339,7 +342,7 @@ public class SoundManager : MonoBehaviour
             {
 
                 inputm.useLower();
-                t.text = "currect!";
+                t.text = "correct";
                 inputm.PlayDown();
                 yield break;
 

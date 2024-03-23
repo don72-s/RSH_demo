@@ -10,7 +10,6 @@ ScriptsOnlyBuild:
     - SceneLoader
     - ScoreIOSystem
     - SoundManager
-    - noteScr
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.Tilemap.Editor.dll:
@@ -162,8 +161,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 14194}
     - Class: 114
       Script: {instanceID: 14330}
-    - Class: 114
-      Script: {instanceID: 14572}
     - Class: 114
       Script: {instanceID: 15064}
     - Class: 115
@@ -473,7 +470,7 @@ ScriptsOnlyBuild:
     className: RemoteTestResultSender
   - hash:
       serializedVersion: 2
-      Hash: 805196d1ed79a38522cf15f3defbe748
+      Hash: 23a24dc430c7260f262d2a13d96ae8b6
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: NoteDisplayere
