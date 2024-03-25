@@ -27,7 +27,12 @@ public class SwipeScript : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Recalculate();
+#if UNITY_EDITOR
+        Recalculate(3);
+#elif UNITY_ANDROID
+
+#endif
+
     }
 
     // Update is called once per frame
@@ -35,7 +40,21 @@ public class SwipeScript : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space)){
 
-            Recalculate();
+            Recalculate(3);
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.A))
+        {
+
+            Recalculate(4);
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+
+            Recalculate(5);
 
         }
 
@@ -74,12 +93,11 @@ public class SwipeScript : MonoBehaviour
 
     float unitDistance = 0.5f;
 
-
-    public void Recalculate() {
+    public void Recalculate(int _buttonCount) {
 
         focusSizeDelegate = null;
 
-        if (contentParent.transform.childCount <= 1) {
+        if (_buttonCount <= 1) {
 
             //todo : 예외 처리
             return;
@@ -87,10 +105,14 @@ public class SwipeScript : MonoBehaviour
 
         buttonL = new List<Button>();
 
-        unitDistance = 1f / ((contentParent.transform.childCount - 1) * 2);
-
-        for (int i = 0; i < contentParent.transform.childCount; i++) {
+        for (int i = 0; i < contentParent.transform.childCount; i++) { 
             buttonL.Add(contentParent.transform.GetChild(i).GetComponent<Button>());
+        }
+
+        unitDistance = 1f / ((_buttonCount - 1) * 2);
+
+        for (int i = 0; i < _buttonCount; i++) {
+            buttonL[i].gameObject.SetActive(true);
             buttonL[i].InitData(i, unitDistance);
             focusSizeDelegate += buttonL[i].SetButtonSize;
         }

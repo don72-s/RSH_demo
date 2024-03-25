@@ -68,8 +68,6 @@ public static class NoteDataManager
 {
 
 
-    #region 개선 후 코드
-
     public static void SaveData(NoteInfo[] _noteArr, float _offsetSecond, int _bpm, int _bpmMultiplier, int _scoreUnit, BGM_TYPE _bgm, SE_TYPYE _upperSE, SE_TYPYE _lowerSE, string _fileName = "noteData.dat") {
 
         StageInfo tmp = new StageInfo(_noteArr, _offsetSecond, _bpm, _bpmMultiplier, _scoreUnit, _bgm, _upperSE, _lowerSE);
@@ -138,78 +136,10 @@ public static class NoteDataManager
         }
         else
         {
-            Debug.LogWarning("파일을 찾을수가 없습니다. - 바탕화면에 파일을 올려놓고 진행하세요.");
             return null;
         }
 
     }
 
-
-
-
-
-    #endregion
-
-
-
-    /*public static void SaveData(int[] _noteArray, string _fileName = "noteData.dat")
-    {
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream fileStream = new FileStream(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName), FileMode.Create);
-        formatter.Serialize(fileStream, new NoteData(_noteArray));
-        fileStream.Close();
-    }
-
-    public static void SaveData(List<int> _noteArray)
-    {
-        SaveData(_noteArray.ToArray());
-    }
-
-    public static int[] LoadData()
-    {
-        if (File.Exists(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "noteData.dat")))
-        {
-            NoteData tmp;
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fileStream = new FileStream(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "noteData.dat"), FileMode.Open);
-            tmp = (NoteData)formatter.Deserialize(fileStream);
-            fileStream.Close();
-            return tmp.noteArray;
-        }
-        else
-        {
-            Debug.LogWarning("Save file not found.");
-            return null;
-        }
-    }
-
-    public static void AndroidSaveData(int[] _noteArray)
-    {
-
-        BinaryFormatter formatter = new BinaryFormatter();
-        FileStream fileStream = new FileStream(Path.Combine(Application.persistentDataPath, "noteData.dat"), FileMode.Create);
-        formatter.Serialize(fileStream, new NoteData(_noteArray));
-        fileStream.Close();
-
-    }
-
-    public static int[] AndroidMapLoadData() {
-
-        if (File.Exists(Path.Combine(Application.persistentDataPath, "noteData.dat")))
-        {
-            NoteData tmp;
-            BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fileStream = new FileStream(Path.Combine(Application.persistentDataPath, "noteData.dat"), FileMode.Open);
-            tmp = (NoteData)formatter.Deserialize(fileStream);
-            fileStream.Close();
-            return tmp.noteArray;
-        }
-        else
-        {
-            Debug.LogWarning("Save file not found.");
-            return null;
-        }
-
-    }*/
 
 }

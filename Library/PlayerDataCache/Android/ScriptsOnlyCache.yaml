@@ -1,15 +1,9 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - AudioDictonary
-    - ButtonScript
-    - InputManager
-    - LowerButtonScript
-    - MusicInfoSetter
-    - NoteDisplayere
-    - SceneLoader
-    - ScoreIOSystem
-    - SoundManager
+    - Button
+    - StageSceneLoader
+    - SwipeScript
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.Tilemap.Editor.dll:
@@ -22,6 +16,13 @@ ScriptsOnlyBuild:
     - Unity.PlasticSCM.Editor.PlasticWindow
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
+    UnityEditor.Graphs.dll:
+    - UnityEditor.Graphs.AnimationBlendTree.Graph
+    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
+    - UnityEditor.Graphs.AnimationStateMachine.Graph
+    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -33,15 +34,14 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.ContentSizeFitter
     - UnityEngine.UI.GraphicRaycaster
-    - UnityEngine.UI.GridLayoutGroup
+    - UnityEngine.UI.HorizontalLayoutGroup
     - UnityEngine.UI.Image
-    - UnityEngine.UI.InputField
     - UnityEngine.UI.Mask
     - UnityEngine.UI.ScrollRect
     - UnityEngine.UI.Scrollbar
     - UnityEngine.UI.Text
   sceneClasses:
-    Assets/Scenes/MakeScene.unity:
+    Assets/Scenes/MenuScene.unity:
     - Class: 1
       Script: {instanceID: 0}
     - Class: 4
@@ -56,10 +56,6 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
-    - Class: 82
-      Script: {instanceID: 0}
-    - Class: 83
-      Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
@@ -67,102 +63,31 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11358}
     - Class: 114
-      Script: {instanceID: 11692}
+      Script: {instanceID: 11586}
     - Class: 114
-      Script: {instanceID: 11698}
+      Script: {instanceID: 11694}
     - Class: 114
-      Script: {instanceID: 11872}
+      Script: {instanceID: 11700}
     - Class: 114
-      Script: {instanceID: 11954}
+      Script: {instanceID: 11956}
     - Class: 114
-      Script: {instanceID: 11964}
+      Script: {instanceID: 12326}
     - Class: 114
-      Script: {instanceID: 12324}
+      Script: {instanceID: 12520}
     - Class: 114
-      Script: {instanceID: 12518}
+      Script: {instanceID: 12942}
     - Class: 114
-      Script: {instanceID: 12920}
+      Script: {instanceID: 13396}
     - Class: 114
-      Script: {instanceID: 12940}
+      Script: {instanceID: 13826}
     - Class: 114
-      Script: {instanceID: 13096}
+      Script: {instanceID: 14332}
     - Class: 114
-      Script: {instanceID: 13394}
+      Script: {instanceID: 15062}
     - Class: 114
-      Script: {instanceID: 13756}
+      Script: {instanceID: 15068}
     - Class: 114
-      Script: {instanceID: 13966}
-    - Class: 114
-      Script: {instanceID: 14048}
-    - Class: 114
-      Script: {instanceID: 14330}
-    - Class: 114
-      Script: {instanceID: 15064}
-    - Class: 114
-      Script: {instanceID: 15182}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 196
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
-    Assets/Scenes/SampleScene 1.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 20
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 81
-      Script: {instanceID: 0}
-    - Class: 82
-      Script: {instanceID: 0}
-    - Class: 83
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
-    - Class: 114
-      Script: {instanceID: 11326}
-    - Class: 114
-      Script: {instanceID: 11358}
-    - Class: 114
-      Script: {instanceID: 11692}
-    - Class: 114
-      Script: {instanceID: 12518}
-    - Class: 114
-      Script: {instanceID: 12920}
-    - Class: 114
-      Script: {instanceID: 13306}
-    - Class: 114
-      Script: {instanceID: 13382}
-    - Class: 114
-      Script: {instanceID: 13394}
-    - Class: 114
-      Script: {instanceID: 13756}
-    - Class: 114
-      Script: {instanceID: 13966}
-    - Class: 114
-      Script: {instanceID: 14194}
-    - Class: 114
-      Script: {instanceID: 14330}
-    - Class: 114
-      Script: {instanceID: 15064}
+      Script: {instanceID: 18114}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -222,6 +147,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
     className: PlayerQuitHandler
+  - hash:
+      serializedVersion: 2
+      Hash: 1e9646e51b0b6f9f86153467f2195e86
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: Button
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -686,6 +617,12 @@ ScriptsOnlyBuild:
     className: Dropdown
   - hash:
       serializedVersion: 2
+      Hash: f8b1b746179d26e5f10f97f12f6e49a6
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SwipeScript
+  - hash:
+      serializedVersion: 2
       Hash: 748dd2a2a28da4e618912da5ac45684b
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.EventSystems
@@ -726,8 +663,13 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 81db21573f18426fb91b1d6f682cd7a9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: StageSceneLoader
   platform: 13
   scenePathNames:
-  - Assets/Scenes/SampleScene 1.unity
-  - Assets/Scenes/MakeScene.unity
+  - Assets/Scenes/MenuScene.unity
   playerPath: C:/Users/ASUS/Desktop/rhsh.apk

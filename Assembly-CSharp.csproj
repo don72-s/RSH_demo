@@ -63,6 +63,7 @@
     <Compile Include="Assets\Scripts\MakeSceneScript\MusicInfoSetter.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\ScoreIOSystem.cs" />
     <Compile Include="Assets\Scripts\MenuScene\Button.cs" />
+    <Compile Include="Assets\Scripts\MenuScene\StageSceneLoader.cs" />
     <Compile Include="Assets\Scripts\MenuScene\SwipeScript.cs" />
     <Compile Include="Assets\Scripts\NoteDataManager.cs" />
     <Compile Include="Assets\Scripts\NoteDisplayere.cs" />
