@@ -90,7 +90,7 @@ GameObject:
   - component: {fileID: 5666353043931005362}
   - component: {fileID: 5666353043931005361}
   - component: {fileID: 5666353043931005360}
-  - component: {fileID: 4661610372920963140}
+  - component: {fileID: 2052809664431575066}
   m_Layer: 5
   m_Name: SwipeButton
   m_TagString: Untagged
@@ -197,8 +197,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 5666353043931005361}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
---- !u!114 &4661610372920963140
+      m_Calls:
+      - m_Target: {fileID: 2052809664431575066}
+        m_MethodName: btn_Cilcked
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+--- !u!114 &2052809664431575066
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -207,7 +218,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 5666353043931005374}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 23ff313108fc1a3469ec77b79d16bf30, type: 3}
+  m_Script: {fileID: 11500000, guid: 2e48d26b760961d40b14627589a83fa8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   childText: {fileID: 5666353042662313883}

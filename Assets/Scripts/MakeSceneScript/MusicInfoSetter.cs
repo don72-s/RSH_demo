@@ -125,7 +125,7 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
 
-    private List<ButtonScript> LoadedSectionList = null;
+    private List<Button> LoadedSectionList = null;
 
     public void btn_Load_Section()
     {
@@ -229,7 +229,7 @@ public class MusicInfoSetter : MonoBehaviour
 
     public void ClearBoarderImg() {
 
-        foreach (ButtonScript _btnScr in LoadedSectionList)
+        foreach (Button _btnScr in LoadedSectionList)
         {
             _btnScr.SetBoarderImg(false);
         }

@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ButtonScript : MonoBehaviour, IPointerClickHandler
+public class Button : MonoBehaviour, IPointerClickHandler
 {
 
     protected Image myImg;

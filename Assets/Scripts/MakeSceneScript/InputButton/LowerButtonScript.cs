@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LowerButtonScript : ButtonScript
+public class LowerButtonScript : Button
 {
 
     protected override void Awake()

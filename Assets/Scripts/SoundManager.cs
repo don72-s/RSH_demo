@@ -28,12 +28,25 @@ public class SoundManager : MonoBehaviour
 
     private NoteInfo[] stageNoteArr;
 
+
+    private bool bgmPause = false;
+    private float pauseTime;
+
     public void Pause()
     {
-        StopAllCoroutines();
-        nDisplayer.StopAllCoroutines();
-        bgmplayer.Stop();
-        nDisplayer.ClearDisplayedNotes();
+
+        if (!bgmPause)
+        {
+            bgmPause = true;
+            bgmplayer.Pause();
+        }
+        else {
+            bgmPause = false;
+            bgmplayer.Play();
+        }
+
+        nDisplayer.setPause(bgmPause);
+
     }
 
 
@@ -46,7 +59,6 @@ public class SoundManager : MonoBehaviour
         StopAllCoroutines();
 
         bgmplayer.Stop();
-        bgmplayer.Play();
 
         StartCoroutine(playBGMReader());
 
@@ -88,14 +100,18 @@ public class SoundManager : MonoBehaviour
         }
     }
 
-   
+    private void Start()
+    {
+        LoadNodeData();
+    }
 
     public void LoadNodeData() {
 
 #if UNITY_EDITOR
-        stageData = NoteDataManager.LoadData(LoadFileName);
+        stageData = NoteDataManager.LoadData(PlayerPrefs.GetString("StageFileName"));
+        //stageData = NoteDataManager.LoadData("stage1Note.dat");
 #elif UNITY_ANDROID
-        stageData = NoteDataManager.AndroidLoadData("stage1Note.dat");
+        stageData = NoteDataManager.AndroidLoadData(PlayerPrefs.GetString("StageFileName"));
 #endif
 
         if (stageData == null) {
@@ -129,7 +145,73 @@ public class SoundManager : MonoBehaviour
 
     private IEnumerator playBGMReader() {
 
-        yield return new WaitForSeconds(0.95f);
+        float countDelay = bpmUnit * stageData.bpmMultiplier;
+        float playTime;
+
+        if (bgmPause) Pause();
+
+        bgmplayer.time = 0;
+
+        //카운트 도중 재생
+        if (countDelay * 4 - 0.95f > 0)
+        {
+            playTime = countDelay * 4 - 0.95f;
+
+            int cnt = 0;
+            bool isBgmPlayed = false;
+
+            bgmplayer.PlayOneShot(lowerClip);
+
+            float curTime = 0;
+            float cmpTime = countDelay;
+
+            while (cnt < 4) {
+
+                if (curTime > cmpTime) {
+
+                    if (cnt == 3) break;
+
+                    bgmplayer.PlayOneShot(lowerClip);
+
+                    cmpTime += countDelay;
+                    cnt++;
+                }
+
+                if (!isBgmPlayed && curTime > playTime) {
+                    bgmplayer.Play();
+                    isBgmPlayed = true;
+                }
+
+                curTime += Time.deltaTime;
+                yield return null;
+
+            }
+
+        }
+        else {//카운트에 들어가기 전부터 재생 => 테스트 안됨.
+            playTime = 0.95f - countDelay * 4;
+
+            bgmplayer.Play();
+
+            yield return new WaitForSeconds(playTime);
+
+            bgmplayer.PlayOneShot(lowerClip);
+            yield return new WaitForSeconds(countDelay);
+            bgmplayer.PlayOneShot(lowerClip);
+            yield return new WaitForSeconds(countDelay);
+            bgmplayer.PlayOneShot(lowerClip);
+            yield return new WaitForSeconds(countDelay);
+            bgmplayer.PlayOneShot(lowerClip);
+            yield return new WaitForSeconds(countDelay);
+
+        }
+        
+
+
+        //bgmplayer.Play();
+
+        //todo : 이거 맵 정보로 바꾸기. ( 0.95f )
+        //yield return new WaitForSeconds(0.95f);
 
         int bpmIndexer = 0;
         float bpmStacker = 0;
@@ -138,11 +220,11 @@ public class SoundManager : MonoBehaviour
 
         int curEffectTimeUnit = 0;
 
-        while (bpmStacker < 150) {// todo : 150 = 노래 길이로 수정
+        while (bpmStacker < 150) {// todo : 150 = 노래 길이로 수정 or 내부 while문의 두번째 조건으로 수정.
 
             //t.text = " " + bpmIndexer;
 
-            while (curBpmComparer < bpmStacker) {
+            while (curBpmComparer < bpmStacker && bpmIndexer < stageNoteArr.Length) {
 
                 curBpmComparer += bpmUnit;
 
@@ -192,7 +274,7 @@ public class SoundManager : MonoBehaviour
             }
 
 
-            bpmStacker += Time.deltaTime;
+            if(!bgmPause) bpmStacker += Time.deltaTime;
 
             yield return null;
 
@@ -206,21 +288,29 @@ public class SoundManager : MonoBehaviour
         inputm.PlayDown();
         nDisplayer.DisplayLowerNote();
 
-        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2 ));
+        float curTime = 0;
+        float waitTime = bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2);
+
+        while (curTime < waitTime) {
+
+            yield return null;
+            if (!bgmPause) curTime += Time.deltaTime;
+
+        }
 
         //판정라인
         //Debug.Log("ppp");
         //inputm.PlayDown();
         //inputm.PlayDown();
 
-        float curTime = 0;
+        curTime = 0;
 
         while (curTime < bpmUnit * 4) {
 
             t.text = "start!";
 
 
-            curTime += Time.deltaTime;
+            if (!bgmPause) curTime += Time.deltaTime;
 
             if (inputm.isLower()) {
 
@@ -249,9 +339,18 @@ public class SoundManager : MonoBehaviour
         inputm.PlayUp();
         nDisplayer.DisplayUpperNote();
 
-        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2));
-
         float curTime = 0;
+        float waitTime = bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2);
+
+        while (curTime < waitTime)
+        {
+
+            yield return null;
+            if (!bgmPause) curTime += Time.deltaTime;
+
+        }
+
+        curTime = 0;
 
         while (curTime < bpmUnit * 4)
         {
@@ -259,7 +358,7 @@ public class SoundManager : MonoBehaviour
             t.text = "start!";
 
 
-            curTime += Time.deltaTime;
+            if (!bgmPause) curTime += Time.deltaTime;
 
             if (inputm.isUpper())
             {
@@ -280,7 +379,6 @@ public class SoundManager : MonoBehaviour
 
     }
 
-
     IEnumerator InverseLowewrNote(int _watingUnit)
     {
 
@@ -288,9 +386,18 @@ public class SoundManager : MonoBehaviour
         Handheld.Vibrate();
         nDisplayer.DisplayInverseLowerNote();
 
-        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2));
-
         float curTime = 0;
+        float waitTime = bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2);
+
+        while (curTime < waitTime)
+        {
+
+            yield return null;
+            if (!bgmPause) curTime += Time.deltaTime;
+
+        }
+
+        curTime = 0;
 
         while (curTime < bpmUnit * 4)
         {
@@ -298,7 +405,7 @@ public class SoundManager : MonoBehaviour
             t.text = "start!";
 
 
-            curTime += Time.deltaTime;
+            if (!bgmPause) curTime += Time.deltaTime;
 
             if (inputm.isUpper())
             {
@@ -326,9 +433,18 @@ public class SoundManager : MonoBehaviour
         Handheld.Vibrate();
         nDisplayer.DisplayInverseUpperNote();
 
-        yield return new WaitForSeconds(bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2));
-
         float curTime = 0;
+        float waitTime = bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2);
+
+        while (curTime < waitTime)
+        {
+
+            yield return null;
+            if (!bgmPause) curTime += Time.deltaTime;
+
+        }
+
+        curTime = 0;
 
         while (curTime < bpmUnit * 4)
         {
@@ -336,7 +452,7 @@ public class SoundManager : MonoBehaviour
             t.text = "start!";
 
 
-            curTime += Time.deltaTime;
+            if (!bgmPause) curTime += Time.deltaTime;
 
             if (inputm.isLower())
             {

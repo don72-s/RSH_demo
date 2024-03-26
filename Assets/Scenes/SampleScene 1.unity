@@ -3725,7 +3725,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
-  LoadFileName: stage1Note.dat
+  LoadFileName: d
   d: {fileID: 0}
   editPageField: {fileID: 1327580162}
   inf: {fileID: 1763527103}

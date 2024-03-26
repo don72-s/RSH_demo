@@ -1,9 +1,17 @@
 ScriptsOnlyBuild:
   usedScripts:
     Assembly-CSharp.dll:
-    - Button
+    - AudioDictonary
+    - InputManager
+    - LowerButtonScript
+    - MusicInfoSetter
+    - NoteDisplayere
+    - SceneLoader
+    - ScoreIOSystem
+    - SoundManager
     - StageSceneLoader
     - SwipeScript
+    - SwiptBtnScript
     Unity.2D.Animation.Editor.dll:
     - UnityEditor.U2D.Animation.BoneGizmo
     Unity.2D.Tilemap.Editor.dll:
@@ -16,13 +24,6 @@ ScriptsOnlyBuild:
     - Unity.PlasticSCM.Editor.PlasticWindow
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
-    UnityEditor.Graphs.dll:
-    - UnityEditor.Graphs.AnimationBlendTree.Graph
-    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
-    - UnityEditor.Graphs.AnimationStateMachine.Graph
-    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -34,13 +35,90 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.ContentSizeFitter
     - UnityEngine.UI.GraphicRaycaster
+    - UnityEngine.UI.GridLayoutGroup
     - UnityEngine.UI.HorizontalLayoutGroup
     - UnityEngine.UI.Image
+    - UnityEngine.UI.InputField
     - UnityEngine.UI.Mask
     - UnityEngine.UI.ScrollRect
     - UnityEngine.UI.Scrollbar
     - UnityEngine.UI.Text
   sceneClasses:
+    Assets/Scenes/MakeScene.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 82
+      Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 11326}
+    - Class: 114
+      Script: {instanceID: 11358}
+    - Class: 114
+      Script: {instanceID: 11694}
+    - Class: 114
+      Script: {instanceID: 11700}
+    - Class: 114
+      Script: {instanceID: 11874}
+    - Class: 114
+      Script: {instanceID: 11956}
+    - Class: 114
+      Script: {instanceID: 11966}
+    - Class: 114
+      Script: {instanceID: 12326}
+    - Class: 114
+      Script: {instanceID: 12520}
+    - Class: 114
+      Script: {instanceID: 12922}
+    - Class: 114
+      Script: {instanceID: 12942}
+    - Class: 114
+      Script: {instanceID: 13098}
+    - Class: 114
+      Script: {instanceID: 13398}
+    - Class: 114
+      Script: {instanceID: 13760}
+    - Class: 114
+      Script: {instanceID: 13970}
+    - Class: 114
+      Script: {instanceID: 14052}
+    - Class: 114
+      Script: {instanceID: 14334}
+    - Class: 114
+      Script: {instanceID: 15070}
+    - Class: 114
+      Script: {instanceID: 15188}
+    - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
+      Script: {instanceID: 0}
     Assets/Scenes/MenuScene.unity:
     - Class: 1
       Script: {instanceID: 0}
@@ -63,8 +141,6 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11358}
     - Class: 114
-      Script: {instanceID: 11586}
-    - Class: 114
       Script: {instanceID: 11694}
     - Class: 114
       Script: {instanceID: 11700}
@@ -77,17 +153,84 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 12942}
     - Class: 114
-      Script: {instanceID: 13396}
+      Script: {instanceID: 13242}
     - Class: 114
-      Script: {instanceID: 13826}
+      Script: {instanceID: 13398}
     - Class: 114
-      Script: {instanceID: 14332}
+      Script: {instanceID: 13828}
     - Class: 114
-      Script: {instanceID: 15062}
+      Script: {instanceID: 14334}
     - Class: 114
-      Script: {instanceID: 15068}
+      Script: {instanceID: 15064}
     - Class: 114
-      Script: {instanceID: 18114}
+      Script: {instanceID: 15070}
+    - Class: 114
+      Script: {instanceID: 16004}
+    - Class: 115
+      Script: {instanceID: 0}
+    - Class: 128
+      Script: {instanceID: 0}
+    - Class: 157
+      Script: {instanceID: 0}
+    - Class: 196
+      Script: {instanceID: 0}
+    - Class: 213
+      Script: {instanceID: 0}
+    - Class: 222
+      Script: {instanceID: 0}
+    - Class: 223
+      Script: {instanceID: 0}
+    - Class: 224
+      Script: {instanceID: 0}
+    Assets/Scenes/SampleScene 1.unity:
+    - Class: 1
+      Script: {instanceID: 0}
+    - Class: 4
+      Script: {instanceID: 0}
+    - Class: 20
+      Script: {instanceID: 0}
+    - Class: 21
+      Script: {instanceID: 0}
+    - Class: 28
+      Script: {instanceID: 0}
+    - Class: 48
+      Script: {instanceID: 0}
+    - Class: 81
+      Script: {instanceID: 0}
+    - Class: 82
+      Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
+    - Class: 95
+      Script: {instanceID: 0}
+    - Class: 104
+      Script: {instanceID: 0}
+    - Class: 114
+      Script: {instanceID: 11326}
+    - Class: 114
+      Script: {instanceID: 11358}
+    - Class: 114
+      Script: {instanceID: 11694}
+    - Class: 114
+      Script: {instanceID: 12520}
+    - Class: 114
+      Script: {instanceID: 12922}
+    - Class: 114
+      Script: {instanceID: 13310}
+    - Class: 114
+      Script: {instanceID: 13386}
+    - Class: 114
+      Script: {instanceID: 13398}
+    - Class: 114
+      Script: {instanceID: 13760}
+    - Class: 114
+      Script: {instanceID: 13970}
+    - Class: 114
+      Script: {instanceID: 14198}
+    - Class: 114
+      Script: {instanceID: 14334}
+    - Class: 114
+      Script: {instanceID: 15070}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -147,12 +290,6 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.TestRunner.dll
     namespaceName: UnityEngine.TestTools.TestRunner.Callbacks
     className: PlayerQuitHandler
-  - hash:
-      serializedVersion: 2
-      Hash: 1e9646e51b0b6f9f86153467f2195e86
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: Button
   - hash:
       serializedVersion: 2
       Hash: c3d3430df9e3ea95e3e3d587961390fb
@@ -401,6 +538,12 @@ ScriptsOnlyBuild:
     className: RemoteTestResultSender
   - hash:
       serializedVersion: 2
+      Hash: 81db21573f18426fb91b1d6f682cd7a9
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: StageSceneLoader
+  - hash:
+      serializedVersion: 2
       Hash: 23a24dc430c7260f262d2a13d96ae8b6
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -501,12 +644,6 @@ ScriptsOnlyBuild:
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SceneLoader
-  - hash:
-      serializedVersion: 2
-      Hash: eb5bd70cef3106cf0f9257d0e95719df
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: ButtonScript
   - hash:
       serializedVersion: 2
       Hash: 21e83542fdb36ca4104da094c20df572
@@ -665,11 +802,13 @@ ScriptsOnlyBuild:
     className: PlayableTrack
   - hash:
       serializedVersion: 2
-      Hash: 81db21573f18426fb91b1d6f682cd7a9
+      Hash: 1e9646e51b0b6f9f86153467f2195e86
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
-    className: StageSceneLoader
+    className: SwiptBtnScript
   platform: 13
   scenePathNames:
   - Assets/Scenes/MenuScene.unity
+  - Assets/Scenes/SampleScene 1.unity
+  - Assets/Scenes/MakeScene.unity
   playerPath: C:/Users/ASUS/Desktop/rhsh.apk

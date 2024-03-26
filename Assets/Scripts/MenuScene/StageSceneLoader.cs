@@ -24,7 +24,7 @@ public class StageSceneLoader : MonoBehaviour
 
 
 
-    private List<Button> buttonList = new List<Button>();
+    private List<SwiptBtnScript> buttonList = new List<SwiptBtnScript>();
 
 
     private void Start()
@@ -91,11 +91,11 @@ public class StageSceneLoader : MonoBehaviour
         while (buttonList.Count <= totalMapCount) {
             GameObject tmpBtnObj = Instantiate(ButtonInstance);
             tmpBtnObj.transform.SetParent(ButtonParentObject.transform);
-            buttonList.Add(tmpBtnObj.GetComponent<Button>());
+            buttonList.Add(tmpBtnObj.GetComponent<SwiptBtnScript>());
         }
 
         //모두 비활성화
-        foreach (Button _btn in buttonList) {
+        foreach (SwiptBtnScript _btn in buttonList) {
             _btn.gameObject.SetActive(false);
         }
 

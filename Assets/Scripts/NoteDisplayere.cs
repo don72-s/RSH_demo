@@ -57,8 +57,6 @@ public class NoteDisplayere : MonoBehaviour
         ClearDisplayedNotes();
     }
 
-    private float startTime;
-
     public void StartMovingMethod(float _totalMoveTime)
     {
 
@@ -68,19 +66,25 @@ public class NoteDisplayere : MonoBehaviour
     }
 
 
+    private bool isPause;
+
+    public void setPause(bool _pause) { 
+        isPause = _pause;
+    }
 
     private IEnumerator moveArrow(float _movingTime) { 
     
-        startTime = Time.time;
+
+        float startTime = 0;
 
         while (true) { 
         
-            float curDurTime = Time.time - startTime;
+            //float curDurTime = Time.time - startTime;
 
-            if (curDurTime < _movingTime)
+            if (startTime < _movingTime)
             {
 
-                float timeRatio = curDurTime / _movingTime;
+                float timeRatio = startTime / _movingTime;
                 rect.localPosition = Vector3.Lerp(startPos, endPos, timeRatio);
 
             }
@@ -88,6 +92,8 @@ public class NoteDisplayere : MonoBehaviour
                 rect.localPosition = endPos;
                 yield break;
             }
+
+            if(!isPause) startTime += Time.deltaTime;
 
             yield return null;
 
