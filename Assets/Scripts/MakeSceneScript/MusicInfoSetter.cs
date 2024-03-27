@@ -27,6 +27,8 @@ public class MusicInfoSetter : MonoBehaviour
 
     [SerializeField]
     ScoreIOSystem BoarderSystem;
+    [SerializeField]
+    SectionInfoDis sectionInfoDisplayer;
 
     // Start is called before the first frame update
     void Start()
@@ -57,7 +59,9 @@ public class MusicInfoSetter : MonoBehaviour
         InitNoteSheet();
 
         unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer) ;
-        
+
+        sectionInfoDisplayer.ClearFocus();
+
         StartCoroutine(playBeatTest(offsetSecond, unitBPMSecond, BPM_Multiplyer));
 
     }
@@ -65,11 +69,12 @@ public class MusicInfoSetter : MonoBehaviour
 
     public string loadFileName = "stage1Note.dat";
 
+
     /// <summary>
-    /// 불러오고 맵 초기설정
+    /// 불러오고 맵 초기설정 초반 버튼용 디버그용
     /// </summary>
     public void btn_Setup_And_LoadNoteData() {
-
+        //todo : 기본 맵 가져오는거? ㄱㄴ but 기본맵과 같은 이름으로 덮어씌워 저장? => 불가능!!
 #if UNITY_EDITOR
         StageInfo stageInfo = NoteDataManager.LoadData(loadFileName);
 #elif UNITY_ANDROID
@@ -91,6 +96,39 @@ public class MusicInfoSetter : MonoBehaviour
 
     }
 
+
+    /// <summary>
+    /// 불러오고 맵 초기설정
+    /// </summary>
+    public StageInfo LoadNoteData(string _fileName)
+    {
+        //todo : 기본 맵 가져오는거? ㄱㄴ but 기본맵과 같은 이름으로 덮어씌워 저장? => 불가능!!
+#if UNITY_EDITOR
+        StageInfo stageInfo = NoteDataManager.LoadData(_fileName);
+#elif UNITY_ANDROID
+        StageInfo stageInfo = NoteDataManager.AndroidLoadData(_fileName);
+#endif
+
+        if (stageInfo == null) return null;
+
+        offsetSecond = stageInfo.offsetSecond;
+        BPM = stageInfo.bpm;
+        BPM_Multiplyer = stageInfo.bpmMultiplier;
+        scoreUnit = stageInfo.scoreUnit;
+
+        noteArray = stageInfo.noteArray;
+
+        bgmClip = audioClipDic.GetBGMClip(stageInfo.bgmType);
+        upperSEClip = audioClipDic.GetSEClip(stageInfo.upperSeType);
+        lowerSEClip = audioClipDic.GetSEClip(stageInfo.lowerSeType);
+
+        return stageInfo;
+
+    }
+
+
+
+
     public void btn_BGM_Pause() {
 
         if (audioPlayer.isPlaying)
@@ -106,6 +144,8 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
     public void btn_BGM_SectionPlay() {
+
+        sectionInfoDisplayer.ClearFocus();
 
         StopAllCoroutines();
 
@@ -125,7 +165,7 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
 
-    private List<Button> LoadedSectionList = null;
+    private List<ButtonScript> LoadedSectionList = null;
 
     public void btn_Load_Section()
     {
@@ -184,25 +224,26 @@ public class MusicInfoSetter : MonoBehaviour
 
             noteArray[idx].noteType = type;
             noteArray[idx].waitingUnit = int.Parse(sectionLengthInputter.text) * scoreUnit;
-            noteArray[idx].effectTimeUnit = 0;
+            noteArray[idx].waitScoreCount = 0;
 
             idx++;
 
         }
 
-        noteArray[int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit].effectTimeUnit = int.Parse(sectionLengthInputter.text);
+        //첫 노트에 대기 단위 추가
+        noteArray[int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit].waitScoreCount = int.Parse(sectionLengthInputter.text);
 
         if (idx < noteArray.Length)
         {
             Debug.Log("idx : " + idx);
-            noteArray[idx].effectTimeUnit = int.Parse(sectionLengthInputter.text);
+            noteArray[idx].waitScoreCount = int.Parse(sectionLengthInputter.text);
             noteArray[idx].noteType = NoteType.NONE;
             noteArray[idx].waitingUnit = 0;
         }
 
         for (int i = idx + 1; i < LoadedSectionList.Count && i < noteArray.Length; i++) {
 
-            noteArray[i].effectTimeUnit = 0;
+            noteArray[i].waitScoreCount = 0;
             noteArray[i].noteType = NoteType.NONE;
             noteArray[i].waitingUnit = 0;
         }
@@ -229,7 +270,7 @@ public class MusicInfoSetter : MonoBehaviour
 
     public void ClearBoarderImg() {
 
-        foreach (Button _btnScr in LoadedSectionList)
+        foreach (ButtonScript _btnScr in LoadedSectionList)
         {
             _btnScr.SetBoarderImg(false);
         }
@@ -260,7 +301,7 @@ public class MusicInfoSetter : MonoBehaviour
             if (audioPlayer.time > cmpTime)
             {
                 cmpTime += _unitBPMSecond;
-
+                
                 StartCoroutine(PlayNote(noteArray[noteCnt]));
 
                 if (btnCnt < LoadedSectionList.Count) LoadedSectionList[btnCnt].SetBoarderImg(true);
@@ -303,12 +344,12 @@ public class MusicInfoSetter : MonoBehaviour
                 cmpTime += _unitBPMSecond;
 
                 
-                if (noteArray[cnt].effectTimeUnit != 0) {
+                if (noteArray[cnt].waitScoreCount != 0) {
 
                     if (flagcnter % 2 == 0) {
 
-                        
                         display_Button(cnt);
+                        sectionInfoDisplayer.SetFocus(flagcnter / 2);
 
                     }
 
@@ -337,7 +378,7 @@ public class MusicInfoSetter : MonoBehaviour
     {
 
         int startIdx = _cnt;
-        int endIdx = _cnt + noteArray[_cnt].effectTimeUnit * BPM_Multiplyer * scoreUnit;
+        int endIdx = _cnt + noteArray[_cnt].waitScoreCount * BPM_Multiplyer * scoreUnit;
 
         NoteInfo[] sectionArr = new NoteInfo[endIdx - startIdx];
 

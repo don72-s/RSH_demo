@@ -59,7 +59,7 @@ public class NoteInfo
 
     public NoteType noteType = NoteType.NONE;
     public int waitingUnit = 0;
-    public int effectTimeUnit = 0;
+    public int waitScoreCount = 0;
 
 
 }

@@ -60,8 +60,11 @@
     <Compile Include="Assets\Scripts\InputManager.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\InputButton\ButtonScript.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\InputButton\LowerButtonScript.cs" />
+    <Compile Include="Assets\Scripts\MakeSceneScript\LoadMenuManager.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\MusicInfoSetter.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\ScoreIOSystem.cs" />
+    <Compile Include="Assets\Scripts\MakeSceneScript\SectionInfoBlock\SectionInfoBlock.cs" />
+    <Compile Include="Assets\Scripts\MakeSceneScript\SectionInfoDis.cs" />
     <Compile Include="Assets\Scripts\MenuScene\StageSceneLoader.cs" />
     <Compile Include="Assets\Scripts\MenuScene\SwipeScript.cs" />
     <Compile Include="Assets\Scripts\MenuScene\SwiptBtnScript.cs" />

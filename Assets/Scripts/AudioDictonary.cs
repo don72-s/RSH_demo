@@ -19,6 +19,10 @@ public class AudioDictonary : ScriptableObject
         [SerializeField]
         public AudioClip bgmClip;
 
+        [SerializeField]
+        public float offsetSecond;
+        [SerializeField]
+        public int bpm;
     }
 
     [System.Serializable]

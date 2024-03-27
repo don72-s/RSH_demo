@@ -30,7 +30,6 @@ public class SoundManager : MonoBehaviour
 
 
     private bool bgmPause = false;
-    private float pauseTime;
 
     public void Pause()
     {
@@ -151,11 +150,11 @@ public class SoundManager : MonoBehaviour
         if (bgmPause) Pause();
 
         bgmplayer.time = 0;
-
+        
         //카운트 도중 재생
-        if (countDelay * 4 - 0.95f > 0)
+        if (countDelay * 4 - stageData.offsetSecond > 0)
         {
-            playTime = countDelay * 4 - 0.95f;
+            playTime = countDelay * 4 - stageData.offsetSecond;
 
             int cnt = 0;
             bool isBgmPlayed = false;
@@ -189,7 +188,7 @@ public class SoundManager : MonoBehaviour
 
         }
         else {//카운트에 들어가기 전부터 재생 => 테스트 안됨.
-            playTime = 0.95f - countDelay * 4;
+            playTime = stageData.offsetSecond - countDelay * 4;
 
             bgmplayer.Play();
 
@@ -210,8 +209,8 @@ public class SoundManager : MonoBehaviour
 
         //bgmplayer.Play();
 
-        //todo : 이거 맵 정보로 바꾸기. ( 0.95f )
-        //yield return new WaitForSeconds(0.95f);
+        //todo : 이거 맵 정보로 바꾸기. ( 0.95f [ 수정 전 ] )
+        //yield return new WaitForSeconds(stageData.offsetSecond);
 
         int bpmIndexer = 0;
         float bpmStacker = 0;
@@ -230,12 +229,12 @@ public class SoundManager : MonoBehaviour
 
 
 
-                if (stageNoteArr[bpmIndexer].effectTimeUnit != 0) {
+                if (stageNoteArr[bpmIndexer].waitScoreCount != 0) {
 
                     if(displayeIndexer % 2 == 0) nDisplayer.ClearDisplayedNotes();
 
-                    curEffectTimeUnit = stageNoteArr[bpmIndexer].effectTimeUnit;
-                    nDisplayer.StartMovingMethod(stageNoteArr[bpmIndexer].effectTimeUnit * bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit);
+                    curEffectTimeUnit = stageNoteArr[bpmIndexer].waitScoreCount;
+                    nDisplayer.StartMovingMethod(stageNoteArr[bpmIndexer].waitScoreCount * bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit);
 
                     displayeIndexer++;
 

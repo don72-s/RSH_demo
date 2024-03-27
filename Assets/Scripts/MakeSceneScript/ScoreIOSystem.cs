@@ -8,11 +8,11 @@ public class ScoreIOSystem : MonoBehaviour
 
     [SerializeField]
     private GridLayoutGroup upperScoreBoard;
-    private List<Button> upperBtnList;
+    private List<ButtonScript> upperBtnList;
 
     [SerializeField]
     private GridLayoutGroup lowerScoreBoard;
-    private List<Button> lowerBtnList;
+    private List<ButtonScript> lowerBtnList;
 
 
 
@@ -26,13 +26,13 @@ public class ScoreIOSystem : MonoBehaviour
     void Start()
     {
 
-        upperBtnList = new List<Button>();
-        lowerBtnList = new List<Button>();
+        upperBtnList = new List<ButtonScript>();
+        lowerBtnList = new List<ButtonScript>();
 
         for (int i = 0; i < 16; i++) {
 
-            upperBtnList.Add(Instantiate(inputUpperBtnObj, upperScoreBoard.transform).GetComponent<Button>());
-            lowerBtnList.Add(Instantiate(inputLowerBtnObj, lowerScoreBoard.transform).GetComponent<Button>());
+            upperBtnList.Add(Instantiate(inputUpperBtnObj, upperScoreBoard.transform).GetComponent<ButtonScript>());
+            lowerBtnList.Add(Instantiate(inputLowerBtnObj, lowerScoreBoard.transform).GetComponent<ButtonScript>());
 
         }
 
@@ -40,12 +40,12 @@ public class ScoreIOSystem : MonoBehaviour
 
 
 
-    private List<Button> retButtonList;
+    private List<ButtonScript> retButtonList;
 
     //todo : 범위를 tite하게 지정해야 함. => 구간을 출력하는거기 때문. 매개변수 추가? or 범위만큼만 세팅? && 가로 버튼 갯수 : bpm multiplyer와 같은 숫자로 받아서 설정
-    public List<Button> SetNotes(NoteType[] _arr, int _bpmMultiplyer) {
+    public List<ButtonScript> SetNotes(NoteType[] _arr, int _bpmMultiplyer) {
 
-        retButtonList = new List<Button>();
+        retButtonList = new List<ButtonScript>();
 
         SetButtonUI(upperBtnList, upperScoreBoard, _arr, inputUpperBtnObj, _bpmMultiplyer, retButtonList);
         SetButtonUI(lowerBtnList, lowerScoreBoard, _arr, inputLowerBtnObj, _bpmMultiplyer, retButtonList);
@@ -53,7 +53,7 @@ public class ScoreIOSystem : MonoBehaviour
         return retButtonList;
     }
 
-    internal List<Button> SetNotes(NoteInfo[] _arr, int _bpmMultiplyer)
+    internal List<ButtonScript> SetNotes(NoteInfo[] _arr, int _bpmMultiplyer)
     {
 
         NoteType[] _noteTypeArr = new NoteType[_arr.Length];
@@ -66,11 +66,11 @@ public class ScoreIOSystem : MonoBehaviour
 
     }
 
-    private void SetButtonUI(List<Button> _buttonsList, GridLayoutGroup _parentObject, NoteType[] _arr, GameObject _btnObject, int _rowCount, List<Button> _retList) {
+    private void SetButtonUI(List<ButtonScript> _buttonsList, GridLayoutGroup _parentObject, NoteType[] _arr, GameObject _btnObject, int _rowCount, List<ButtonScript> _retList) {
 
         int cnt = _arr.Length;
 
-        foreach (Button _scr in _buttonsList)
+        foreach (ButtonScript _scr in _buttonsList)
         {
             _scr.gameObject.SetActive(false);
         }
@@ -80,7 +80,7 @@ public class ScoreIOSystem : MonoBehaviour
 
             if (_buttonsList.Count <= i)
             {
-                _buttonsList.Add(Instantiate(_btnObject, _parentObject.transform).GetComponent<Button>());
+                _buttonsList.Add(Instantiate(_btnObject, _parentObject.transform).GetComponent<ButtonScript>());
             }
 
             _buttonsList[i].gameObject.SetActive(true);
