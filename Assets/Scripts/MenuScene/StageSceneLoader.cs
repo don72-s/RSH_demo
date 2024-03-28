@@ -24,14 +24,14 @@ public class StageSceneLoader : MonoBehaviour
 
 
 
-    private List<SwiptBtnScript> buttonList = new List<SwiptBtnScript>();
+    //private List<SwiptBtnScript> buttonList = new List<SwiptBtnScript>();
 
 
     private void Start()
     {
 
 #if UNITY_EDITOR
-
+        //todo : 경로별 차별화 추가.
 #elif UNITY_ANDROID
         if (checkDefaultFilesExist(stageFileNameList))
         {
@@ -55,7 +55,28 @@ public class StageSceneLoader : MonoBehaviour
 
     public Text debugt;
 
+    /// <summary>
+    /// 해당 파일들이 준비되어있는지 확인
+    /// </summary>
+    /// <param name="_defaultFileNamesL">대상 파일 이름 리스트</param>
+    /// <returns></returns>
+    bool checkDefaultFilesExist(List<string> _defaultFileNamesL) {
 
+        foreach (string _fileName in _defaultFileNamesL) {
+
+            if (!File.Exists(Path.Combine(Application.persistentDataPath, _fileName))){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /// <summary>
+    /// 제공 리스트에 제공되는 문자열 요소가 포함되는지 확인
+    /// </summary>
+    /// <param name="_compareGroup">확인할 리스트</param>
+    /// <param name="_str">체크할 문자열 요소</param>
+    /// <returns></returns>
     private bool CheckContainsString(List<string> _compareGroup, string _str) {
 
         foreach (string _string in _compareGroup) {
@@ -85,60 +106,19 @@ public class StageSceneLoader : MonoBehaviour
 
         }
 
-        int totalMapCount = _systemDefaultFileNames.Count + customNoteFileNameL.Count;
-
-        //오브젝트 풀 크기 체크
-        while (buttonList.Count <= totalMapCount) {
-            GameObject tmpBtnObj = Instantiate(ButtonInstance);
-            tmpBtnObj.transform.SetParent(ButtonParentObject.transform);
-            buttonList.Add(tmpBtnObj.GetComponent<SwiptBtnScript>());
-        }
-
-        //모두 비활성화
-        foreach (SwiptBtnScript _btn in buttonList) {
-            _btn.gameObject.SetActive(false);
-        }
-
-        //시스템 제공 스테이지 우선 활성화
-        for (int i = 0; i < _systemDefaultFileNames.Count; i++) {
-            buttonList[i].gameObject.SetActive(true);
-            buttonList[i].SetText(_systemDefaultFileNames[i].Substring(0, _systemDefaultFileNames[i].Length - ".dat".Length));
-        }
+        List<string> fileNamesList = new List<string>();
+        fileNamesList.AddRange(_systemDefaultFileNames);
+        fileNamesList.AddRange(customNoteFileNameL);
 
 
-        //사용자 제작 스테이지 활성화
-        for (int i = 0; i < customNoteFileNameL.Count; i++) {
-
-            buttonList[i + _systemDefaultFileNames.Count].gameObject.SetActive(true);
-            buttonList[i + _systemDefaultFileNames.Count].SetText(customNoteFileNameL[i].Substring(0, customNoteFileNameL[i].Length - ".dat".Length));
-
-        }
-
-        //추가 버튼 활성화.
-        buttonList[totalMapCount].gameObject.SetActive(true);
-        buttonList[totalMapCount].gameObject.GetComponent<Image>().sprite = addBoarderImg;
-        buttonList[totalMapCount].SetText("+");
-
-
-        //todo : 버튼 클릭시 이벤트 설정.
-
-        //스와이프 재계산
-        swipeMenuScr.Recalculate(totalMapCount + 1);
+        //버튼 세팅
+        swipeMenuScr.SettingSwipteButtons(fileNamesList);
 
     }
 
 
 
-    bool checkDefaultFilesExist(List<string> _fileNames) {
 
-        foreach (string _fileName in _fileNames) {
-
-            if (!File.Exists(Path.Combine(Application.persistentDataPath, _fileName))){
-                return false;
-            }
-        }
-        return true;
-    }
 
     IEnumerator UnpackingNoteFile(string _fileName)
     {

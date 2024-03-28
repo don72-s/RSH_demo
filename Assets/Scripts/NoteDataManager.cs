@@ -5,19 +5,6 @@ using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
 
-[System.Serializable]
-public class NoteData
-{
-
-    public NoteData(int[] _arr) { 
-        noteArray = _arr;
-    }
-
-    public int[] noteArray;
-
-}
-
-
 
 public enum NoteType { NONE, DOWN_NOTE, UPPER_NOTE, INVERSE_DOWN_NOTE, INVERSE_UPPER_NOTE };
 
@@ -56,12 +43,9 @@ public class StageInfo {
 [System.Serializable]
 public class NoteInfo
 {
-
     public NoteType noteType = NoteType.NONE;
     public int waitingUnit = 0;
     public int waitScoreCount = 0;
-
-
 }
 
 public static class NoteDataManager
@@ -84,7 +68,12 @@ public static class NoteDataManager
 
     }
 
-    public static StageInfo LoadData(string _fileName) {//바탕화면 기준
+    /// <summary>
+    /// 전달된 이름의 파일을 읽어옴 [ .dat 포함된 파일 이름 전달 ], 바탕화면 기준.
+    /// </summary>
+    /// <param name="_fileName">파일 이름 [ .dat 포함된 이름으로 전달 ]</param>
+    /// <returns></returns>
+    public static StageInfo LoadData(string _fileName) {
 
         if (File.Exists(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName)))
         {
@@ -102,6 +91,7 @@ public static class NoteDataManager
         }
 
     }
+
 
 
 
@@ -123,6 +113,11 @@ public static class NoteDataManager
 
     }
 
+    /// <summary>
+    /// 전달된 이름의 파일을 읽어옴 [ .dat 포함된 파일 이름 전달 ], persistentDataPath 기준.
+    /// </summary>
+    /// <param name="_fileName">파일 이름 [ .dat 포함된 이름으로 전달 ]</param>
+    /// <returns></returns>
     public static StageInfo AndroidLoadData(string _fileName) {
 
         if (File.Exists(Path.Combine(Application.persistentDataPath, _fileName)))

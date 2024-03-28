@@ -6,7 +6,8 @@ using UnityEngine.UI;
 public class NoteDisplayere : MonoBehaviour
 {
 
-    public GameObject ArrowGroup;
+    [SerializeField]
+    RectTransform ArrowTransform;
 
     [SerializeField]
     GameObject ArrowIconParent;
@@ -28,7 +29,6 @@ public class NoteDisplayere : MonoBehaviour
     List<Image> ArrowIconImgLists;
 
 
-    RectTransform rect;
     Vector3 startPos;
     Vector3 endPos;
 
@@ -38,14 +38,10 @@ public class NoteDisplayere : MonoBehaviour
         ArrowIconLists = new List<GameObject>();
         ArrowIconImgLists = new List<Image>();
 
+        startPos = ArrowTransform.localPosition;
+        endPos = -ArrowTransform.localPosition;
 
-        rect = ArrowGroup.GetComponent<RectTransform>();
-
-        startPos = rect.localPosition;
-        endPos = -rect.localPosition;
-
-        //defaultColor = ArrowIconLists[0].GetComponent<Image>().color;
-
+        //아이콘 오브젝트 풀 제작[ 기본 갯수는 16개로 지정 ]
         for (int i = 0; i < 16; i++)
         {
             ArrowIconLists.Add(Instantiate(ArrowIconObject));
@@ -79,17 +75,15 @@ public class NoteDisplayere : MonoBehaviour
 
         while (true) { 
         
-            //float curDurTime = Time.time - startTime;
-
             if (startTime < _movingTime)
             {
 
                 float timeRatio = startTime / _movingTime;
-                rect.localPosition = Vector3.Lerp(startPos, endPos, timeRatio);
+                ArrowTransform.localPosition = Vector3.Lerp(startPos, endPos, timeRatio);
 
             }
             else {
-                rect.localPosition = endPos;
+                ArrowTransform.localPosition = endPos;
                 yield break;
             }
 
@@ -103,7 +97,7 @@ public class NoteDisplayere : MonoBehaviour
 
     public void DisplayUpperNote() {
         CheckObjectPool();
-        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, 25, 0);
+        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(ArrowTransform.localPosition.x, 25, 0);
         ArrowIconImgLists[noteIdx].sprite = UpperIconImg;
         ArrowIconLists[noteIdx].SetActive(true);
         noteIdx++;
@@ -112,7 +106,7 @@ public class NoteDisplayere : MonoBehaviour
     public void DisplayLowerNote()
     {
         CheckObjectPool();
-        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, -25, 0);
+        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(ArrowTransform.localPosition.x, -25, 0);
         ArrowIconImgLists[noteIdx].sprite = LowerIconImg;
         ArrowIconLists[noteIdx].SetActive(true);
         noteIdx++;
@@ -121,7 +115,7 @@ public class NoteDisplayere : MonoBehaviour
     public void DisplayInverseUpperNote()
     {
         CheckObjectPool();
-        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, 25, 0);
+        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(ArrowTransform.localPosition.x, 25, 0);
         ArrowIconImgLists[noteIdx].sprite = UpperInverseIconImg;
         ArrowIconLists[noteIdx].SetActive(true);
         noteIdx++;
@@ -130,7 +124,7 @@ public class NoteDisplayere : MonoBehaviour
     public void DisplayInverseLowerNote()
     {
         CheckObjectPool();
-        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(rect.localPosition.x, -25, 0);
+        ArrowIconLists[noteIdx].transform.localPosition = new Vector3(ArrowTransform.localPosition.x, -25, 0);
         ArrowIconImgLists[noteIdx].sprite = LowerInverseIconImg;
         ArrowIconLists[noteIdx].SetActive(true);
         noteIdx++;

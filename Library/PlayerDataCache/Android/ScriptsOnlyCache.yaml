@@ -3,11 +3,8 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - AudioDictonary
     - InputManager
-    - LowerButtonScript
-    - MusicInfoSetter
     - NoteDisplayere
     - SceneLoader
-    - ScoreIOSystem
     - SoundManager
     - StageSceneLoader
     - SwipeScript
@@ -35,90 +32,13 @@ ScriptsOnlyBuild:
     - UnityEngine.UI.CanvasScaler
     - UnityEngine.UI.ContentSizeFitter
     - UnityEngine.UI.GraphicRaycaster
-    - UnityEngine.UI.GridLayoutGroup
     - UnityEngine.UI.HorizontalLayoutGroup
     - UnityEngine.UI.Image
-    - UnityEngine.UI.InputField
     - UnityEngine.UI.Mask
     - UnityEngine.UI.ScrollRect
     - UnityEngine.UI.Scrollbar
     - UnityEngine.UI.Text
   sceneClasses:
-    Assets/Scenes/MakeScene.unity:
-    - Class: 1
-      Script: {instanceID: 0}
-    - Class: 4
-      Script: {instanceID: 0}
-    - Class: 20
-      Script: {instanceID: 0}
-    - Class: 21
-      Script: {instanceID: 0}
-    - Class: 28
-      Script: {instanceID: 0}
-    - Class: 48
-      Script: {instanceID: 0}
-    - Class: 81
-      Script: {instanceID: 0}
-    - Class: 82
-      Script: {instanceID: 0}
-    - Class: 83
-      Script: {instanceID: 0}
-    - Class: 104
-      Script: {instanceID: 0}
-    - Class: 114
-      Script: {instanceID: 11326}
-    - Class: 114
-      Script: {instanceID: 11358}
-    - Class: 114
-      Script: {instanceID: 11694}
-    - Class: 114
-      Script: {instanceID: 11700}
-    - Class: 114
-      Script: {instanceID: 11874}
-    - Class: 114
-      Script: {instanceID: 11956}
-    - Class: 114
-      Script: {instanceID: 11966}
-    - Class: 114
-      Script: {instanceID: 12326}
-    - Class: 114
-      Script: {instanceID: 12520}
-    - Class: 114
-      Script: {instanceID: 12922}
-    - Class: 114
-      Script: {instanceID: 12942}
-    - Class: 114
-      Script: {instanceID: 13098}
-    - Class: 114
-      Script: {instanceID: 13398}
-    - Class: 114
-      Script: {instanceID: 13760}
-    - Class: 114
-      Script: {instanceID: 13970}
-    - Class: 114
-      Script: {instanceID: 14052}
-    - Class: 114
-      Script: {instanceID: 14334}
-    - Class: 114
-      Script: {instanceID: 15070}
-    - Class: 114
-      Script: {instanceID: 15188}
-    - Class: 115
-      Script: {instanceID: 0}
-    - Class: 128
-      Script: {instanceID: 0}
-    - Class: 157
-      Script: {instanceID: 0}
-    - Class: 196
-      Script: {instanceID: 0}
-    - Class: 213
-      Script: {instanceID: 0}
-    - Class: 222
-      Script: {instanceID: 0}
-    - Class: 223
-      Script: {instanceID: 0}
-    - Class: 224
-      Script: {instanceID: 0}
     Assets/Scenes/MenuScene.unity:
     - Class: 1
       Script: {instanceID: 0}
@@ -141,31 +61,31 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11358}
     - Class: 114
-      Script: {instanceID: 11694}
+      Script: {instanceID: 11692}
     - Class: 114
-      Script: {instanceID: 11700}
+      Script: {instanceID: 11698}
     - Class: 114
-      Script: {instanceID: 11956}
+      Script: {instanceID: 11954}
     - Class: 114
-      Script: {instanceID: 12326}
+      Script: {instanceID: 12324}
     - Class: 114
-      Script: {instanceID: 12520}
+      Script: {instanceID: 12518}
     - Class: 114
       Script: {instanceID: 12942}
     - Class: 114
       Script: {instanceID: 13242}
     - Class: 114
-      Script: {instanceID: 13398}
+      Script: {instanceID: 13400}
     - Class: 114
-      Script: {instanceID: 13828}
+      Script: {instanceID: 13830}
     - Class: 114
-      Script: {instanceID: 14334}
+      Script: {instanceID: 14104}
     - Class: 114
-      Script: {instanceID: 15064}
+      Script: {instanceID: 14340}
     - Class: 114
       Script: {instanceID: 15070}
     - Class: 114
-      Script: {instanceID: 16004}
+      Script: {instanceID: 15076}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -210,27 +130,25 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11358}
     - Class: 114
-      Script: {instanceID: 11694}
+      Script: {instanceID: 11692}
     - Class: 114
-      Script: {instanceID: 12520}
+      Script: {instanceID: 12518}
     - Class: 114
       Script: {instanceID: 12922}
     - Class: 114
-      Script: {instanceID: 13310}
+      Script: {instanceID: 13312}
     - Class: 114
-      Script: {instanceID: 13386}
+      Script: {instanceID: 13388}
     - Class: 114
-      Script: {instanceID: 13398}
+      Script: {instanceID: 13400}
     - Class: 114
-      Script: {instanceID: 13760}
+      Script: {instanceID: 13972}
     - Class: 114
-      Script: {instanceID: 13970}
+      Script: {instanceID: 14204}
     - Class: 114
-      Script: {instanceID: 14198}
+      Script: {instanceID: 14340}
     - Class: 114
-      Script: {instanceID: 14334}
-    - Class: 114
-      Script: {instanceID: 15070}
+      Script: {instanceID: 15076}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -496,7 +414,13 @@ ScriptsOnlyBuild:
     className: Selectable
   - hash:
       serializedVersion: 2
-      Hash: abe4b09296eb9791c9428136e45b8d0d
+      Hash: 4ce15e99c635d2567873d27549d1f16f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SectionInfoBlock
+  - hash:
+      serializedVersion: 2
+      Hash: 3dfa9c0a5bd435afa985a06765bc3ff4
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: AudioDictonary
@@ -544,7 +468,13 @@ ScriptsOnlyBuild:
     className: StageSceneLoader
   - hash:
       serializedVersion: 2
-      Hash: 23a24dc430c7260f262d2a13d96ae8b6
+      Hash: 12643a4c80bc1afc9a1a0fee015d0495
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SectionInfoDis
+  - hash:
+      serializedVersion: 2
+      Hash: 329fba34dc7e1920ba1c965474bdc625
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: NoteDisplayere
@@ -556,7 +486,7 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
-      Hash: 4c3f6a667a99126b0a2ec1698d78bac8
+      Hash: 7541622cb8efda929506cbe6e8786221
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: InputManager
@@ -646,7 +576,25 @@ ScriptsOnlyBuild:
     className: SceneLoader
   - hash:
       serializedVersion: 2
-      Hash: 21e83542fdb36ca4104da094c20df572
+      Hash: 0aef0917e9608c595de87ec91f7c47ec
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: LoadMenuManager
+  - hash:
+      serializedVersion: 2
+      Hash: eb5bd70cef3106cf0f9257d0e95719df
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ButtonScript
+  - hash:
+      serializedVersion: 2
+      Hash: 1e9646e51b0b6f9f86153467f2195e86
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SwiptBtnScript
+  - hash:
+      serializedVersion: 2
+      Hash: 4a1fa5d916895607b635b9716b41cd7d
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SoundManager
@@ -754,7 +702,7 @@ ScriptsOnlyBuild:
     className: Dropdown
   - hash:
       serializedVersion: 2
-      Hash: f8b1b746179d26e5f10f97f12f6e49a6
+      Hash: 61defde4540371fef457279cf13a650c
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SwipeScript
@@ -790,7 +738,7 @@ ScriptsOnlyBuild:
     className: ToggleGroup
   - hash:
       serializedVersion: 2
-      Hash: 122b7e7e5cdecc6064e83a81eeeab8b3
+      Hash: fbdec3e21aa36d4cf37ba1759cede705
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MusicInfoSetter
@@ -800,15 +748,8 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 1e9646e51b0b6f9f86153467f2195e86
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: SwiptBtnScript
   platform: 13
   scenePathNames:
   - Assets/Scenes/MenuScene.unity
   - Assets/Scenes/SampleScene 1.unity
-  - Assets/Scenes/MakeScene.unity
   playerPath: C:/Users/ASUS/Desktop/rhsh.apk

@@ -15,7 +15,10 @@ public class SwipeScript : MonoBehaviour
     Scrollbar scrollBar;
 
     [SerializeField]
-    GameObject contentParent;
+    Transform ButtonParent;
+
+    [SerializeField]
+    GameObject ButtonInstance;
 
 
     FocusSizeDelegate focusSizeDelegate = null;
@@ -25,13 +28,23 @@ public class SwipeScript : MonoBehaviour
 
     private int curFocusedIdx = 0;
 
-    List<SwiptBtnScript> buttonL;
+    List<SwiptBtnScript> buttonObjectPool = new List<SwiptBtnScript>();
+    List<SwiptBtnScript> buttonL = new List<SwiptBtnScript>();
+
+    [SerializeField]
+    Sprite editerButtonSprite;
 
     // Start is called before the first frame update
     void Start()
     {
 #if UNITY_EDITOR
-        Recalculate(3);
+
+        List<string> l = new List<string>();
+        l.Add("stage1Note.dat");
+        l.Add("st2.dat");
+        l.Add("st3.dat");
+
+        SettingSwipteButtons(l);
 #elif UNITY_ANDROID
 
 #endif
@@ -43,7 +56,7 @@ public class SwipeScript : MonoBehaviour
     {
 
         //에디터용 디버그 테스트
-        if(Input.GetKeyDown(KeyCode.Space)){
+        if (Input.GetKeyDown(KeyCode.Space)) {
 
             Recalculate(3);
 
@@ -87,7 +100,7 @@ public class SwipeScript : MonoBehaviour
                 curFocusedIdx = destIdx / 2;
             }
 
-        }else {
+        } else {
 
             scrollBar.value = Mathf.Lerp(scrollBar.value, destPos, 0.1f);
 
@@ -99,7 +112,78 @@ public class SwipeScript : MonoBehaviour
 
     float unitDistance = 0.5f;
 
-    public void Recalculate(int _buttonCount) {
+    /// <summary>
+    /// 버튼들 초기 정보 세팅.
+    /// </summary>
+    /// <param name="_stageNameList">노트파일 이름이 저장되어있는 리스트</param>
+    public void SettingSwipteButtons(List<string> _stageNameList) {
+
+        int count = _stageNameList.Count + 1;
+
+        if (!CheckObjectPool(count)) ExpandObjectPool(count);
+
+        foreach (SwiptBtnScript _btn in buttonObjectPool) { _btn.gameObject.SetActive(false); }
+
+        SettingButtonsInfo(_stageNameList);
+
+        Recalculate(count);
+
+    }
+
+
+    /// <summary>
+    /// 오브젝트 풀의 갯수 확인
+    /// </summary>
+    /// <param name="_cnt">필요 갯수 전달</param>
+    /// <returns></returns>
+    private bool CheckObjectPool(int _cnt) {
+
+        return buttonObjectPool.Count < _cnt ? false : true;
+
+    }
+
+    /// <summary>
+    /// 오브젝트 풀의 크기를 확장.
+    /// </summary>
+    /// <param name="_destSize">목표 확장 크기</param>
+    private void ExpandObjectPool(int _destSize) {
+
+        while (buttonObjectPool.Count < _destSize) {
+            GameObject tmpBtnObj = Instantiate(ButtonInstance);
+            tmpBtnObj.transform.SetParent(ButtonParent);
+            buttonObjectPool.Add(tmpBtnObj.GetComponent<SwiptBtnScript>());
+        }
+
+    }
+
+    /// <summary>
+    /// 버튼들의 내용을 추가하고 사용중 버튼 리스트에 추가
+    /// </summary>
+    /// <param name="_stageNameList">스테이지들의 이름 배열</param>
+    private void SettingButtonsInfo(List<string> _stageNameList) {
+
+        string suffixStr = ".dat";
+
+        buttonL.Clear();
+
+        for(int i = 0; i < _stageNameList.Count + 1; i++) { buttonL.Add(buttonObjectPool[i]); }
+
+        for (int i = 0; i < _stageNameList.Count; i++) {
+            buttonL[i].gameObject.SetActive(true);
+            buttonL[i].SetText(_stageNameList[i].Substring(0, _stageNameList[i].Length - suffixStr.Length));
+        }
+
+        buttonL[buttonL.Count - 1].gameObject.SetActive(true);
+        buttonL[buttonL.Count - 1].GetComponent<Image>().sprite = editerButtonSprite;
+        buttonL[buttonL.Count - 1].SetText("+");
+
+    }
+
+    /// <summary>
+    /// 버튼들의 스와이프/클릭 이벤트등의 재계산 및 재할당
+    /// </summary>
+    /// <param name="_buttonCount">버튼들의 총 갯수</param>
+    private void Recalculate(int _buttonCount) {
 
         focusSizeDelegate = null;
 
@@ -109,22 +193,19 @@ public class SwipeScript : MonoBehaviour
             return;
         }
 
-        buttonL = new List<SwiptBtnScript>();
-
-        for (int i = 0; i < _buttonCount; i++) {
-            buttonL.Add(contentParent.transform.GetChild(i).GetComponent<SwiptBtnScript>());
-        }
-
         unitDistance = 1f / ((_buttonCount - 1) * 2);
 
         for (int i = 0; i < _buttonCount; i++) {
-            buttonL[i].gameObject.SetActive(true);
             buttonL[i].InitData(i, unitDistance, ButtonClicked);
             focusSizeDelegate += buttonL[i].SetButtonSize;
         }
 
     }
 
+    /// <summary>
+    /// 버튼이 클릭되었을 때 호출될 콜백 메소드
+    /// </summary>
+    /// <param name="_btnIdx">받아올 버튼의 고유 idx</param>
     public void ButtonClicked(int _btnIdx) {
 
         destPos = _btnIdx * unitDistance * 2;

@@ -17,7 +17,10 @@ public class InputManager : MonoBehaviour
     private Text text;
 
     [SerializeField]
-    private float delayOffset = 4;
+    private float lowerOffset = 4;
+    [SerializeField]
+    private float upperOffset = 4;
+
 
 
     public InputField inputf;
@@ -26,12 +29,6 @@ public class InputManager : MonoBehaviour
     public void Start()
     {
         Input.gyro.enabled = true;
-    }
-
-    public void setOffset() {
-
-        delayOffset = float.Parse(inputf.text);
-
     }
 
 
@@ -60,7 +57,8 @@ public class InputManager : MonoBehaviour
                 }
         */
 
-        //에디터 디버그
+        #region 에디터용 디버그 
+
         if (!isLowerPlaying && Input.GetKeyDown(KeyCode.Space))
         {
             Debug.Log("pushed");
@@ -76,31 +74,31 @@ public class InputManager : MonoBehaviour
 
         }
 
-        if (!isLowerPlaying && vec.z > delayOffset) {
+        #endregion
 
-            //PlayDown();
+        if (!isLowerPlaying && vec.z > lowerOffset) {
+
             StartCoroutine(playLowerSnd());
 
         }
 
-        if (!isUpperPlaying && vec.z < -delayOffset)
+        if (!isUpperPlaying && vec.z < -upperOffset)
         {
-
-            //PlayUp();
             StartCoroutine(playUpperSnd());
 
         }
 
     }
 
+    private bool lowerFlag = false;
+    private bool upperFlag = false;
+
     public bool isUpper() {
         return upperFlag;
     }
-
     public void useUpper() {
         upperFlag = false;
     }
-
 
     public bool isLower()
     {
@@ -112,35 +110,7 @@ public class InputManager : MonoBehaviour
     }
 
 
-
-
-
-    private bool lowerFlag = false;
-    private bool upperFlag = false;
-
-
-    private bool isUpperPlaying = false;
-    private float upperWaitTime = 0.25f;
-    private IEnumerator playUpperSnd() {
-
-        if (!isUpperPlaying) {
-
-            isUpperPlaying = true;
-            upperFlag = true;
-
-            yield return new WaitForSeconds(Time.deltaTime);
-
-            upperFlag = false;
-
-            yield return new WaitForSeconds(upperWaitTime / 2);
-
-            isUpperPlaying = false;
-
-
-        }
     
-    }
-
     private bool isLowerPlaying = false;
     private float lowerWaitTime = 0.25f;
     private IEnumerator playLowerSnd()
@@ -162,6 +132,28 @@ public class InputManager : MonoBehaviour
 
         }
 
+    }
+
+    private bool isUpperPlaying = false;
+    private float upperWaitTime = 0.25f;
+    private IEnumerator playUpperSnd() {
+
+        if (!isUpperPlaying) {
+
+            isUpperPlaying = true;
+            upperFlag = true;
+
+            yield return new WaitForSeconds(Time.deltaTime);
+
+            upperFlag = false;
+
+            yield return new WaitForSeconds(upperWaitTime / 2);
+
+            isUpperPlaying = false;
+
+
+        }
+    
     }
 
 

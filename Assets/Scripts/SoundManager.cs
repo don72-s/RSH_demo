@@ -11,7 +11,6 @@ public class SoundManager : MonoBehaviour
     public AudioSource bgmplayer;
 
     public InputManager inputm;
-
     public NoteDisplayere nDisplayer;
 
     public Text t;
@@ -22,9 +21,7 @@ public class SoundManager : MonoBehaviour
     private AudioClip upperClip;
     private AudioClip lowerClip;
 
-
     StageInfo stageData;
-
 
     private NoteInfo[] stageNoteArr;
 
@@ -49,8 +46,16 @@ public class SoundManager : MonoBehaviour
     }
 
 
-    public void playbgm() {
+    /// <summary>
+    /// 스테이지를 시작시키는 함수.
+    /// </summary>
+    public void StartStage() {
 
+        if (stageData == null)
+        {
+            Debug.LogWarning("스테이지가 제대로 로드되지 않음.");
+            return;
+        }
 
         nDisplayer.ClearDisplayedNotes();
         nDisplayer.StopAllCoroutines();
@@ -63,52 +68,28 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    public List<GameObject> noteButtons;
-
-
-    public string LoadFileName;
-    public void btn_androidLoadCheck() {
-
-        StartCoroutine(loaddd());
-    }
-
-
-    IEnumerator loaddd() {
-
-        // "StreamingAssets" 폴더에 있는 파일의 경로
-        string streamingAssetsPath = Path.Combine(Application.streamingAssetsPath, "stage1Note.dat");
-
-        // 파일을 UnityWebRequest를 사용하여 로드
-        UnityWebRequest www = UnityWebRequest.Get(streamingAssetsPath);
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
-        {
-             t.text = "Failed to load file: ";
-        }
-        else
-        {
-            // UnityWebRequest를 통해 로드한 파일의 바이트 데이터
-            byte[] fileBytes = www.downloadHandler.data;
-
-            // 파일을 "Application.persistentDataPath"로 저장
-            string persistentDataPath = Path.Combine(Application.persistentDataPath, "stage1Note.dat");
-            File.WriteAllBytes(persistentDataPath, fileBytes);
-
-            t.text = "File copied to persistent data path:"+ persistentDataPath;
-        }
-    }
 
     private void Start()
     {
         LoadNodeData();
     }
 
+
+
+    //에디터 디버그용 불러오는 파일 이름.
+    [SerializeField]
+    string DebugLoadFileName;
+
+
+
+    float bpmUnitSecond;
+
     public void LoadNodeData() {
 
 #if UNITY_EDITOR
+        //todo : 디버그용임.
+        //PlayerPrefs.SetString("StageFileName", DebugLoadFileName);
         stageData = NoteDataManager.LoadData(PlayerPrefs.GetString("StageFileName"));
-        //stageData = NoteDataManager.LoadData("stage1Note.dat");
 #elif UNITY_ANDROID
         stageData = NoteDataManager.AndroidLoadData(PlayerPrefs.GetString("StageFileName"));
 #endif
@@ -122,7 +103,7 @@ public class SoundManager : MonoBehaviour
 
         stageNoteArr = stageData.noteArray;
 
-        bpmUnit = (float)(60 / ((double)stageData.bpm * stageData.bpmMultiplier));
+        bpmUnitSecond = (float)(60 / ((double)stageData.bpm * stageData.bpmMultiplier));
 
         bgmplayer.clip = audioDic.GetBGMClip(stageData.bgmType);
 
@@ -134,23 +115,26 @@ public class SoundManager : MonoBehaviour
         Debug.Log("loaded");
     }
 
-    public GameObject d;
 
-    public InputField editPageField;
 
-    public InputField inf;
-
-    float bpmUnit = 0.1339285714285714f;
-
+    /// <summary>
+    /// 실질적인 플레이 시작
+    /// </summary>
+    /// <returns></returns>
     private IEnumerator playBGMReader() {
 
-        float countDelay = bpmUnit * stageData.bpmMultiplier;
+        float countDelay = bpmUnitSecond * stageData.bpmMultiplier;
         float playTime;
 
         if (bgmPause) Pause();
 
         bgmplayer.time = 0;
-        
+
+
+        //시작 카운트 다운 구현.
+
+        t.text = "3";
+
         //카운트 도중 재생
         if (countDelay * 4 - stageData.offsetSecond > 0)
         {
@@ -168,7 +152,11 @@ public class SoundManager : MonoBehaviour
 
                 if (curTime > cmpTime) {
 
-                    if (cnt == 3) break;
+                    if (cnt == 3) { 
+                        break; 
+                    }
+
+                    t.text = cnt == 2 ? "Go!" : (2 - cnt).ToString();
 
                     bgmplayer.PlayOneShot(lowerClip);
 
@@ -195,22 +183,23 @@ public class SoundManager : MonoBehaviour
             yield return new WaitForSeconds(playTime);
 
             bgmplayer.PlayOneShot(lowerClip);
+            t.text = "3";
             yield return new WaitForSeconds(countDelay);
+
             bgmplayer.PlayOneShot(lowerClip);
+            t.text = "2";
             yield return new WaitForSeconds(countDelay);
+
             bgmplayer.PlayOneShot(lowerClip);
+            t.text = "1";
             yield return new WaitForSeconds(countDelay);
+
             bgmplayer.PlayOneShot(lowerClip);
+            t.text = "Go!";
             yield return new WaitForSeconds(countDelay);
 
         }
         
-
-
-        //bgmplayer.Play();
-
-        //todo : 이거 맵 정보로 바꾸기. ( 0.95f [ 수정 전 ] )
-        //yield return new WaitForSeconds(stageData.offsetSecond);
 
         int bpmIndexer = 0;
         float bpmStacker = 0;
@@ -219,28 +208,27 @@ public class SoundManager : MonoBehaviour
 
         int curEffectTimeUnit = 0;
 
-        while (bpmStacker < 150) {// todo : 150 = 노래 길이로 수정 or 내부 while문의 두번째 조건으로 수정.
+        while (bpmStacker < bgmplayer.clip.length + 5) {//노래 길이 + 5초
 
-            //t.text = " " + bpmIndexer;
 
             while (curBpmComparer < bpmStacker && bpmIndexer < stageNoteArr.Length) {
 
-                curBpmComparer += bpmUnit;
+                curBpmComparer += bpmUnitSecond;
 
-
-
+                //마디가 넘어갈 때 할 행동.
                 if (stageNoteArr[bpmIndexer].waitScoreCount != 0) {
 
                     if(displayeIndexer % 2 == 0) nDisplayer.ClearDisplayedNotes();
 
                     curEffectTimeUnit = stageNoteArr[bpmIndexer].waitScoreCount;
-                    nDisplayer.StartMovingMethod(stageNoteArr[bpmIndexer].waitScoreCount * bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit);
+                    nDisplayer.StartMovingMethod(stageNoteArr[bpmIndexer].waitScoreCount * bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit);
 
                     displayeIndexer++;
 
                 }
 
 
+                //노트 분기
                 switch (stageNoteArr[bpmIndexer].noteType)
                 {
 
@@ -288,7 +276,7 @@ public class SoundManager : MonoBehaviour
         nDisplayer.DisplayLowerNote();
 
         float curTime = 0;
-        float waitTime = bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2);
+        float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
 
         while (curTime < waitTime) {
 
@@ -297,14 +285,9 @@ public class SoundManager : MonoBehaviour
 
         }
 
-        //판정라인
-        //Debug.Log("ppp");
-        //inputm.PlayDown();
-        //inputm.PlayDown();
-
         curTime = 0;
 
-        while (curTime < bpmUnit * 4) {
+        while (curTime < bpmUnitSecond * 4) {
 
             t.text = "start!";
 
@@ -324,8 +307,6 @@ public class SoundManager : MonoBehaviour
 
         }
 
-        //inputm.PlayUp();
-
         t.text = " failied ";
 
 
@@ -339,7 +320,7 @@ public class SoundManager : MonoBehaviour
         nDisplayer.DisplayUpperNote();
 
         float curTime = 0;
-        float waitTime = bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2);
+        float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
 
         while (curTime < waitTime)
         {
@@ -351,7 +332,7 @@ public class SoundManager : MonoBehaviour
 
         curTime = 0;
 
-        while (curTime < bpmUnit * 4)
+        while (curTime < bpmUnitSecond * 4)
         {
 
             t.text = "start!";
@@ -373,7 +354,6 @@ public class SoundManager : MonoBehaviour
 
         }
 
-        //inputm.PlayUp();
         t.text = " failied ";
 
     }
@@ -386,7 +366,7 @@ public class SoundManager : MonoBehaviour
         nDisplayer.DisplayInverseLowerNote();
 
         float curTime = 0;
-        float waitTime = bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2);
+        float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
 
         while (curTime < waitTime)
         {
@@ -398,7 +378,7 @@ public class SoundManager : MonoBehaviour
 
         curTime = 0;
 
-        while (curTime < bpmUnit * 4)
+        while (curTime < bpmUnitSecond * 4)
         {
 
             t.text = "start!";
@@ -419,9 +399,8 @@ public class SoundManager : MonoBehaviour
             yield return null;
 
         }
-        t.text = " failied ";
 
-        //inputm.PlayUp();
+        t.text = " failied ";
 
     }
 
@@ -433,7 +412,7 @@ public class SoundManager : MonoBehaviour
         nDisplayer.DisplayInverseUpperNote();
 
         float curTime = 0;
-        float waitTime = bpmUnit * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnit * 2);
+        float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
 
         while (curTime < waitTime)
         {
@@ -445,7 +424,7 @@ public class SoundManager : MonoBehaviour
 
         curTime = 0;
 
-        while (curTime < bpmUnit * 4)
+        while (curTime < bpmUnitSecond * 4)
         {
 
             t.text = "start!";
@@ -466,9 +445,8 @@ public class SoundManager : MonoBehaviour
             yield return null;
 
         }
-        t.text = " failied ";
 
-        //inputm.PlayDown();
+        t.text = " failied ";
 
     }
 
