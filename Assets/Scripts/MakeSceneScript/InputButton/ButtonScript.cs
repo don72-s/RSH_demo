@@ -27,7 +27,8 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
 
     }
 
-    private static int iidd = 0;
+    //del
+    //private static int idxCounter = 0;
 
     // Start is called before the first frame update
     protected virtual void Awake()
@@ -44,16 +45,15 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
             }
 
         }
-        Debug.Log(iidd++);
 
-        SetBoarderImg(false);
+        SetBoarderImgActive(false);
     }
 
     public void SetInteractable(bool _isIteract) {
         myImg.raycastTarget = _isIteract;
     }
 
-    public void SetBoarderImg(bool _isActive) { 
+    public void SetBoarderImgActive(bool _isActive) { 
         boarderImg.gameObject.SetActive(_isActive);
     }
 
@@ -88,7 +88,7 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
 
             }
 
-        } else if (eventData.button == PointerEventData.InputButton.Right) {
+        } else if (eventData.button == PointerEventData.InputButton.Right) {//에디터용 디버그
 
             SetNoteType(NoteType.NONE);
 

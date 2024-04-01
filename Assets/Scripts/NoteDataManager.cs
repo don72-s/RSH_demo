@@ -75,7 +75,7 @@ public static class NoteDataManager
     /// <returns></returns>
     public static StageInfo LoadData(string _fileName) {
 
-        if (File.Exists(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName)))
+        if (CheckFileExist(_fileName))
         {
             StageInfo tmp;
             BinaryFormatter formatter = new BinaryFormatter();
@@ -90,6 +90,16 @@ public static class NoteDataManager
             return null;
         }
 
+    }
+
+    /// <summary>
+    /// 파일의 존재 확인.
+    /// </summary>
+    /// <param name="_fileName">[.dat]이 포함된 파일 이름</param>
+    /// <returns>파일 존재 여부</returns>
+    public static bool CheckFileExist(string _fileName)
+    {
+        return File.Exists(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName));
     }
 
 
@@ -120,7 +130,7 @@ public static class NoteDataManager
     /// <returns></returns>
     public static StageInfo AndroidLoadData(string _fileName) {
 
-        if (File.Exists(Path.Combine(Application.persistentDataPath, _fileName)))
+        if (CheckAndroidFileExist(_fileName))
         {
             StageInfo tmp;
             BinaryFormatter formatter = new BinaryFormatter();
@@ -134,6 +144,16 @@ public static class NoteDataManager
             return null;
         }
 
+    }
+
+    /// <summary>
+    /// 파일의 존재 확인.
+    /// </summary>
+    /// <param name="_fileName">[.dat]이 포함된 파일 이름</param>
+    /// <returns>파일 존재 여부</returns>
+    public static bool CheckAndroidFileExist(string _fileName)
+    {
+        return File.Exists(Path.Combine(Application.persistentDataPath, _fileName));
     }
 
 

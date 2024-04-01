@@ -53,7 +53,7 @@ public class LoadMenuManager : MonoBehaviour
             sb.Append("\nbgm Multiplyer : ");
             sb.Append(stageInfo.bpmMultiplier);
             sb.Append("\nscore Unit : ");
-            sb.Append("stageInfo.scoreUnit");
+            sb.Append(stageInfo.scoreUnit);
             sb.Append("\n");
 
 

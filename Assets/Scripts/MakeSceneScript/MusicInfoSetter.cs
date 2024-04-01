@@ -30,6 +30,12 @@ public class MusicInfoSetter : MonoBehaviour
     [SerializeField]
     SectionInfoDis sectionInfoDisplayer;
 
+    [SerializeField]
+    AlertWindow alertWindow;
+
+    [SerializeField]
+    GameObject exportWindow;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -67,34 +73,7 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
 
-    public string loadFileName = "stage1Note.dat";
-
-
-    /// <summary>
-    /// 불러오고 맵 초기설정 초반 버튼용 디버그용
-    /// </summary>
-    public void btn_Setup_And_LoadNoteData() {
-        //todo : 기본 맵 가져오는거? ㄱㄴ but 기본맵과 같은 이름으로 덮어씌워 저장? => 불가능!!
-#if UNITY_EDITOR
-        StageInfo stageInfo = NoteDataManager.LoadData(loadFileName);
-#elif UNITY_ANDROID
-        StageInfo stageInfo = NoteDataManager.AndroidLoadData("stage1Note.dat");
-#endif
-
-        if (stageInfo == null) return;
-
-        offsetSecond = stageInfo.offsetSecond;
-        BPM = stageInfo.bpm;
-        BPM_Multiplyer = stageInfo.bpmMultiplier;
-        scoreUnit = stageInfo.scoreUnit;
-        
-        noteArray = stageInfo.noteArray;
-
-        bgmClip = audioClipDic.GetBGMClip(stageInfo.bgmType);
-        upperSEClip = audioClipDic.GetSEClip(stageInfo.upperSeType);
-        lowerSEClip = audioClipDic.GetSEClip(stageInfo.lowerSeType);
-
-    }
+    public string loadFileName;
 
 
     /// <summary>
@@ -153,13 +132,20 @@ public class MusicInfoSetter : MonoBehaviour
 
         unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer);
 
-        float startTime = (float) (int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit * unitBPMSecond);
-        float duringTime = (float)(int.Parse(sectionLengthInputter.text) * BPM_Multiplyer * scoreUnit * 2 * unitBPMSecond);
+        if (!InputChecker.IsPositiveInt(sectionNumInputter, true)) { alertWindow.ShowSingleAlertWindow("sectionNum은 0과 양의 정수만 입력 가능합니다."); return; }
+        if (!InputChecker.IsPositiveInt(sectionLengthInputter)) { alertWindow.ShowSingleAlertWindow("sectionLength는 양의 정수만 입력 가능합니다."); return; }
+
+        int sectionNum = InputChecker.GetInt(sectionNumInputter);
+        int sectionLength = InputChecker.GetInt(sectionLengthInputter);
 
 
-        debugText.text = "curSection : " + int.Parse(sectionNumInputter.text) + " ~ " + (int.Parse(sectionNumInputter.text) + (int.Parse(sectionLengthInputter.text) * 2) - 1);
+        float startTime = (float) (sectionNum * BPM_Multiplyer * scoreUnit * unitBPMSecond);
+        float duringTime = (float)(sectionLength * BPM_Multiplyer * scoreUnit * 2 * unitBPMSecond);
 
-        int startIdx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit;
+
+        debugText.text = "curSection : " + sectionNum + " ~ " + (sectionNum + (sectionLength * 2) - 1);
+
+        int startIdx = sectionNum * BPM_Multiplyer * scoreUnit;
 
         StartCoroutine(playSection(startIdx, offsetSecond, startTime, startTime + duringTime, unitBPMSecond));
     }
@@ -172,14 +158,21 @@ public class MusicInfoSetter : MonoBehaviour
 
         StopAllCoroutines();
 
-        //test
-        //unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer);
+        if (!InputChecker.IsPositiveInt(sectionNumInputter, true)) { alertWindow.ShowSingleAlertWindow("sectionNum은 0과 양의 정수만 입력 가능합니다."); return; }
+        if (!InputChecker.IsPositiveInt(sectionLengthInputter)) { alertWindow.ShowSingleAlertWindow("sectionLength는 양의 정수만 입력 가능합니다."); return; }
 
-        int startIdx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit;
-        int endIdx = startIdx + int.Parse(sectionLengthInputter.text) * BPM_Multiplyer * scoreUnit;
+        int sectionNum = InputChecker.GetInt(sectionNumInputter);
+        int sectionLength = InputChecker.GetInt(sectionLengthInputter);
 
+        //del
+        //int startIdx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit;
+        //int endIdx = startIdx + int.Parse(sectionLengthInputter.text) * BPM_Multiplyer * scoreUnit;
 
-        debugText.text = "LoadedSection : " + int.Parse(sectionNumInputter.text) + " ~ " + (int.Parse(sectionNumInputter.text) + (int.Parse(sectionLengthInputter.text) * 2) - 1);
+        int startIdx = InputChecker.GetInt(sectionNumInputter) * BPM_Multiplyer * scoreUnit;
+        int endIdx = startIdx + InputChecker.GetInt(sectionLengthInputter) * BPM_Multiplyer * scoreUnit;
+
+        //todo : info쪽으로 이동.
+        debugText.text = "LoadedSection : " + sectionNum + " ~ " + (sectionNum + (sectionLength * 2) - 1);
 
         NoteInfo[] sectionArr = new NoteInfo[endIdx - startIdx];
 
@@ -193,37 +186,104 @@ public class MusicInfoSetter : MonoBehaviour
 
 
 
-    public void btn_expertScore() {
+    public string saveFileName;
+
+    public void btn_Export_Window(bool _active) {
+        exportWindow.SetActive(_active);
+    }
+
+    public void btn_Save_Custom_Note(InputField _fileNameInputField) {
 
         if (noteArray == null) return;
 
+        saveFileName = _fileNameInputField.text;
+
+        if (saveFileName.StartsWith("stage")) { alertWindow.ShowSingleAlertWindow("저장 파일명은 stage로 시작할 수 없습니다."); return; }
+        if (!saveFileName.EndsWith(".dat")) { alertWindow.ShowSingleAlertWindow("저장 파일명은 [.dat]으로 끝나야 합니다."); return; }
+        if (saveFileName.Equals(".dat")) { alertWindow.ShowSingleAlertWindow("저장 파일명은 공백일 수 없습니다."); return; }
+
 #if UNITY_EDITOR
 
-        NoteDataManager.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
+        if (NoteDataManager.CheckFileExist(saveFileName))
+        {
+            alertWindow.ShowDoubleAlertWindow("[ " + saveFileName + " ] 같은 이름의 파일이 존재합니다.\n덮어쓰시겠습니까?", "OK!", CallbackExport);
+        }
+        else
+        {
+            NoteDataManager.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
+            alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
+            btn_Export_Window(false);
+
+        }
+
+        //del after test
+        //NoteDataManager.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
 
 #elif UNITY_ANDROID
 
-        NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType);
+        if (NoteDataManager.CheckAndroidFileExist(saveFileName))
+        {
+            alertWindow.ShowDoubleAlertWindow("[ " + saveFileName + " ] 같은 이름의 파일이 존재합니다.\n덮어쓰시겠습니까?", "OK!", CallbackAndroidExport);
+        }
+        else {
+            NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType);
+            alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
+            btn_Export_Window(false);
+
+        }
+
+        //del after test
+        //NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType);
 
 #endif
 
+    }
+
+    #region 버튼 콜백 함수.
+
+    private void CallbackExport() {
+
+        NoteDataManager.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
+        alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
+        btn_Export_Window(false);
 
     }
 
-    public string saveFileName = "st1";
+    private void CallbackAndroidExport() {
 
+        NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType);
+        alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
+        btn_Export_Window(false);
+
+    }
+
+    #endregion
+
+
+
+
+
+    /// <summary>
+    /// 현재 임시 노트인 noteArray[]에 구간채보 적용
+    /// </summary>
     public void btn_Save_Section() {
 
         if (LoadedSectionList == null) return;
 
-        int idx = int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit;
+        if (!InputChecker.IsPositiveInt(sectionNumInputter, true)) { alertWindow.ShowSingleAlertWindow("sectionNum은 0과 양의 정수만 입력 가능합니다."); return; }
+        if (!InputChecker.IsPositiveInt(sectionLengthInputter)) { alertWindow.ShowSingleAlertWindow("sectionLength는 양의 정수만 입력 가능합니다."); return; }
+
+        int sectionNum = InputChecker.GetInt(sectionNumInputter);
+        int sectionLength = InputChecker.GetInt(sectionLengthInputter);
+
+        int idx = sectionNum * BPM_Multiplyer * scoreUnit;
 
         for (int i = 0; i < LoadedSectionList.Count / 2; i++) {
 
             NoteType type = LoadedSectionList[i].GetNoteType();
 
             noteArray[idx].noteType = type;
-            noteArray[idx].waitingUnit = int.Parse(sectionLengthInputter.text) * scoreUnit;
+            noteArray[idx].waitingUnit = sectionLength * scoreUnit;
             noteArray[idx].waitScoreCount = 0;
 
             idx++;
@@ -231,12 +291,12 @@ public class MusicInfoSetter : MonoBehaviour
         }
 
         //첫 노트에 대기 단위 추가
-        noteArray[int.Parse(sectionNumInputter.text) * BPM_Multiplyer * scoreUnit].waitScoreCount = int.Parse(sectionLengthInputter.text);
+        noteArray[sectionNum * BPM_Multiplyer * scoreUnit].waitScoreCount = sectionLength;
 
         if (idx < noteArray.Length)
         {
             Debug.Log("idx : " + idx);
-            noteArray[idx].waitScoreCount = int.Parse(sectionLengthInputter.text);
+            noteArray[idx].waitScoreCount = sectionLength;
             noteArray[idx].noteType = NoteType.NONE;
             noteArray[idx].waitingUnit = 0;
         }
@@ -272,13 +332,21 @@ public class MusicInfoSetter : MonoBehaviour
 
         foreach (ButtonScript _btnScr in LoadedSectionList)
         {
-            _btnScr.SetBoarderImg(false);
+            _btnScr.SetBoarderImgActive(false);
         }
 
     }
 
 
-
+    /// <summary>
+    /// 지정 구간 재생
+    /// </summary>
+    /// <param name="_startIdx"></param>
+    /// <param name="_offset"></param>
+    /// <param name="_startTime"></param>
+    /// <param name="_endTime"></param>
+    /// <param name="_unitBPMSecond"></param>
+    /// <returns></returns>
     private IEnumerator playSection(int _startIdx, float _offset, float _startTime,float _endTime, double _unitBPMSecond)
     {
 
@@ -304,7 +372,7 @@ public class MusicInfoSetter : MonoBehaviour
                 
                 StartCoroutine(PlayNote(noteArray[noteCnt]));
 
-                if (btnCnt < LoadedSectionList.Count) LoadedSectionList[btnCnt].SetBoarderImg(true);
+                if (btnCnt < LoadedSectionList.Count) LoadedSectionList[btnCnt].SetBoarderImgActive(true);
 
                 noteCnt++;
                 btnCnt++;
@@ -319,6 +387,13 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 전체 구간 재생.
+    /// </summary>
+    /// <param name="_offset"></param>
+    /// <param name="_unitBPMSecond"></param>
+    /// <param name="_bpmMultiCount"></param>
+    /// <returns></returns>
     private IEnumerator playBeatTest(float _offset, double _unitBPMSecond, int _bpmMultiCount) {
 
         double cmpTime = _offset;
@@ -406,7 +481,7 @@ public class MusicInfoSetter : MonoBehaviour
             if (audioPlayer.time > cmpTime)
             {
                 cmpTime += unitBPMSecond;
-                LoadedSectionList[cnt].SetBoarderImg(true);
+                LoadedSectionList[cnt].SetBoarderImgActive(true);
                 cnt++;
             }
 
@@ -450,8 +525,7 @@ public class MusicInfoSetter : MonoBehaviour
 
     }
 
-    //todo : 판정 확인점으로 바꿔야 하는 함수, playoneshot을 이용하면 pause가 풀림. 이걸 우회할 방법 고려.!!
-    //todo : 채보시에는 필요 없음!!!
+
     private IEnumerator WaitInput(AudioClip _snd, int _waitUnitTime, bool _isAuto) {
 
         float curTime = audioPlayer.time;
@@ -492,7 +566,7 @@ public class MusicInfoSetter : MonoBehaviour
 
         int arrCount = beatInBGM + BPM_Multiplyer;
 
-
+        //todo : 정리하기.
         if (noteArray == null)
         {
 

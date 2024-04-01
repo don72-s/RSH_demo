@@ -12,12 +12,19 @@ public class SectionInfoDis : MonoBehaviour
     GameObject secInfoBlockInstance;
     List<SectionInfoBlock> secInfoBlockL = new List<SectionInfoBlock>();
 
-
+    /// <summary>
+    /// 구간 정보 출력 전광판 초기화.
+    /// </summary>
+    /// <param name="_stageInfo">참고할 스테이지 정보 객체</param>
     public void SetupSecInfoDisplay(StageInfo _stageInfo)
     {
         if (_stageInfo != null) SetupSecInfoDisplay(_stageInfo.noteArray);
-            }
+    }
 
+    /// <summary>
+    /// 구간 정보 출력 전광판 초기화.
+    /// </summary>
+    /// <param name="_noteArr">참고할 노트 배열</param>
     public void SetupSecInfoDisplay(NoteInfo[] _noteArr) {
 
         if (_noteArr == null) return;
@@ -29,7 +36,8 @@ public class SectionInfoDis : MonoBehaviour
 
         foreach (NoteInfo _info in _noteArr)
         {
-            Debug.Log(_info.waitScoreCount);
+            //del
+            //Debug.Log(_info.waitScoreCount);
             if (_info.waitScoreCount != 0)
             {
 
@@ -52,6 +60,7 @@ public class SectionInfoDis : MonoBehaviour
                     }
 
                     secInfoBlockL[counter / 2].SetText(sb.ToString());
+                    secInfoBlockL[counter / 2].gameObject.transform.localScale = Vector3.one;
                     sb.Clear();
 
                 }

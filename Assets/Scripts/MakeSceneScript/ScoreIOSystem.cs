@@ -29,6 +29,7 @@ public class ScoreIOSystem : MonoBehaviour
         upperBtnList = new List<ButtonScript>();
         lowerBtnList = new List<ButtonScript>();
 
+        //위, 아래 모두 16개를 기본으로 오브젝트 풀 조정.
         for (int i = 0; i < 16; i++) {
 
             upperBtnList.Add(Instantiate(inputUpperBtnObj, upperScoreBoard.transform).GetComponent<ButtonScript>());
@@ -42,7 +43,12 @@ public class ScoreIOSystem : MonoBehaviour
 
     private List<ButtonScript> retButtonList;
 
-    //todo : 범위를 tite하게 지정해야 함. => 구간을 출력하는거기 때문. 매개변수 추가? or 범위만큼만 세팅? && 가로 버튼 갯수 : bpm multiplyer와 같은 숫자로 받아서 설정
+    /// <summary>
+    /// 노드 타입 정보를 받아서 위, 아래 디스플레이 정보를 세팅.
+    /// </summary>
+    /// <param name="_arr">노트 타입 배열</param>
+    /// <param name="_bpmMultiplyer">세분화 비트 단위</param>
+    /// <returns>디스플래이 된 ButtonScript 객체들의 리스트를 반환.</returns>
     public List<ButtonScript> SetNotes(NoteType[] _arr, int _bpmMultiplyer) {
 
         retButtonList = new List<ButtonScript>();
@@ -53,6 +59,12 @@ public class ScoreIOSystem : MonoBehaviour
         return retButtonList;
     }
 
+    /// <summary>
+    /// 노드 정보를 받아서 위, 아래 디스플레이 정보를 세팅.
+    /// </summary>
+    /// <param name="_arr">노트 정보 배열</param>
+    /// <param name="_bpmMultiplyer">세분화 비트 단위</param>
+    /// <returns>디스플래이 된 ButtonScript 객체들의 리스트를 반환.</returns>
     internal List<ButtonScript> SetNotes(NoteInfo[] _arr, int _bpmMultiplyer)
     {
 
@@ -66,6 +78,16 @@ public class ScoreIOSystem : MonoBehaviour
 
     }
 
+
+    /// <summary>
+    /// 실제 노트의 디스플래이를 세팅
+    /// </summary>
+    /// <param name="_buttonsList">대상이 될 디스플래이 버튼들의 리스트</param>
+    /// <param name="_parentObject">해당 버튼들의 부모 오브젝트</param>
+    /// <param name="_arr">세팅할 노트 정보 배열</param>
+    /// <param name="_btnObject">오브젝트 풀이 부족할 시, 추가 객체화 할 인스턴스</param>
+    /// <param name="_rowCount">조정할 가로 갯수의 크기</param>
+    /// <param name="_retList">반환할 최종 버튼 객체들의 리스트</param>
     private void SetButtonUI(List<ButtonScript> _buttonsList, GridLayoutGroup _parentObject, NoteType[] _arr, GameObject _btnObject, int _rowCount, List<ButtonScript> _retList) {
 
         int cnt = _arr.Length;
@@ -89,7 +111,7 @@ public class ScoreIOSystem : MonoBehaviour
 
         }
 
-        //todo : 가로갯수 조정
+        //가로 길이 조정.
         _parentObject.constraintCount = _rowCount;
         _parentObject.cellSize = new Vector2(400 / _rowCount, 50);
     }
