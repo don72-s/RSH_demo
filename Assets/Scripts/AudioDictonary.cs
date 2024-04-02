@@ -4,8 +4,8 @@ using UnityEngine;
 
 
 
-public enum BGM_TYPE { STAGE1 };
-public enum SE_TYPYE { DEFAULT_UPPER, DEFAULT_LOWER };
+public enum BGM_TYPE { STAGE1, STAGE2 };
+public enum SE_TYPE { DEF_UPPER, DEF_LOWER };
 
 
 [CreateAssetMenu(menuName = "Dictonarys/AduioDictionary")]
@@ -29,7 +29,7 @@ public class AudioDictonary : ScriptableObject
     struct seData {
 
         [SerializeField]
-        public SE_TYPYE seType;
+        public SE_TYPE seType;
         [SerializeField]
         public AudioClip seClip;
 
@@ -40,25 +40,17 @@ public class AudioDictonary : ScriptableObject
     [SerializeField]
     List<seData> seList;
 
-    Dictionary<BGM_TYPE, AudioClip> bgmDic = null;
-    Dictionary<SE_TYPYE, AudioClip> seDic = null;
+    Dictionary<BGM_TYPE, bgmData> bgmDic = null;
+    Dictionary<SE_TYPE, seData> seDic = null;
 
 
     public AudioClip GetBGMClip(BGM_TYPE _bgmType) {
 
-        if (bgmDic == null) { 
-        
-            bgmDic = new Dictionary<BGM_TYPE, AudioClip>();
-
-            foreach (bgmData _data in bgmList) { 
-                bgmDic.Add(_data.bgmType, _data.bgmClip);
-            }
-
-        }
+        CheckBGMDic();
 
         if (bgmDic.ContainsKey(_bgmType))
         {
-            return bgmDic[_bgmType];
+            return bgmDic[_bgmType].bgmClip;
         }
         else {
             return null;
@@ -66,24 +58,75 @@ public class AudioDictonary : ScriptableObject
 
     }
 
-    public AudioClip GetSEClip(SE_TYPYE _seType)
+    public float GetBGMOffset(BGM_TYPE _bgmType) {
+
+        CheckBGMDic();
+
+        if (bgmDic.ContainsKey(_bgmType))
+        {
+            return bgmDic[_bgmType].offsetSecond;
+        }
+        else
+        {
+            return float.MinValue;
+        }
+
+    }
+
+    public float GetBGM_BPM(BGM_TYPE _bgmType)
+    {
+
+        CheckBGMDic();
+
+        if (bgmDic.ContainsKey(_bgmType))
+        {
+            return bgmDic[_bgmType].bpm;
+        }
+        else
+        {
+            return float.MinValue;
+        }
+
+    }
+
+    private void CheckBGMDic() {
+
+        if (bgmDic == null)
+        {
+
+            bgmDic = new Dictionary<BGM_TYPE, bgmData>();
+
+            foreach (bgmData _data in bgmList)
+            {
+                bgmDic.Add(_data.bgmType, _data);
+            }
+
+        }
+
+    }
+
+
+
+
+
+    public AudioClip GetSEClip(SE_TYPE _seType)
     {
 
         if (seDic == null)
         {
 
-            seDic = new Dictionary<SE_TYPYE, AudioClip>();
+            seDic = new Dictionary<SE_TYPE, seData>();
 
             foreach (seData _data in seList)
             {
-                seDic.Add(_data.seType, _data.seClip);
+                seDic.Add(_data.seType, _data);
             }
 
         }
 
         if (seDic.ContainsKey(_seType))
         {
-            return seDic[_seType];
+            return seDic[_seType].seClip;
         }
         else
         {

@@ -17,9 +17,9 @@ public class MusicInfoSetter : MonoBehaviour
     [SerializeField]
     BGM_TYPE bgmType;
     [SerializeField]
-    SE_TYPYE upperSeType;
+    SE_TYPE upperSeType;
     [SerializeField]
-    SE_TYPYE lowerSeType;
+    SE_TYPE lowerSeType;
 
     [SerializeField]
     AudioDictonary audioClipDic;
@@ -62,7 +62,8 @@ public class MusicInfoSetter : MonoBehaviour
     
         StopAllCoroutines();
 
-        InitNoteSheet();
+        //정보가 초기화되지 않음.
+        if (audioPlayer.clip == null) return;
 
         unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer) ;
 
@@ -226,7 +227,7 @@ public class MusicInfoSetter : MonoBehaviour
             alertWindow.ShowDoubleAlertWindow("[ " + saveFileName + " ] 같은 이름의 파일이 존재합니다.\n덮어쓰시겠습니까?", "OK!", CallbackAndroidExport);
         }
         else {
-            NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType);
+            NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
             alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
             btn_Export_Window(false);
 
@@ -251,7 +252,7 @@ public class MusicInfoSetter : MonoBehaviour
 
     private void CallbackAndroidExport() {
 
-        NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType);
+        NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
         alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
         btn_Export_Window(false);
 
@@ -548,15 +549,42 @@ public class MusicInfoSetter : MonoBehaviour
 
     private NoteInfo[] noteArray = null;
 
-    public void InitNoteSheet() {
 
-        if (bgmClip == null) { 
-        
-            bgmClip = audioClipDic.GetBGMClip(bgmType);
-            upperSEClip = audioClipDic.GetSEClip(upperSeType);
-            lowerSEClip = audioClipDic.GetSEClip(lowerSeType);
 
-        }
+
+
+
+    [SerializeField]
+    BGMDropdown BGM_Dropdown;
+    [SerializeField]
+    SEDropdown LowerSE_Dropdown;
+    [SerializeField]
+    SEDropdown UpperSE_Dropdown;
+
+    [SerializeField]
+    InputField BPM_Multiplyer_Inputfield;
+    [SerializeField]
+    InputField ScoreUnit_Inputfield;
+
+    public void btn_Ceate_New_Score() {
+
+        if(!InputChecker.IsPositiveInt(BPM_Multiplyer_Inputfield)) { alertWindow.ShowSingleAlertWindow("BPM계수는 양수여야 합니다."); return; }
+        if(!InputChecker.IsPositiveInt(ScoreUnit_Inputfield)) { alertWindow.ShowSingleAlertWindow("지속 마디 계수는 양수여야 합니다."); return; }
+
+        BPM_Multiplyer = InputChecker.GetInt(BPM_Multiplyer_Inputfield);
+        scoreUnit = InputChecker.GetInt(ScoreUnit_Inputfield);
+
+        bgmType = BGM_Dropdown.GetItem();
+        lowerSeType = LowerSE_Dropdown.GetItem();
+        upperSeType = UpperSE_Dropdown.GetItem();
+
+        bgmClip = audioClipDic.GetBGMClip(bgmType);
+        audioPlayer.clip = bgmClip;
+        upperSEClip = audioClipDic.GetSEClip(upperSeType);
+        lowerSEClip = audioClipDic.GetSEClip(lowerSeType);
+
+        offsetSecond = audioClipDic.GetBGMOffset(bgmType);
+        BPM = audioClipDic.GetBGM_BPM(bgmType);
 
         float bgmTime = bgmClip.length;
         Debug.Log(bgmTime);
@@ -566,17 +594,13 @@ public class MusicInfoSetter : MonoBehaviour
 
         int arrCount = beatInBGM + BPM_Multiplyer;
 
-        //todo : 정리하기.
-        if (noteArray == null)
-        {
 
-            noteArray = new NoteInfo[arrCount];
+        noteArray = new NoteInfo[arrCount];
 
-            for (int i = 0; i < arrCount; i++) {
-                noteArray[i] = new NoteInfo();
-            }
-            
+        for (int i = 0; i < arrCount; i++) {
+            noteArray[i] = new NoteInfo();
         }
+            
 
 
 

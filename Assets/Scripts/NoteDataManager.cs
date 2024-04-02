@@ -18,12 +18,12 @@ public class StageInfo {
     public readonly int scoreUnit;
 
     public readonly BGM_TYPE bgmType;
-    public readonly SE_TYPYE upperSeType;
-    public readonly SE_TYPYE lowerSeType;
+    public readonly SE_TYPE upperSeType;
+    public readonly SE_TYPE lowerSeType;
 
     public readonly NoteInfo[] noteArray;
 
-    public StageInfo(NoteInfo[] _noteArr, float _offsetSecond, int _bpm, int _bpmMultiplier, int _scoreUnit, BGM_TYPE _bgm, SE_TYPYE _upper, SE_TYPYE _lower) { 
+    public StageInfo(NoteInfo[] _noteArr, float _offsetSecond, int _bpm, int _bpmMultiplier, int _scoreUnit, BGM_TYPE _bgm, SE_TYPE _upper, SE_TYPE _lower) { 
     
         noteArray= _noteArr;
 
@@ -52,7 +52,7 @@ public static class NoteDataManager
 {
 
 
-    public static void SaveData(NoteInfo[] _noteArr, float _offsetSecond, int _bpm, int _bpmMultiplier, int _scoreUnit, BGM_TYPE _bgm, SE_TYPYE _upperSE, SE_TYPYE _lowerSE, string _fileName = "noteData.dat") {
+    public static void SaveData(NoteInfo[] _noteArr, float _offsetSecond, int _bpm, int _bpmMultiplier, int _scoreUnit, BGM_TYPE _bgm, SE_TYPE _upperSE, SE_TYPE _lowerSE, string _fileName = "noteData.dat") {
 
         StageInfo tmp = new StageInfo(_noteArr, _offsetSecond, _bpm, _bpmMultiplier, _scoreUnit, _bgm, _upperSE, _lowerSE);
         SaveData(tmp, _fileName);
@@ -105,7 +105,7 @@ public static class NoteDataManager
 
 
 
-    public static void AndroidSaveData(NoteInfo[] _noteArr, float _offsetSecond, int _bpm, int _bpmMultiplier, int _scoreUnit, BGM_TYPE _bgm, SE_TYPYE _upperSE, SE_TYPYE _lowerSE, string _fileName = "noteData.dat")
+    public static void AndroidSaveData(NoteInfo[] _noteArr, float _offsetSecond, int _bpm, int _bpmMultiplier, int _scoreUnit, BGM_TYPE _bgm, SE_TYPE _upperSE, SE_TYPE _lowerSE, string _fileName = "noteData.dat")
     {
 
         StageInfo tmp = new StageInfo(_noteArr, _offsetSecond, _bpm, _bpmMultiplier, _scoreUnit, _bgm, _upperSE, _lowerSE);

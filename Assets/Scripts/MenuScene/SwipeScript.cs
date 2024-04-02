@@ -39,12 +39,7 @@ public class SwipeScript : MonoBehaviour
     {
 #if UNITY_EDITOR
 
-        List<string> l = new List<string>();
-        l.Add("stage1Note.dat");
-        l.Add("st2.dat");
-        l.Add("st3.dat");
-
-        SettingSwipteButtons(l);
+        
 #elif UNITY_ANDROID
 
 #endif
@@ -216,6 +211,8 @@ public class SwipeScript : MonoBehaviour
             if (_btnIdx == buttonL.Count - 1)
             {
                 Debug.Log("에디터로 전환 &");
+                SceneManager.LoadScene("MakeScene", LoadSceneMode.Single);
+
             }
             else
             {

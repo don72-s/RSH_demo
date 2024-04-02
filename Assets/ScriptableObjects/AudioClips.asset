@@ -17,6 +17,10 @@ MonoBehaviour:
     bgmClip: {fileID: 8300000, guid: 9ec9a9b685b88c94fbb1797e06a48cd4, type: 3}
     offsetSecond: 0.98
     bpm: 130
+  - bgmType: 1
+    bgmClip: {fileID: 8300000, guid: 440d9060af7c3e04982bfbc0c6298e67, type: 3}
+    offsetSecond: 0.2
+    bpm: 128
   seList:
   - seType: 0
     seClip: {fileID: 8300000, guid: c05eaf80354b2444f97a098cdd3e7914, type: 3}

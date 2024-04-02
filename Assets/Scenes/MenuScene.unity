@@ -703,8 +703,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6849c18694cdc74580d02b6874bc33d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  stageFileNameList:
-  - stage1Note.dat
+  loadFileNames: {fileID: 11400000, guid: 7c978b930afeec0418c40d390cb213d8, type: 2}
   swipeMenuScr: {fileID: 383593902}
   ButtonParentObject: {fileID: 818169531}
   ButtonInstance: {fileID: 5666353043931005374, guid: 68ffae4b49e49734ba02698b1bd1ef8f,

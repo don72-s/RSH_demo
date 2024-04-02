@@ -2774,7 +2774,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 440063604}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1180091603}
+        m_MethodName: btn_Ceate_New_Score
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &440063604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4182,6 +4193,7 @@ GameObject:
   - component: {fileID: 706815036}
   - component: {fileID: 706815035}
   - component: {fileID: 706815034}
+  - component: {fileID: 706815037}
   m_Layer: 5
   m_Name: BgmDropdown
   m_TagString: Untagged
@@ -4300,6 +4312,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 706815032}
   m_CullTransparentMesh: 0
+--- !u!114 &706815037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 706815032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 359a7d3d958fd1846a7bac956d6785a8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &729480546
 GameObject:
   m_ObjectHideFlags: 0
@@ -4689,6 +4713,7 @@ GameObject:
   - component: {fileID: 787194811}
   - component: {fileID: 787194810}
   - component: {fileID: 787194809}
+  - component: {fileID: 787194812}
   m_Layer: 5
   m_Name: LowerSE Dropdown
   m_TagString: Untagged
@@ -4807,6 +4832,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 787194807}
   m_CullTransparentMesh: 0
+--- !u!114 &787194812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 787194807}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 881140a3646a4f54c8a805b3b5d61069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &805971515
 GameObject:
   m_ObjectHideFlags: 0
@@ -6803,6 +6840,7 @@ GameObject:
   - component: {fileID: 1044604213}
   - component: {fileID: 1044604212}
   - component: {fileID: 1044604211}
+  - component: {fileID: 1044604214}
   m_Layer: 5
   m_Name: UpperSE Dropdown
   m_TagString: Untagged
@@ -6921,6 +6959,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1044604209}
   m_CullTransparentMesh: 0
+--- !u!114 &1044604214
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1044604209}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 881140a3646a4f54c8a805b3b5d61069, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1045118630
 GameObject:
   m_ObjectHideFlags: 0
@@ -7593,6 +7643,11 @@ MonoBehaviour:
   scoreUnit: 4
   loadFileName: stage1Note.dat
   saveFileName: 
+  BGM_Dropdown: {fileID: 706815037}
+  LowerSE_Dropdown: {fileID: 787194812}
+  UpperSE_Dropdown: {fileID: 1044604214}
+  BPM_Multiplyer_Inputfield: {fileID: 1899904627}
+  ScoreUnit_Inputfield: {fileID: 2071667153}
 --- !u!4 &1180091604
 Transform:
   m_ObjectHideFlags: 0
@@ -10527,8 +10582,8 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
+    m_BestFit: 1
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -10772,8 +10827,8 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
+    m_BestFit: 1
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0
@@ -13754,8 +13809,8 @@ MonoBehaviour:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
     m_FontStyle: 0
-    m_BestFit: 0
-    m_MinSize: 10
+    m_BestFit: 1
+    m_MinSize: 0
     m_MaxSize: 40
     m_Alignment: 3
     m_AlignByGeometry: 0

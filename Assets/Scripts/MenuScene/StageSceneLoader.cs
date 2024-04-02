@@ -7,8 +7,11 @@ using UnityEngine.UI;
 
 public class StageSceneLoader : MonoBehaviour
 {
-    [SerializeField]
+    
     List<string> stageFileNameList;
+
+    [SerializeField]
+    LoadFileNames loadFileNames;
 
     [SerializeField]
     SwipeScript swipeMenuScr;
@@ -30,8 +33,13 @@ public class StageSceneLoader : MonoBehaviour
     private void Start()
     {
 
+        stageFileNameList = loadFileNames.fileNames;
+
+
 #if UNITY_EDITOR
-        //todo : 경로별 차별화 추가.
+
+        swipeMenuScr.SettingSwipteButtons(stageFileNameList);
+
 #elif UNITY_ANDROID
         if (checkDefaultFilesExist(stageFileNameList))
         {

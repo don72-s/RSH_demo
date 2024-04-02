@@ -58,6 +58,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\AudioDictonary.cs" />
     <Compile Include="Assets\Scripts\InputManager.cs" />
+    <Compile Include="Assets\Scripts\LoadFileNames.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\AlertWindow.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\InputButton\ButtonScript.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\InputButton\LowerButtonScript.cs" />
@@ -73,6 +74,8 @@
     <Compile Include="Assets\Scripts\NoteDisplayere.cs" />
     <Compile Include="Assets\Scripts\SceneLoader.cs" />
     <Compile Include="Assets\Scripts\SoundManager.cs" />
+    <Compile Include="Assets\Scripts\StaticScript\Dropdown\BGMDropdown.cs" />
+    <Compile Include="Assets\Scripts\StaticScript\Dropdown\SEDropdown.cs" />
     <Compile Include="Assets\Scripts\StaticScript\InputChecker.cs" />
     <Compile Include="Assets\Scripts\noteScr.cs" />
   </ItemGroup>
