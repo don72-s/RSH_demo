@@ -10,7 +10,7 @@ public class StageSceneLoader : MonoBehaviour
     
     List<string> stageFileNameList;
 
-    [SerializeField]
+    [SerializeField]//scriptable object
     LoadFileNames loadFileNames;
 
     [SerializeField]
@@ -25,6 +25,8 @@ public class StageSceneLoader : MonoBehaviour
     [SerializeField]
     Sprite addBoarderImg;
 
+    [SerializeField]
+    OptionScript optionWindow;
 
 
     //private List<SwiptBtnScript> buttonList = new List<SwiptBtnScript>();
@@ -38,9 +40,24 @@ public class StageSceneLoader : MonoBehaviour
 
 #if UNITY_EDITOR
 
+
+        optionWindow.init();
         swipeMenuScr.SettingSwipteButtons(stageFileNameList);
 
+
 #elif UNITY_ANDROID
+
+        //sav파일 확인
+        if (!NoteDataManager.CheckAndroidFileExist("userData.sav"))
+        {
+            StartCoroutine(AndroidUnpackingNoteFile("userData.sav"));
+        }
+
+        StartCoroutine(AndroidUserdataDownloadCheck("userData.sav"));
+
+
+
+        //dat파일 확인 (노트파일)
         if (checkDefaultFilesExist(stageFileNameList))
         {
 
@@ -52,12 +69,15 @@ public class StageSceneLoader : MonoBehaviour
         foreach (string _fileName in stageFileNameList)
         {
 
-            StartCoroutine(UnpackingNoteFile(_fileName));
+            StartCoroutine(AndroidUnpackingNoteFile(_fileName));
 
         }
 
-        StartCoroutine(FileDownloadCheck(stageFileNameList));
+        StartCoroutine(AndroidNoteFilesDownloadCheck(stageFileNameList));
 #endif
+
+
+
 
     }
 
@@ -128,7 +148,7 @@ public class StageSceneLoader : MonoBehaviour
 
 
 
-    IEnumerator UnpackingNoteFile(string _fileName)
+    IEnumerator AndroidUnpackingNoteFile(string _fileName)
     {
 
         // "StreamingAssets" 폴더에 있는 파일의 경로
@@ -154,7 +174,28 @@ public class StageSceneLoader : MonoBehaviour
         }
     }
 
-    IEnumerator FileDownloadCheck(List<string> _fileNames) {
+    IEnumerator AndroidUserdataDownloadCheck(string _fileName) {
+
+        int downloadCount = 0;
+
+        while (!NoteDataManager.CheckAndroidFileExist(_fileName))
+        {
+
+            yield return new WaitForSeconds(3f);
+            downloadCount++;
+
+            if (downloadCount > 5)
+            {
+                yield break;
+            }
+
+        }
+
+        optionWindow.init();
+
+    }
+
+    IEnumerator AndroidNoteFilesDownloadCheck(List<string> _fileNames) {
 
         int downloadCount = 0;
 
@@ -174,5 +215,8 @@ public class StageSceneLoader : MonoBehaviour
         InitElements(stageFileNameList);
 
     }
+
+
+
 
 }

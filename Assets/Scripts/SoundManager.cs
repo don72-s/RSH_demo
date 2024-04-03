@@ -87,8 +87,6 @@ public class SoundManager : MonoBehaviour
     public void LoadNodeData() {
 
 #if UNITY_EDITOR
-        //todo : 디버그용임.
-        //PlayerPrefs.SetString("StageFileName", DebugLoadFileName);
         stageData = NoteDataManager.LoadData(PlayerPrefs.GetString("StageFileName"));
 #elif UNITY_ANDROID
         stageData = NoteDataManager.AndroidLoadData(PlayerPrefs.GetString("StageFileName"));

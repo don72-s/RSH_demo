@@ -68,6 +68,16 @@ public static class NoteDataManager
 
     }
 
+    public static void SaveData<T>(T _data, string _fileName)
+    {
+
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream fileStream = new FileStream(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName), FileMode.Create);
+        formatter.Serialize(fileStream, _data);
+        fileStream.Close();
+
+    }
+
     /// <summary>
     /// 전달된 이름의 파일을 읽어옴 [ .dat 포함된 파일 이름 전달 ], 바탕화면 기준.
     /// </summary>
@@ -81,6 +91,25 @@ public static class NoteDataManager
             BinaryFormatter formatter = new BinaryFormatter();
             FileStream fileStream = new FileStream(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName), FileMode.Open);
             tmp = (StageInfo)formatter.Deserialize(fileStream);
+            fileStream.Close();
+            return tmp;
+        }
+        else
+        {
+            Debug.LogWarning("파일을 찾을수가 없습니다. - 바탕화면에 파일을 올려놓고 진행하세요.");
+            return null;
+        }
+
+    }
+
+    public static UserData LoadUserData() {
+
+        if (CheckFileExist("userData.sav"))
+        {
+            UserData tmp;
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = new FileStream(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "userData.sav"), FileMode.Open);
+            tmp = (UserData)formatter.Deserialize(fileStream);
             fileStream.Close();
             return tmp;
         }
@@ -123,6 +152,19 @@ public static class NoteDataManager
 
     }
 
+
+    public static void AndroidSaveData<T>(T _data, string _fileName)
+    {
+
+        BinaryFormatter formatter = new BinaryFormatter();
+        FileStream fileStream = new FileStream(Path.Combine(Application.persistentDataPath, _fileName), FileMode.Create);
+        formatter.Serialize(fileStream, _data);
+        fileStream.Close();
+
+    }
+
+
+
     /// <summary>
     /// 전달된 이름의 파일을 읽어옴 [ .dat 포함된 파일 이름 전달 ], persistentDataPath 기준.
     /// </summary>
@@ -145,6 +187,27 @@ public static class NoteDataManager
         }
 
     }
+
+    public static UserData AndroidLoadUserData()
+    {
+
+        if (CheckAndroidFileExist("userData.sav"))
+        {
+            UserData tmp;
+            BinaryFormatter formatter = new BinaryFormatter();
+            FileStream fileStream = new FileStream(Path.Combine(Application.persistentDataPath, "userData.sav"), FileMode.Open);
+            tmp = (UserData)formatter.Deserialize(fileStream);
+            fileStream.Close();
+            return tmp;
+        }
+        else
+        {
+            Debug.LogWarning("파일을 찾을수가 없습니다. - 바탕화면에 파일을 올려놓고 진행하세요.");
+            return null;
+        }
+
+    }
+
 
     /// <summary>
     /// 파일의 존재 확인.

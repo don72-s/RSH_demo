@@ -17,9 +17,9 @@ public class InputManager : MonoBehaviour
     private Text text;
 
     [SerializeField]
-    private float lowerOffset = 4;
+    private float lowerOffset;
     [SerializeField]
-    private float upperOffset = 4;
+    private float upperOffset;
 
 
 
@@ -29,6 +29,8 @@ public class InputManager : MonoBehaviour
     public void Start()
     {
         Input.gyro.enabled = true;
+        lowerOffset = PlayerPrefs.GetFloat("LowerSensitivity");
+        upperOffset = PlayerPrefs.GetFloat("UpperSensitivity");
     }
 
 
@@ -82,7 +84,7 @@ public class InputManager : MonoBehaviour
 
         }
 
-        if (!isUpperPlaying && vec.z < -upperOffset)
+        if (!isUpperPlaying && vec.z < upperOffset)
         {
             StartCoroutine(playUpperSnd());
 

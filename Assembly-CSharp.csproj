@@ -67,9 +67,11 @@
     <Compile Include="Assets\Scripts\MakeSceneScript\ScoreIOSystem.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\SectionInfoBlock\SectionInfoBlock.cs" />
     <Compile Include="Assets\Scripts\MakeSceneScript\SectionInfoDis.cs" />
+    <Compile Include="Assets\Scripts\MenuScene\OptionScript.cs" />
     <Compile Include="Assets\Scripts\MenuScene\StageSceneLoader.cs" />
     <Compile Include="Assets\Scripts\MenuScene\SwipeScript.cs" />
     <Compile Include="Assets\Scripts\MenuScene\SwiptBtnScript.cs" />
+    <Compile Include="Assets\Scripts\MenuScene\UserData.cs" />
     <Compile Include="Assets\Scripts\NoteDataManager.cs" />
     <Compile Include="Assets\Scripts\NoteDisplayere.cs" />
     <Compile Include="Assets\Scripts\SceneLoader.cs" />

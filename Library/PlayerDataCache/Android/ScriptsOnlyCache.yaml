@@ -3,12 +3,16 @@ ScriptsOnlyBuild:
     Assembly-CSharp.dll:
     - AlertWindow
     - AudioDictonary
+    - BGMDropdown
     - ButtonScript
     - InputManager
+    - LoadFileNames
     - LoadMenuManager
     - LowerButtonScript
     - MusicInfoSetter
     - NoteDisplayere
+    - OptionScript
+    - SEDropdown
     - SceneLoader
     - ScoreIOSystem
     - SectionInfoBlock
@@ -88,43 +92,47 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11966}
     - Class: 114
-      Script: {instanceID: 12326}
+      Script: {instanceID: 12194}
     - Class: 114
-      Script: {instanceID: 12520}
+      Script: {instanceID: 12328}
     - Class: 114
-      Script: {instanceID: 12856}
+      Script: {instanceID: 12522}
     - Class: 114
-      Script: {instanceID: 12924}
+      Script: {instanceID: 12858}
     - Class: 114
-      Script: {instanceID: 12944}
+      Script: {instanceID: 12926}
     - Class: 114
-      Script: {instanceID: 13100}
+      Script: {instanceID: 12946}
     - Class: 114
-      Script: {instanceID: 13272}
+      Script: {instanceID: 13102}
     - Class: 114
-      Script: {instanceID: 13402}
+      Script: {instanceID: 13274}
     - Class: 114
-      Script: {instanceID: 13588}
+      Script: {instanceID: 13404}
     - Class: 114
-      Script: {instanceID: 13600}
+      Script: {instanceID: 13592}
     - Class: 114
-      Script: {instanceID: 13766}
+      Script: {instanceID: 13604}
     - Class: 114
-      Script: {instanceID: 13976}
+      Script: {instanceID: 13770}
     - Class: 114
-      Script: {instanceID: 14042}
+      Script: {instanceID: 13980}
     - Class: 114
-      Script: {instanceID: 14060}
+      Script: {instanceID: 14046}
     - Class: 114
-      Script: {instanceID: 14344}
+      Script: {instanceID: 14064}
     - Class: 114
-      Script: {instanceID: 15038}
+      Script: {instanceID: 14348}
     - Class: 114
-      Script: {instanceID: 15080}
+      Script: {instanceID: 14552}
     - Class: 114
-      Script: {instanceID: 15106}
+      Script: {instanceID: 15044}
     - Class: 114
-      Script: {instanceID: 15198}
+      Script: {instanceID: 15086}
+    - Class: 114
+      Script: {instanceID: 15112}
+    - Class: 114
+      Script: {instanceID: 15204}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -156,6 +164,10 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
+    - Class: 82
+      Script: {instanceID: 0}
+    - Class: 83
+      Script: {instanceID: 0}
     - Class: 104
       Script: {instanceID: 0}
     - Class: 114
@@ -169,25 +181,31 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11956}
     - Class: 114
-      Script: {instanceID: 12326}
+      Script: {instanceID: 12328}
     - Class: 114
-      Script: {instanceID: 12520}
+      Script: {instanceID: 12522}
     - Class: 114
-      Script: {instanceID: 12944}
+      Script: {instanceID: 12946}
     - Class: 114
-      Script: {instanceID: 13244}
+      Script: {instanceID: 13246}
     - Class: 114
-      Script: {instanceID: 13402}
+      Script: {instanceID: 13404}
     - Class: 114
-      Script: {instanceID: 13834}
+      Script: {instanceID: 13560}
     - Class: 114
-      Script: {instanceID: 14108}
+      Script: {instanceID: 13770}
     - Class: 114
-      Script: {instanceID: 14344}
+      Script: {instanceID: 13838}
     - Class: 114
-      Script: {instanceID: 15074}
+      Script: {instanceID: 14112}
+    - Class: 114
+      Script: {instanceID: 14348}
     - Class: 114
       Script: {instanceID: 15080}
+    - Class: 114
+      Script: {instanceID: 15086}
+    - Class: 114
+      Script: {instanceID: 16636}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -234,23 +252,23 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 11694}
     - Class: 114
-      Script: {instanceID: 12520}
+      Script: {instanceID: 12522}
     - Class: 114
-      Script: {instanceID: 12924}
+      Script: {instanceID: 12926}
     - Class: 114
-      Script: {instanceID: 13314}
+      Script: {instanceID: 13316}
     - Class: 114
-      Script: {instanceID: 13390}
+      Script: {instanceID: 13392}
     - Class: 114
-      Script: {instanceID: 13402}
+      Script: {instanceID: 13404}
     - Class: 114
-      Script: {instanceID: 13976}
+      Script: {instanceID: 13980}
     - Class: 114
-      Script: {instanceID: 14208}
+      Script: {instanceID: 14212}
     - Class: 114
-      Script: {instanceID: 14344}
+      Script: {instanceID: 14348}
     - Class: 114
-      Script: {instanceID: 15080}
+      Script: {instanceID: 15086}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -456,6 +474,12 @@ ScriptsOnlyBuild:
     className: PixelPerfectCamera
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: SEDropdown
+  - hash:
+      serializedVersion: 2
       Hash: 5ab533713adae59372fb3e10a585c186
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -564,7 +588,7 @@ ScriptsOnlyBuild:
     className: RemoteTestResultSender
   - hash:
       serializedVersion: 2
-      Hash: 81db21573f18426fb91b1d6f682cd7a9
+      Hash: 89b77bad043d45c15d5bdbadff759503
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: StageSceneLoader
@@ -604,6 +628,12 @@ ScriptsOnlyBuild:
     assemblyName: UnityEngine.UI.dll
     namespaceName: UnityEngine.UI
     className: RawImage
+  - hash:
+      serializedVersion: 2
+      Hash: 7ab19cee6d47161f25af99d333d3e2c0
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: LoadFileNames
   - hash:
       serializedVersion: 2
       Hash: 5ad4aa237d47ac2bab17bacb672edf7a
@@ -732,6 +762,12 @@ ScriptsOnlyBuild:
     className: BeforeAfterTestCommandState
   - hash:
       serializedVersion: 2
+      Hash: 71bb6a6b6c8f052f948db64c7dd3ca4f
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: BGMDropdown
+  - hash:
+      serializedVersion: 2
       Hash: 1ea9a7cb370acf8b38f968f966134741
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
@@ -846,7 +882,7 @@ ScriptsOnlyBuild:
     className: ToggleGroup
   - hash:
       serializedVersion: 2
-      Hash: 879b3bf1b919c59d2f3690c321a88fd8
+      Hash: 54cbeb699738a2fd6fc3fc91a2961886
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MusicInfoSetter
@@ -856,6 +892,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 6f9019c274914b62c6346576e2b4305a
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: OptionScript
   platform: 13
   scenePathNames:
   - Assets/Scenes/MenuScene.unity
