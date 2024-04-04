@@ -24,6 +24,9 @@ public class OptionScript : MonoBehaviour
     [SerializeField]
     AudioClip lowerClip;
 
+    [SerializeField]
+    AlertWindow alertWindow;
+
     public void init()
     {
         Input.gyro.enabled = true;
@@ -59,7 +62,7 @@ public class OptionScript : MonoBehaviour
 
         Vector3 vec = Input.gyro.rotationRate;
 
-        sensitivityText.text = vec.z.ToString();
+        sensitivityText.text = vec.z.ToString("F4");
 
 #if UNITY_EDITOR
 
@@ -140,34 +143,34 @@ public class OptionScript : MonoBehaviour
     public void btn_windowActive(bool _isActive) { 
         gameObject.SetActive(_isActive);
     }
+
     public void btn_SetUpperOffset(InputField _upperInputField) {
 
-        float upperVal;
 
-        if (float.TryParse(_upperInputField.text, out upperVal)) {
-            userData.upperOffset = upperVal;
+        if (!InputChecker.IsPositiveFloat(_upperInputField, true)) {
+
+            userData.upperOffset = InputChecker.GetFloat(_upperInputField);
             PlayerPrefs.SetFloat("UpperSensitivity", userData.upperOffset);
 #if UNITY_EDITOR
             NoteDataManager.SaveData(userData, "userData.sav");
 #elif UNITY_ANDROID
             NoteDataManager.AndroidSaveData(userData, "userData.sav");
 #endif
-
             refreshSensInfo();
+
         }
-        else
-        {
-            //alertWindow
+        else {
+            alertWindow.ShowSingleAlertWindow("Upper값은 음수여야 합니다.");
         }
+
 
     }
     public void btn_SetLowerOffset(InputField _lowerInputField) {
 
-        float lowerVal;
-
-        if (float.TryParse(_lowerInputField.text, out lowerVal))
+        if (InputChecker.IsPositiveFloat(_lowerInputField))
         {
-            userData.lowerOffset = lowerVal;
+
+            userData.lowerOffset = InputChecker.GetFloat(_lowerInputField);
             PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
 #if UNITY_EDITOR
             NoteDataManager.SaveData(userData, "userData.sav");
@@ -175,15 +178,31 @@ public class OptionScript : MonoBehaviour
             NoteDataManager.AndroidSaveData(userData, "userData.sav");
 #endif
             refreshSensInfo();
-        }
-        else
+
+        }else
         {
-            //alertWindow
+            alertWindow.ShowSingleAlertWindow("Lower값은 양수여야 합니다.");
         }
 
     }
 
+    public void btn_InitOffset() {
 
+        userData.upperOffset = -4;
+        userData.lowerOffset = 4;
+        PlayerPrefs.SetFloat("UpperSensitivity", userData.upperOffset);
+        PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
+
+#if UNITY_EDITOR
+        NoteDataManager.SaveData(userData, "userData.sav");
+
+#elif UNITY_ANDROID
+        NoteDataManager.AndroidSaveData(userData, "userData.sav");
+#endif
+        refreshSensInfo();
+
+
+    }
 
 
     IEnumerator UnpackingNoteFile(string _fileName)

@@ -37,6 +37,9 @@ public class ScoreIOSystem : MonoBehaviour
 
         }
 
+        foreach (ButtonScript _btnScr in upperBtnList) _btnScr.gameObject.SetActive(false);
+        foreach (ButtonScript _btnScr in lowerBtnList) _btnScr.gameObject.SetActive(false);
+
     }
 
 

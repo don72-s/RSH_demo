@@ -34,10 +34,13 @@ public class SectionInfoDis : MonoBehaviour
         int counter = 0;
         int noteIdx = 0;
 
+        foreach (SectionInfoBlock _block in secInfoBlockL) {
+            _block.gameObject.SetActive(false);
+        }
+
         foreach (NoteInfo _info in _noteArr)
         {
-            //del
-            //Debug.Log(_info.waitScoreCount);
+
             if (_info.waitScoreCount != 0)
             {
 
@@ -61,6 +64,7 @@ public class SectionInfoDis : MonoBehaviour
 
                     secInfoBlockL[counter / 2].SetText(sb.ToString());
                     secInfoBlockL[counter / 2].gameObject.transform.localScale = Vector3.one;
+                    secInfoBlockL[counter / 2].gameObject.SetActive(true);
                     sb.Clear();
 
                 }
