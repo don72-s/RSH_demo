@@ -412,6 +412,7 @@ public class MusicInfoSetter : MonoBehaviour
         float audioLength = audioPlayer.clip.length;
 
         audioPlayer.Play();
+        debugText.text = "Playing...";
 
         yield return new WaitForSeconds(_offset);
 
@@ -427,8 +428,6 @@ public class MusicInfoSetter : MonoBehaviour
                 
                 if (noteArray[cnt].waitScoreCount != 0) {
 
-                    Debug.Log("tet");
-
                     if (flagcnter % 2 == 0) {
 
                         display_Button(cnt);
@@ -441,8 +440,6 @@ public class MusicInfoSetter : MonoBehaviour
                 }
 
                 StartCoroutine(PlayNote(noteArray[cnt]));
-
-                debugText.text = "curCnt : " + cnt + " / arrLength : " + noteArray.Length;
 
 
                 cnt++;

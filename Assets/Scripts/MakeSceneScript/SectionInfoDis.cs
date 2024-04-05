@@ -53,7 +53,9 @@ public class SectionInfoDis : MonoBehaviour
 
                     noteIdx = noteIdx + (_info.waitScoreCount * 2);
                     sb.Append((noteIdx - 1).ToString());
-                    sb.Append(" }");
+                    sb.Append(" } [ L : ");
+                    sb.Append(_info.waitScoreCount);
+                    sb.Append(" ]");
 
                     while (secInfoBlockL.Count <= counter / 2)
                     {

@@ -17,18 +17,6 @@ public class InfoWindow : MonoBehaviour
     [SerializeField]
     Button rightButton;
 
-    public InfoPageSO testObject;
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.A)) { 
-            InitInfo(testObject);
-        }
-    }
-
-
-
-
-
 
     private int curIdx = 0;
 
@@ -48,11 +36,11 @@ public class InfoWindow : MonoBehaviour
 
     }
 
-    public void btn_ExtiButton() {
-        gameObject.SetActive(false);
+    public void btn_ActiveWindow(bool _isActive) {
+        gameObject.SetActive(_isActive);
     }
 
-    public void InitInfo(InfoPageSO _pageSO) {
+    public void btn_InitInfo(InfoPageSO _pageSO) {
 
         if (_pageSO == null) return;
 
