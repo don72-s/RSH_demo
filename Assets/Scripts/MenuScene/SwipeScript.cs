@@ -50,27 +50,6 @@ public class SwipeScript : MonoBehaviour
     void Update()
     {
 
-        //에디터용 디버그 테스트
-        if (Input.GetKeyDown(KeyCode.Space)) {
-
-            Recalculate(3);
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.A))
-        {
-
-            Recalculate(4);
-
-        }
-
-        if (Input.GetKeyDown(KeyCode.B))
-        {
-
-            Recalculate(5);
-
-        }
-
 
         if (Input.GetMouseButton(0))
         {
