@@ -213,7 +213,13 @@ public class MusicInfoSetter : MonoBehaviour
 
         if (NoteDataManager.CheckFileExist(saveFileName))
         {
-            alertWindow.ShowDoubleAlertWindow("[ " + saveFileName + " ] 같은 이름의 파일이 존재합니다.\n덮어쓰시겠습니까?", "OK!", CallbackExport);
+            alertWindow.ShowDoubleAlertWindow("[ " + saveFileName + " ] 같은 이름의 파일이 존재합니다.\n덮어쓰시겠습니까?", "OK!", () => {
+
+                NoteDataManager.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
+                alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
+                btn_Export_Window(false);
+
+            });
         }
         else
         {
@@ -228,7 +234,13 @@ public class MusicInfoSetter : MonoBehaviour
 
         if (NoteDataManager.CheckAndroidFileExist(saveFileName))
         {
-            alertWindow.ShowDoubleAlertWindow("[ " + saveFileName + " ] 같은 이름의 파일이 존재합니다.\n덮어쓰시겠습니까?", "OK!", CallbackAndroidExport);
+            alertWindow.ShowDoubleAlertWindow("[ " + saveFileName + " ] 같은 이름의 파일이 존재합니다.\n덮어쓰시겠습니까?", "OK!", () => {
+            
+                NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
+                alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
+                btn_Export_Window(false);
+
+            });
         }
         else {
             NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
@@ -244,6 +256,7 @@ public class MusicInfoSetter : MonoBehaviour
 
     #region 버튼 콜백 함수.
 
+    //todo : 람다식 동작 확인 후 제거.
     private void CallbackExport() {
 
         NoteDataManager.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);

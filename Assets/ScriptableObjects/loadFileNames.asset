@@ -12,5 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0d0d0039fdaefc245aaf9ef62c6350ca, type: 3}
   m_Name: loadFileNames
   m_EditorClassIdentifier: 
-  fileNames:
-  - stage1Note.dat
+  fileInfoL:
+  - fileName: stage1Note.dat
+    sha256Hash: 80830978d348cc9dafe07155a6fa39c516b4c82def8b36fde08182a196e571d6

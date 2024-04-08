@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using System;
-
+using System.Security.Cryptography;
 
 public enum NoteType { NONE, DOWN_NOTE, UPPER_NOTE, INVERSE_DOWN_NOTE, INVERSE_UPPER_NOTE };
 
@@ -50,7 +50,7 @@ public class NoteInfo
 
 public static class NoteDataManager
 {
-
+    //todo : #if로 구분하기.
 
     public static void SaveData(NoteInfo[] _noteArr, float _offsetSecond, int _bpm, int _bpmMultiplier, int _scoreUnit, BGM_TYPE _bgm, SE_TYPE _upperSE, SE_TYPE _lowerSE, string _fileName = "noteData.dat") {
 
@@ -219,5 +219,32 @@ public static class NoteDataManager
         return File.Exists(Path.Combine(Application.persistentDataPath, _fileName));
     }
 
+
+
+
+
+    public static bool CheckHash(LoadFileNames.FileInfo _fileInfo)
+    {
+        return CheckHash(_fileInfo.fileName, _fileInfo.sha256Hash);
+    }
+
+
+    public static bool CheckHash(string _fileName, string _hashValue) {
+
+    string path;
+
+#if UNITY_EDITOR
+    path = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName);
+#elif UNITY_ANDROID
+    path = Path.Combine(Application.persistentDataPath, _fileName);
+#endif
+        using (var stream = File.OpenRead(path))
+        {
+            var sha256 = SHA256.Create();
+            byte[] hashBytes = sha256.ComputeHash(stream);
+
+            return _hashValue.Equals(BitConverter.ToString(hashBytes).Replace("-", "").ToLower());
+        }
+    }
 
 }

@@ -8,10 +8,8 @@ using UnityEngine.UI;
 public class StageSceneLoader : MonoBehaviour
 {
     
-    List<string> stageFileNameList;
-
     [SerializeField]//scriptable object
-    LoadFileNames loadFileNames;
+    LoadFileNames fileInfoSO;
 
     [SerializeField]
     SwipeScript swipeMenuScr;
@@ -35,15 +33,21 @@ public class StageSceneLoader : MonoBehaviour
     private void Start()
     {
 
-        stageFileNameList = loadFileNames.fileNames;
+        List<string> nameList = fileInfoSO.GetFileNames();
 
 
 #if UNITY_EDITOR
 
 
         optionWindow.init();
-        swipeMenuScr.SettingSwipteButtons(stageFileNameList);
 
+        swipeMenuScr.SettingSwipteButtons(nameList);
+
+        if (NoteDataManager.CheckHash(fileInfoSO.fileInfoL[0])){
+            Debug.Log("해시 일치");
+        }else {
+            Debug.Log("불일치");
+        }
 
 #elif UNITY_ANDROID
 
@@ -57,23 +61,26 @@ public class StageSceneLoader : MonoBehaviour
 
 
 
-        //dat파일 확인 (노트파일)
-        if (checkDefaultFilesExist(stageFileNameList))
+        //dat파일 확인 (노트파일과 해시 무결성 체크)
+        if (checkDefaultFilesExist(fileInfoSO))
         {
 
-            InitElements(stageFileNameList);
+            InitElements(nameList);
             return;
 
         }
 
-        foreach (string _fileName in stageFileNameList)
+        //깨진 파일들이 감지되었으므로 파일들 제거
+        RemoveFiles(fileInfoSO.GetFileNames());
+
+        foreach (string _fileName in nameList)
         {
 
             StartCoroutine(AndroidUnpackingNoteFile(_fileName));
 
         }
 
-        StartCoroutine(AndroidNoteFilesDownloadCheck(stageFileNameList));
+        StartCoroutine(AndroidNoteFilesDownloadCheck(fileInfoSO));
 #endif
 
 
@@ -86,17 +93,38 @@ public class StageSceneLoader : MonoBehaviour
     /// <summary>
     /// 해당 파일들이 준비되어있는지 확인
     /// </summary>
-    /// <param name="_defaultFileNamesL">대상 파일 이름 리스트</param>
+    /// <param name="_fileInfoL">대상 파일 이름 리스트</param>
     /// <returns></returns>
-    bool checkDefaultFilesExist(List<string> _defaultFileNamesL) {
+    bool checkDefaultFilesExist(LoadFileNames _fileNamesSO) {
 
-        foreach (string _fileName in _defaultFileNamesL) {
+        List<LoadFileNames.FileInfo> fileInfoL = _fileNamesSO.fileInfoL;
 
-            if (!File.Exists(Path.Combine(Application.persistentDataPath, _fileName))){
+        foreach (LoadFileNames.FileInfo _fileInfo in fileInfoL) {//파일 존재 여부 확인.
+
+            if (!File.Exists(Path.Combine(Application.persistentDataPath, _fileInfo.fileName))){
                 return false;
             }
         }
+
+        foreach (LoadFileNames.FileInfo _fileInfo in fileInfoL)
+        {//해시값 체크
+
+            if (!NoteDataManager.CheckHash(_fileInfo.fileName, _fileInfo.sha256Hash))
+            {
+                return false;
+            }
+        }
+
         return true;
+    }
+
+    void RemoveFiles(List<string> _fileNames) {
+
+        foreach (string _deleteName in _fileNames)//일부만 존재시 전부 제거.
+        {
+            File.Delete(Path.Combine(Application.persistentDataPath, _deleteName));
+        }
+
     }
 
     /// <summary>
@@ -195,11 +223,11 @@ public class StageSceneLoader : MonoBehaviour
 
     }
 
-    IEnumerator AndroidNoteFilesDownloadCheck(List<string> _fileNames) {
+    IEnumerator AndroidNoteFilesDownloadCheck(LoadFileNames _fileInfoSO) {
 
         int downloadCount = 0;
 
-        while (!checkDefaultFilesExist(_fileNames)) {
+        while (!checkDefaultFilesExist(_fileInfoSO)) {
 
             yield return new WaitForSeconds(3f);
             downloadCount++;
@@ -212,7 +240,7 @@ public class StageSceneLoader : MonoBehaviour
         }
 
         Debug.Log("다운로드 완료");
-        InitElements(stageFileNameList);
+        InitElements(_fileInfoSO.GetFileNames());
 
     }
 

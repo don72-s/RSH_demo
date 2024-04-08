@@ -2141,7 +2141,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6849c18694cdc74580d02b6874bc33d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadFileNames: {fileID: 11400000, guid: 7c978b930afeec0418c40d390cb213d8, type: 2}
+  fileInfoSO: {fileID: 11400000, guid: 7c978b930afeec0418c40d390cb213d8, type: 2}
   swipeMenuScr: {fileID: 383593902}
   ButtonParentObject: {fileID: 818169531}
   ButtonInstance: {fileID: 5666353043931005374, guid: 68ffae4b49e49734ba02698b1bd1ef8f,
@@ -3373,6 +3373,11 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1484241249}
     m_Modifications:
+    - target: {fileID: 285388570794092713, guid: 94b16eedba9b8f44fac003eb29121a72,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 2.0214844
+      objectReference: {fileID: 0}
     - target: {fileID: 285388571238207752, guid: 94b16eedba9b8f44fac003eb29121a72,
         type: 3}
       propertyPath: m_AnchorMax.x
