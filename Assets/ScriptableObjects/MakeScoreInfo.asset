@@ -19,3 +19,5 @@ MonoBehaviour:
     img: {fileID: 21300000, guid: 051865484e33e274ba1294f38b79d74b, type: 3}
   - titleText: "\uAD6C\uAC04 \uCC44\uBCF4 \uBC0F \uC801\uC6A9\uD558\uAE30"
     img: {fileID: 21300000, guid: 61343806774967e4c9f4dd187f613f0a, type: 3}
+  - titleText: "\uD14C\uC2A4\uD2B8 \uC7AC\uC0DD"
+    img: {fileID: 21300000, guid: fafb7fe6be5e6684e878628a91f92522, type: 3}
