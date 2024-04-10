@@ -23,9 +23,6 @@ public class InputManager : MonoBehaviour
 
 
 
-    public InputField inputf;
-
-
     public void Start()
     {
         Input.gyro.enabled = true;

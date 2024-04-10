@@ -21,6 +21,11 @@ public class SoundManager : MonoBehaviour
     private AudioClip upperClip;
     private AudioClip lowerClip;
 
+    [SerializeField]
+    Animator effectAnimator;
+    [SerializeField]
+    Animator failAnimator;
+
     StageInfo stageData;
 
     private NoteInfo[] stageNoteArr;
@@ -297,6 +302,7 @@ public class SoundManager : MonoBehaviour
                 inputm.useLower();
                 t.text = "correct";
                 inputm.PlayDown();
+                effectAnimator.SetTrigger("PlayEffect");
                 yield break;
 
             }
@@ -305,6 +311,7 @@ public class SoundManager : MonoBehaviour
 
         }
 
+        failAnimator.SetTrigger("Fail");
         t.text = " failied ";
 
 
@@ -344,6 +351,7 @@ public class SoundManager : MonoBehaviour
                 inputm.useUpper();
                 t.text = "correct";
                 inputm.PlayUp();
+                effectAnimator.SetTrigger("PlayEffect");
                 yield break;
 
             }
@@ -352,6 +360,7 @@ public class SoundManager : MonoBehaviour
 
         }
 
+        failAnimator.SetTrigger("Fail");
         t.text = " failied ";
 
     }
@@ -390,6 +399,7 @@ public class SoundManager : MonoBehaviour
                 inputm.useUpper();
                 t.text = "correct";
                 inputm.PlayUp();
+                effectAnimator.SetTrigger("PlayEffect");
                 yield break;
 
             }
@@ -398,6 +408,7 @@ public class SoundManager : MonoBehaviour
 
         }
 
+        failAnimator.SetTrigger("Fail");
         t.text = " failied ";
 
     }
@@ -436,6 +447,7 @@ public class SoundManager : MonoBehaviour
                 inputm.useLower();
                 t.text = "correct";
                 inputm.PlayDown();
+                effectAnimator.SetTrigger("PlayEffect");
                 yield break;
 
             }
@@ -444,6 +456,7 @@ public class SoundManager : MonoBehaviour
 
         }
 
+        failAnimator.SetTrigger("Fail");
         t.text = " failied ";
 
     }

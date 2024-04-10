@@ -35,6 +35,14 @@ ScriptsOnlyBuild:
     - Unity.PlasticSCM.Editor.PlasticWindow
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
+    UnityEditor.Graphs.dll:
+    - UnityEditor.Graphs.AnimationBlendTree.Graph
+    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
+    - UnityEditor.Graphs.AnimationStateMachine.Graph
+    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
+    - UnityEditor.Graphs.AnimationStateMachine.StateNode
+    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -247,11 +255,15 @@ ScriptsOnlyBuild:
       Script: {instanceID: 0}
     - Class: 48
       Script: {instanceID: 0}
+    - Class: 74
+      Script: {instanceID: 0}
     - Class: 81
       Script: {instanceID: 0}
     - Class: 82
       Script: {instanceID: 0}
     - Class: 83
+      Script: {instanceID: 0}
+    - Class: 91
       Script: {instanceID: 0}
     - Class: 95
       Script: {instanceID: 0}
@@ -624,7 +636,7 @@ ScriptsOnlyBuild:
     className: TextContainer
   - hash:
       serializedVersion: 2
-      Hash: 7541622cb8efda929506cbe6e8786221
+      Hash: d22a2b442a58ab3b90b55bc7b53a755f
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: InputManager
@@ -756,7 +768,7 @@ ScriptsOnlyBuild:
     className: OptionScript
   - hash:
       serializedVersion: 2
-      Hash: 4a1fa5d916895607b635b9716b41cd7d
+      Hash: 3568b237b5f2a1afd22822b829ebd867
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SoundManager
