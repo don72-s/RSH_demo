@@ -16,6 +16,7 @@ ScriptsOnlyBuild:
     - OptionScript
     - SEDropdown
     - SceneLoader
+    - ScoreDisplayer
     - ScoreIOSystem
     - SectionInfoBlock
     - SectionInfoDis
@@ -42,7 +43,6 @@ ScriptsOnlyBuild:
     - UnityEditor.Graphs.AnimationStateMachine.Graph
     - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
     - UnityEditor.Graphs.AnimationStateMachine.StateNode
-    - UnityEditor.Graphs.AnimatorControllerTool
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -293,6 +293,8 @@ ScriptsOnlyBuild:
       Script: {instanceID: 14354}
     - Class: 114
       Script: {instanceID: 15094}
+    - Class: 114
+      Script: {instanceID: 22102}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -768,7 +770,7 @@ ScriptsOnlyBuild:
     className: OptionScript
   - hash:
       serializedVersion: 2
-      Hash: 3568b237b5f2a1afd22822b829ebd867
+      Hash: 9a1e1cab633594c713be1b56db67aa77
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: SoundManager
@@ -934,6 +936,12 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
+  - hash:
+      serializedVersion: 2
+      Hash: 5961fe87a9529729f3fd141563839350
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ScoreDisplayer
   platform: 13
   scenePathNames:
   - Assets/Scenes/MenuScene.unity

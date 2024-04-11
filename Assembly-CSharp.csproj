@@ -76,6 +76,7 @@
     <Compile Include="Assets\Scripts\NoteDataManager.cs" />
     <Compile Include="Assets\Scripts\NoteDisplayere.cs" />
     <Compile Include="Assets\Scripts\SceneLoader.cs" />
+    <Compile Include="Assets\Scripts\ScoreDisplayer.cs" />
     <Compile Include="Assets\Scripts\SoundManager.cs" />
     <Compile Include="Assets\Scripts\StaticScript\Dropdown\BGMDropdown.cs" />
     <Compile Include="Assets\Scripts\StaticScript\Dropdown\SEDropdown.cs" />

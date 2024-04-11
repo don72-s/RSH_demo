@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
@@ -25,6 +26,9 @@ public class SoundManager : MonoBehaviour
     Animator effectAnimator;
     [SerializeField]
     Animator failAnimator;
+
+    [SerializeField]
+    ScoreDisplayer scoreDisplayer;
 
     StageInfo stageData;
 
@@ -77,6 +81,7 @@ public class SoundManager : MonoBehaviour
     private void Start()
     {
         LoadNodeData();
+        scoreDisplayer.ResetBoard();
     }
 
 
@@ -239,19 +244,19 @@ public class SoundManager : MonoBehaviour
                         break;
 
                     case NoteType.DOWN_NOTE:
-                        StartCoroutine(LowewrNote(curEffectTimeUnit));
+                        StartCoroutine(PlayNote(curEffectTimeUnit, inputm.PlayDown, nDisplayer.DisplayLowerNote, inputm.isLower, inputm.useLower, inputm.PlayDown));
                         break;
 
                     case NoteType.UPPER_NOTE:
-                        StartCoroutine(UpperNote(curEffectTimeUnit));
+                        StartCoroutine(PlayNote(curEffectTimeUnit, inputm.PlayUp, nDisplayer.DisplayUpperNote, inputm.isUpper, inputm.useUpper, inputm.PlayUp));
                         break;
 
                     case NoteType.INVERSE_DOWN_NOTE:
-                        StartCoroutine(InverseLowewrNote(curEffectTimeUnit));
+                        StartCoroutine(PlayNote(curEffectTimeUnit, inputm.PlayDown, nDisplayer.DisplayInverseLowerNote, inputm.isUpper, inputm.useUpper, inputm.PlayUp));
                         break;
 
                     case NoteType.INVERSE_UPPER_NOTE:
-                        StartCoroutine(InverseUpperNote(curEffectTimeUnit));
+                        StartCoroutine(PlayNote(curEffectTimeUnit, inputm.PlayUp, nDisplayer.DisplayInverseUpperNote, inputm.isLower, inputm.useLower, inputm.PlayDown));
                         break;
 
 
@@ -273,56 +278,21 @@ public class SoundManager : MonoBehaviour
 
     }
 
-    IEnumerator LowewrNote(int _watingUnit) {
 
-        inputm.PlayDown();
-        nDisplayer.DisplayLowerNote();
+    /// <summary>
+    /// 개별 노트의 코루틴 플레이 진행
+    /// </summary>
+    /// <param name="_watingUnit">다음 마디까지의 대기 단위</param>
+    /// <param name="_swipeSnd">디스플레이 시 플레이 될 사운드</param>
+    /// <param name="_displayNote">디스플레이 노트 종류</param>
+    /// <param name="_checkInput">체크할 입력 종류</param>
+    /// <param name="_useInput">사용할 입력 종류</param>
+    /// <param name="_playSnd">입력 성공시 플레이 될 사운드</param>
+    /// <returns></returns>
+    IEnumerator PlayNote(int _watingUnit, Action _swipeSnd, Action _displayNote, Func<bool> _checkInput, Action _useInput, Action _playSnd) {
 
-        float curTime = 0;
-        float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
-
-        while (curTime < waitTime) {
-
-            yield return null;
-            if (!bgmPause) curTime += Time.deltaTime;
-
-        }
-
-        curTime = 0;
-
-        while (curTime < bpmUnitSecond * 4) {
-
-            t.text = "start!";
-
-
-            if (!bgmPause) curTime += Time.deltaTime;
-
-            if (inputm.isLower()) {
-
-                inputm.useLower();
-                t.text = "correct";
-                inputm.PlayDown();
-                effectAnimator.SetTrigger("PlayEffect");
-                yield break;
-
-            }
-
-            yield return null;
-
-        }
-
-        failAnimator.SetTrigger("Fail");
-        t.text = " failied ";
-
-
-
-    }
-
-    IEnumerator UpperNote(int _watingUnit)
-    {
-
-        inputm.PlayUp();
-        nDisplayer.DisplayUpperNote();
+        _swipeSnd?.Invoke();
+        _displayNote?.Invoke();
 
         float curTime = 0;
         float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
@@ -337,21 +307,34 @@ public class SoundManager : MonoBehaviour
 
         curTime = 0;
 
-        while (curTime < bpmUnitSecond * 4)
+        float duringTime = bpmUnitSecond * 4;
+        float goodEndDuringTime = bpmUnitSecond * 3;
+
+        while (curTime < duringTime)
         {
-
-            t.text = "start!";
-
 
             if (!bgmPause) curTime += Time.deltaTime;
 
-            if (inputm.isUpper())
+            if (_checkInput())
             {
 
-                inputm.useUpper();
-                t.text = "correct";
-                inputm.PlayUp();
-                effectAnimator.SetTrigger("PlayEffect");
+                _useInput?.Invoke();
+                _playSnd?.Invoke();
+
+
+                if (curTime > bpmUnitSecond && curTime < goodEndDuringTime)
+                {
+                    t.text = "correct";
+                    effectAnimator.SetTrigger("Correct");
+                    scoreDisplayer.AddCorrect();
+                }
+                else
+                {
+                    t.text = "good";
+                    effectAnimator.SetTrigger("Good");
+                    scoreDisplayer.AddGood();
+                }
+
                 yield break;
 
             }
@@ -360,105 +343,11 @@ public class SoundManager : MonoBehaviour
 
         }
 
+        effectAnimator.SetTrigger("Fail");
         failAnimator.SetTrigger("Fail");
-        t.text = " failied ";
-
-    }
-
-    IEnumerator InverseLowewrNote(int _watingUnit)
-    {
-
-        inputm.PlayDown();
         Handheld.Vibrate();
-        nDisplayer.DisplayInverseLowerNote();
-
-        float curTime = 0;
-        float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
-
-        while (curTime < waitTime)
-        {
-
-            yield return null;
-            if (!bgmPause) curTime += Time.deltaTime;
-
-        }
-
-        curTime = 0;
-
-        while (curTime < bpmUnitSecond * 4)
-        {
-
-            t.text = "start!";
-
-
-            if (!bgmPause) curTime += Time.deltaTime;
-
-            if (inputm.isUpper())
-            {
-
-                inputm.useUpper();
-                t.text = "correct";
-                inputm.PlayUp();
-                effectAnimator.SetTrigger("PlayEffect");
-                yield break;
-
-            }
-
-            yield return null;
-
-        }
-
-        failAnimator.SetTrigger("Fail");
+        scoreDisplayer.AddFail();
         t.text = " failied ";
-
-    }
-
-    IEnumerator InverseUpperNote(int _watingUnit)
-    {
-
-        inputm.PlayUp();
-        Handheld.Vibrate();
-        nDisplayer.DisplayInverseUpperNote();
-
-        float curTime = 0;
-        float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
-
-        while (curTime < waitTime)
-        {
-
-            yield return null;
-            if (!bgmPause) curTime += Time.deltaTime;
-
-        }
-
-        curTime = 0;
-
-        while (curTime < bpmUnitSecond * 4)
-        {
-
-            t.text = "start!";
-
-
-            if (!bgmPause) curTime += Time.deltaTime;
-
-            if (inputm.isLower())
-            {
-
-                inputm.useLower();
-                t.text = "correct";
-                inputm.PlayDown();
-                effectAnimator.SetTrigger("PlayEffect");
-                yield break;
-
-            }
-
-            yield return null;
-
-        }
-
-        failAnimator.SetTrigger("Fail");
-        t.text = " failied ";
-
     }
 
 
