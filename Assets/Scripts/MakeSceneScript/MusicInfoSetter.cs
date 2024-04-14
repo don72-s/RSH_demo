@@ -14,11 +14,8 @@ public class MusicInfoSetter : MonoBehaviour
     AudioClip lowerSEClip;
 
 
-    [SerializeField]
     BGM_TYPE bgmType;
-    [SerializeField]
     SE_TYPE upperSeType;
-    [SerializeField]
     SE_TYPE lowerSeType;
 
     [SerializeField]
@@ -73,7 +70,7 @@ public class MusicInfoSetter : MonoBehaviour
     }
 
 
-    public string loadFileName;
+    private string loadFileName;
 
 
     /// <summary>
@@ -193,7 +190,7 @@ public class MusicInfoSetter : MonoBehaviour
 
 
 
-    public string saveFileName;
+    private string saveFileName;
 
     public void btn_Export_Window(bool _active) {
         exportWindow.SetActive(_active);

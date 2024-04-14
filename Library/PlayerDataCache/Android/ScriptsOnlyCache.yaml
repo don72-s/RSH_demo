@@ -36,13 +36,6 @@ ScriptsOnlyBuild:
     - Unity.PlasticSCM.Editor.PlasticWindow
     Unity.Rider.Editor.dll:
     - Packages.Rider.Editor.UnitTesting.CallbackData
-    UnityEditor.Graphs.dll:
-    - UnityEditor.Graphs.AnimationBlendTree.Graph
-    - UnityEditor.Graphs.AnimationBlendTree.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.AnyStateNode
-    - UnityEditor.Graphs.AnimationStateMachine.Graph
-    - UnityEditor.Graphs.AnimationStateMachine.GraphGUI
-    - UnityEditor.Graphs.AnimationStateMachine.StateNode
     UnityEditor.TestRunner.dll:
     - UnityEditor.TestTools.TestRunner.Api.CallbacksHolder
     - UnityEditor.TestTools.TestRunner.TestListCacheData
@@ -146,7 +139,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 15120}
     - Class: 114
-      Script: {instanceID: 15212}
+      Script: {instanceID: 15214}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -294,7 +287,7 @@ ScriptsOnlyBuild:
     - Class: 114
       Script: {instanceID: 15094}
     - Class: 114
-      Script: {instanceID: 22102}
+      Script: {instanceID: 15122}
     - Class: 115
       Script: {instanceID: 0}
     - Class: 128
@@ -908,6 +901,12 @@ ScriptsOnlyBuild:
     className: Toggle
   - hash:
       serializedVersion: 2
+      Hash: 5961fe87a9529729f3fd141563839350
+    assemblyName: Assembly-CSharp.dll
+    namespaceName: 
+    className: ScoreDisplayer
+  - hash:
+      serializedVersion: 2
       Hash: 8220b46879dc5e37db1b940c938f5744
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
@@ -926,7 +925,7 @@ ScriptsOnlyBuild:
     className: ToggleGroup
   - hash:
       serializedVersion: 2
-      Hash: 54cbeb699738a2fd6fc3fc91a2961886
+      Hash: a39d43aca8c106f79af504ea1bf6478a
     assemblyName: Assembly-CSharp.dll
     namespaceName: 
     className: MusicInfoSetter
@@ -936,12 +935,6 @@ ScriptsOnlyBuild:
     assemblyName: Unity.Timeline.dll
     namespaceName: UnityEngine.Timeline
     className: PlayableTrack
-  - hash:
-      serializedVersion: 2
-      Hash: 5961fe87a9529729f3fd141563839350
-    assemblyName: Assembly-CSharp.dll
-    namespaceName: 
-    className: ScoreDisplayer
   platform: 13
   scenePathNames:
   - Assets/Scenes/MenuScene.unity

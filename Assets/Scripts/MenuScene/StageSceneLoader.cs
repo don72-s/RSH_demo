@@ -43,7 +43,7 @@ public class StageSceneLoader : MonoBehaviour
 
         swipeMenuScr.SettingSwipteButtons(nameList);
 
-        if (NoteDataManager.CheckHash(fileInfoSO.fileInfoL[1])){
+        if (NoteDataManager.CheckHash(fileInfoSO.fileInfoL[2])){
             Debug.Log("해시 일치");
         }else {
             Debug.Log("불일치");

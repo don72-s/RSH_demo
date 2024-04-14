@@ -17,3 +17,5 @@ MonoBehaviour:
     sha256Hash: 80830978d348cc9dafe07155a6fa39c516b4c82def8b36fde08182a196e571d6
   - fileName: stage2Note.dat
     sha256Hash: da444af10e65e095aadc54b6976927c4e8343410522f1ee90324c906e71716b6
+  - fileName: stage3Note.dat
+    sha256Hash: cc62c21bd6bb23572c72cb01c990515233b4c3f0506341bc2725c02e8e87aeab
