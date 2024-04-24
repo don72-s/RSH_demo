@@ -6,4 +6,6 @@
 
 단순 리듬게임 프로젝트.
 
+[프로젝트의 구조 설명으로 이동](https://github.com/don72-s/RSH_demo/blob/main/Docs/description.md)
+
 [안드로이드용 apk 다운로드](https://github.com/don72-s/RSH_demo/releases/tag/v1.0.0-alpha)
