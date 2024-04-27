@@ -5,6 +5,10 @@
 커스텀 맵 제작 기능을 가진 에디터를 포함한
 
 단순 리듬게임 프로젝트.
+<br>
+
+![ddd](https://github.com/don72-s/RSH_demo/assets/66211881/31ca13e7-dd47-450f-bfcd-57794f82c64f)
+
 <hr>
 
 ### [프로젝트의 구조 설명으로 이동](https://github.com/don72-s/RSH_demo/blob/main/Docs/description.md)
