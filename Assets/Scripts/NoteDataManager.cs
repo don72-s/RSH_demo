@@ -89,7 +89,7 @@ public static class NoteDataManager
         {
             StageInfo tmp;
             BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fileStream = new FileStream(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName), FileMode.Open);
+            FileStream fileStream = new FileStream(Path.Combine(Application.streamingAssetsPath, _fileName), FileMode.Open);
             tmp = (StageInfo)formatter.Deserialize(fileStream);
             fileStream.Close();
             return tmp;
@@ -108,7 +108,7 @@ public static class NoteDataManager
         {
             UserData tmp;
             BinaryFormatter formatter = new BinaryFormatter();
-            FileStream fileStream = new FileStream(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), "userData.sav"), FileMode.Open);
+            FileStream fileStream = new FileStream(Path.Combine(Application.streamingAssetsPath, "userData.sav"), FileMode.Open);
             tmp = (UserData)formatter.Deserialize(fileStream);
             fileStream.Close();
             return tmp;
@@ -128,7 +128,7 @@ public static class NoteDataManager
     /// <returns>파일 존재 여부</returns>
     public static bool CheckFileExist(string _fileName)
     {
-        return File.Exists(Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName));
+        return File.Exists(Path.Combine(Application.streamingAssetsPath, _fileName));
     }
 
 
@@ -221,7 +221,20 @@ public static class NoteDataManager
 
 
 
+    public static bool CheckHash(LoadFileNames _fileNames) {
 
+        List<LoadFileNames.FileInfo> fileInfoL = _fileNames.fileInfoL;
+
+        foreach (LoadFileNames.FileInfo fileInfo in fileInfoL) {
+
+
+            if (!CheckHash(fileInfo)) return false;
+
+        }
+
+        return true;
+
+    }
 
     public static bool CheckHash(LoadFileNames.FileInfo _fileInfo)
     {
@@ -234,7 +247,7 @@ public static class NoteDataManager
     string path;
 
 #if UNITY_EDITOR
-    path = Path.Combine(System.Environment.GetFolderPath(System.Environment.SpecialFolder.Desktop), _fileName);
+        path = Path.Combine(Application.streamingAssetsPath, _fileName);
 #elif UNITY_ANDROID
     path = Path.Combine(Application.persistentDataPath, _fileName);
 #endif

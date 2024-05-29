@@ -43,14 +43,16 @@ public class SoundManager : MonoBehaviour
         if (!bgmPause)
         {
             bgmPause = true;
+            Time.timeScale = 0;
             bgmplayer.Pause();
         }
         else {
             bgmPause = false;
+            Time.timeScale = 1;
             bgmplayer.Play();
         }
 
-        nDisplayer.setPause(bgmPause);
+        //nDisplayer.setPause(bgmPause);
 
     }
 
@@ -133,8 +135,6 @@ public class SoundManager : MonoBehaviour
 
         float countDelay = bpmUnitSecond * stageData.bpmMultiplier;
         float playTime;
-
-        if (bgmPause) Pause();
 
         bgmplayer.time = 0;
 
@@ -268,8 +268,7 @@ public class SoundManager : MonoBehaviour
 
             }
 
-
-            if(!bgmPause) bpmStacker += Time.deltaTime;
+            bpmStacker += Time.deltaTime;
 
             yield return null;
 
@@ -297,23 +296,14 @@ public class SoundManager : MonoBehaviour
         float curTime = 0;
         float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
 
-        while (curTime < waitTime)
-        {
-
-            yield return null;
-            if (!bgmPause) curTime += Time.deltaTime;
-
-        }
-
-        curTime = 0;
+        yield return new WaitForSeconds(waitTime);
 
         float duringTime = bpmUnitSecond * 4;
         float goodEndDuringTime = bpmUnitSecond * 3;
 
         while (curTime < duringTime)
         {
-
-            if (!bgmPause) curTime += Time.deltaTime;
+            curTime += Time.deltaTime;
 
             if (_checkInput())
             {

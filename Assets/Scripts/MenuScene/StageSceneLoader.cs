@@ -35,15 +35,14 @@ public class StageSceneLoader : MonoBehaviour
 
         List<string> nameList = fileInfoSO.GetFileNames();
 
-
-#if UNITY_EDITOR
-
-
         optionWindow.init();
 
         swipeMenuScr.SettingSwipteButtons(nameList);
 
-        if (NoteDataManager.CheckHash(fileInfoSO.fileInfoL[2])){
+#if UNITY_EDITOR
+
+
+        if (NoteDataManager.CheckHash(fileInfoSO)){
             Debug.Log("해시 일치");
         }else {
             Debug.Log("불일치");

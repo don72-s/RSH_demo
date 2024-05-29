@@ -61,13 +61,6 @@ public class NoteDisplayere : MonoBehaviour
 
     }
 
-
-    private bool isPause;
-
-    public void setPause(bool _pause) { 
-        isPause = _pause;
-    }
-
     private IEnumerator moveArrow(float _movingTime) { 
     
 
@@ -87,7 +80,7 @@ public class NoteDisplayere : MonoBehaviour
                 yield break;
             }
 
-            if(!isPause) startTime += Time.deltaTime;
+            startTime += Time.deltaTime;
 
             yield return null;
 

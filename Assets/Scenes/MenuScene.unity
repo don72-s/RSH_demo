@@ -461,6 +461,7 @@ MonoBehaviour:
   ButtonParent: {fileID: 818169532}
   ButtonInstance: {fileID: 5666353043931005374, guid: 68ffae4b49e49734ba02698b1bd1ef8f,
     type: 3}
+  buttonSprite: {fileID: 10905, guid: 0000000000000000f000000000000000, type: 0}
   editerButtonSprite: {fileID: 21300000, guid: 18451503e24ed4e4d91ee733382eb499, type: 3}
 --- !u!4 &383593903
 Transform:

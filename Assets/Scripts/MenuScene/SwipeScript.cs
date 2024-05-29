@@ -32,6 +32,9 @@ public class SwipeScript : MonoBehaviour
     List<SwiptBtnScript> buttonL = new List<SwiptBtnScript>();
 
     [SerializeField]
+    Sprite buttonSprite;
+
+    [SerializeField]
     Sprite editerButtonSprite;
 
     // Start is called before the first frame update
@@ -145,6 +148,7 @@ public class SwipeScript : MonoBehaviour
         for (int i = 0; i < _stageNameList.Count; i++) {
             buttonL[i].gameObject.SetActive(true);
             buttonL[i].SetText(_stageNameList[i].Substring(0, _stageNameList[i].Length - suffixStr.Length));
+            buttonL[i].GetComponent<Image>().sprite = buttonSprite;
         }
 
         buttonL[buttonL.Count - 1].gameObject.SetActive(true);
