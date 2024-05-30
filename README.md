@@ -15,7 +15,7 @@
 
 <hr>
 
-### [안드로이드용 apk 다운로드](https://github.com/don72-s/RSH_demo/releases/tag/v1.0.0-alpha)
+### [안드로이드용 apk 다운로드](https://github.com/don72-s/RSH_demo/releases/tag/v1.0.1-alpha)
 
 <hr>
 <br>
