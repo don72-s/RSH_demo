@@ -1,12 +1,10 @@
 ﻿using System.Collections;
-using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class OptionScript : MonoBehaviour
-{
+public class OptionScript : MonoBehaviour {
 
     public UserData userData = null;
 
@@ -27,9 +25,16 @@ public class OptionScript : MonoBehaviour
     [SerializeField]
     AlertWindow alertWindow;
 
-    public void init()
-    {
+    private void Awake() {
+
         Input.gyro.enabled = true;
+
+    }
+
+    /// <summary>
+    /// 유저세팅(감도) 적용. 파일이 없었을경우 -4,4로 세팅된 파일을 다운로드해옴.
+    /// </summary>
+    public void Init() {
 
 #if UNITY_EDITOR
 
@@ -38,49 +43,46 @@ public class OptionScript : MonoBehaviour
         }
 
         userData = NoteDataManager.LoadUserData();
-
         PlayerPrefs.SetFloat("UpperSensitivity", userData.upperOffset);
         PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
 
-        refreshSensInfo();
-
+        DisplayUserSetting();
 
 #elif UNITY_ANDROID
 
         userData = NoteDataManager.AndroidLoadUserData();
+
         PlayerPrefs.SetFloat("UpperSensitivity", userData.upperOffset);
         PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
 
-        refreshSensInfo();
+        DisplayUserSetting();
 
 #endif
 
     }
 
-    private void Update()
-    {
+
+    private void Update() {
 
         Vector3 vec = Input.gyro.rotationRate;
-
         sensitivityText.text = vec.z.ToString("F4");
 
 #if UNITY_EDITOR
 
-        if(userData == null) { sensitivityText.text = "Loading..."; return; }
+        if (userData == null) { sensitivityText.text = "Loading..."; return; }
 
 #elif UNITY_ANDROID
 
-        
 
-        if (!isLowerPlaying && vec.z > userData.lowerOffset)
-        {
+
+        if (!isLowerPlaying && vec.z > userData.lowerOffset) {
 
             StartCoroutine(playLowerSnd());
 
         }
 
-        if (!isUpperPlaying && vec.z < userData.upperOffset)
-        {
+        if (!isUpperPlaying && vec.z < userData.upperOffset) {
+
             StartCoroutine(playUpperSnd());
 
         }
@@ -91,17 +93,16 @@ public class OptionScript : MonoBehaviour
 
     #region 소리 재생 코루틴
 
-    private bool isLowerPlaying = false;
-    private float lowerWaitTime = 0.25f;
-    private IEnumerator playLowerSnd()
-    {
+    bool isLowerPlaying = false;
+    WaitForSeconds lowerDelay = new WaitForSeconds(0.125f);
+    private IEnumerator playLowerSnd() {
 
-        if (!isLowerPlaying)
-        {
+        if (!isLowerPlaying) {
+
             audioPlayer.PlayOneShot(lowerClip);
             isLowerPlaying = true;
 
-            yield return new WaitForSeconds(lowerWaitTime / 2);
+            yield return lowerDelay;
 
             isLowerPlaying = false;
 
@@ -110,20 +111,18 @@ public class OptionScript : MonoBehaviour
     }
 
 
-    private bool isUpperPlaying = false;
-    private float upperWaitTime = 0.25f;
-    private IEnumerator playUpperSnd()
-    {
+    bool isUpperPlaying = false;
+    WaitForSeconds upperDelay = new WaitForSeconds(0.125f);
+    private IEnumerator playUpperSnd() {
 
-        if (!isUpperPlaying)
-        {
+        if (!isUpperPlaying) {
+
             audioPlayer.PlayOneShot(upperClip);
             isUpperPlaying = true;
 
-            yield return new WaitForSeconds(upperWaitTime / 2);
+            yield return upperDelay;
 
             isUpperPlaying = false;
-
 
         }
 
@@ -131,21 +130,18 @@ public class OptionScript : MonoBehaviour
 
     #endregion
 
-
-    private void refreshSensInfo() {
+    /// <summary>
+    /// 현재 세팅 출력 갱신
+    /// </summary>
+    void DisplayUserSetting() {
 
         curSensInfoText.text = "upper : " + userData.upperOffset + " / lower : " + userData.lowerOffset;
 
     }
 
 
-
-    public void btn_windowActive(bool _isActive) { 
-        gameObject.SetActive(_isActive);
-    }
-
-    public void btn_SetUpperOffset(InputField _upperInputField) {
-
+    //외부 버튼 콜백 함수
+    public void Btn_SetUpperOffset(InputField _upperInputField) {
 
         if (!InputChecker.IsPositiveFloat(_upperInputField, true)) {
 
@@ -156,19 +152,19 @@ public class OptionScript : MonoBehaviour
 #elif UNITY_ANDROID
             NoteDataManager.AndroidSaveData(userData, "userData.sav");
 #endif
-            refreshSensInfo();
+            DisplayUserSetting();
 
-        }
-        else {
+        } else {
+
             alertWindow.ShowSingleAlertWindow("Upper값은 음수여야 합니다.");
+
         }
 
 
     }
-    public void btn_SetLowerOffset(InputField _lowerInputField) {
+    public void Btn_SetLowerOffset(InputField _lowerInputField) {
 
-        if (InputChecker.IsPositiveFloat(_lowerInputField))
-        {
+        if (InputChecker.IsPositiveFloat(_lowerInputField)) {
 
             userData.lowerOffset = InputChecker.GetFloat(_lowerInputField);
             PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
@@ -177,16 +173,16 @@ public class OptionScript : MonoBehaviour
 #elif UNITY_ANDROID
             NoteDataManager.AndroidSaveData(userData, "userData.sav");
 #endif
-            refreshSensInfo();
+            DisplayUserSetting();
 
-        }else
-        {
+        } else {
+
             alertWindow.ShowSingleAlertWindow("Lower값은 양수여야 합니다.");
+
         }
 
     }
-
-    public void btn_InitOffset() {
+    public void Btn_InitOffset() {
 
         userData.upperOffset = -4;
         userData.lowerOffset = 4;
@@ -195,52 +191,11 @@ public class OptionScript : MonoBehaviour
 
 #if UNITY_EDITOR
         NoteDataManager.SaveData(userData, "userData.sav");
-
 #elif UNITY_ANDROID
         NoteDataManager.AndroidSaveData(userData, "userData.sav");
 #endif
-        refreshSensInfo();
-
-
-    }
-
-
-    IEnumerator UnpackingNoteFile(string _fileName)
-    {
-
-        debug.text = "입장2";
-
-        // "StreamingAssets" 폴더에 있는 파일의 경로
-        string streamingAssetsPath = Path.Combine(Application.streamingAssetsPath, _fileName);
-
-        // 파일을 UnityWebRequest를 사용하여 로드
-        UnityWebRequest www = UnityWebRequest.Get(streamingAssetsPath);
-        yield return www.SendWebRequest();
-
-        if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.Log("네트워크 에러");
-        }
-        else
-        {
-            // UnityWebRequest를 통해 로드한 파일의 바이트 데이터
-            byte[] fileBytes = www.downloadHandler.data;
-
-            // 파일을 "Application.persistentDataPath"에 저장
-            string persistentDataPath = Path.Combine(Application.persistentDataPath, _fileName);
-            File.WriteAllBytes(persistentDataPath, fileBytes);
-
-        }
-
-        debug.text = "완료";
-
+        DisplayUserSetting();
 
     }
-
-    public Text debug;
-
-
-
-
 
 }

@@ -1,115 +1,98 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Timers;
 using UnityEngine;
 using UnityEngine.Networking;
-using UnityEngine.UI;
 
-public class StageSceneLoader : MonoBehaviour
-{
-    
-    [SerializeField]//scriptable object
+public class StageSceneLoader : MonoBehaviour {
+
+    [Header("Default Stages Data")]
+    [SerializeField]
     LoadFileNames fileInfoSO;
 
+    [Header("Swipe Menu Obj")]
     [SerializeField]
     SwipeScript swipeMenuScr;
 
-    [SerializeField]
-    GameObject ButtonParentObject;
-
-    [SerializeField]
-    GameObject ButtonInstance;
-
-    [SerializeField]
-    Sprite addBoarderImg;
-
+    [Header("Option Window Obj")]
     [SerializeField]
     OptionScript optionWindow;
 
 
-    //private List<SwiptBtnScript> buttonList = new List<SwiptBtnScript>();
-
-
-    private void Start()
-    {
+    private void Start() {
 
         List<string> nameList = fileInfoSO.GetFileNames();
 
-        optionWindow.init();
-
-        swipeMenuScr.SettingSwipteButtons(nameList);
 
 #if UNITY_EDITOR
 
+        //에디터는 파일 확인 생략
 
-        if (NoteDataManager.CheckHash(fileInfoSO)){
+        optionWindow.Init();
+        swipeMenuScr.InitStageButtons(nameList);
+
+
+        if (NoteDataManager.CheckHash(fileInfoSO)) {
             Debug.Log("해시 일치");
-        }else {
+        } else {
             Debug.Log("불일치");
         }
 
 #elif UNITY_ANDROID
 
-        //sav파일 확인
+        //sav파일이 없다면 새로 생성.
         if (!NoteDataManager.CheckAndroidFileExist("userData.sav"))
-        {
-            StartCoroutine(AndroidUnpackingNoteFile("userData.sav"));
-        }
+            StartCoroutine(AndroidUnpackingFile("userData.sav"));
 
+        //sav파일 다운로드 완료까지 대기.
         StartCoroutine(AndroidUserdataDownloadCheck("userData.sav"));
 
-
-
         //dat파일 확인 (노트파일과 해시 무결성 체크)
-        if (checkDefaultFilesExist(fileInfoSO))
-        {
+        if (CheckDefaultFilesExist_Hash(fileInfoSO)) {
 
+            //파일에 문제가 없는 경우 초기화하고 종료.
             InitElements(nameList);
-            return;
+
+        } else {
+
+            //깨진 파일들이 감지되었으므로 파일들 제거
+            RemoveFiles(fileInfoSO.GetFileNames());
+
+            foreach (string _fileName in nameList) {
+
+                StartCoroutine(AndroidUnpackingFile(_fileName));
+
+            }
+
+            StartCoroutine(AndroidNoteFilesDownloadCheck(fileInfoSO));
 
         }
-
-        //깨진 파일들이 감지되었으므로 파일들 제거
-        RemoveFiles(fileInfoSO.GetFileNames());
-
-        foreach (string _fileName in nameList)
-        {
-
-            StartCoroutine(AndroidUnpackingNoteFile(_fileName));
-
-        }
-
-        StartCoroutine(AndroidNoteFilesDownloadCheck(fileInfoSO));
 #endif
-
-
-
 
     }
 
-    public Text debugt;
 
     /// <summary>
-    /// 해당 파일들이 준비되어있는지 확인
+    /// 해당 파일들이 준비되어있는지와 해시 일치 확인.
     /// </summary>
     /// <param name="_fileInfoL">대상 파일 이름 리스트</param>
     /// <returns></returns>
-    bool checkDefaultFilesExist(LoadFileNames _fileNamesSO) {
+    bool CheckDefaultFilesExist_Hash(LoadFileNames _fileNamesSO) {
 
         List<LoadFileNames.FileInfo> fileInfoL = _fileNamesSO.fileInfoL;
 
         foreach (LoadFileNames.FileInfo _fileInfo in fileInfoL) {//파일 존재 여부 확인.
 
-            if (!File.Exists(Path.Combine(Application.persistentDataPath, _fileInfo.fileName))){
+            if (!File.Exists(Path.Combine(Application.persistentDataPath, _fileInfo.fileName))) {
                 return false;
             }
         }
 
-        foreach (LoadFileNames.FileInfo _fileInfo in fileInfoL)
-        {//해시값 체크
+        foreach (LoadFileNames.FileInfo _fileInfo in fileInfoL) {//해시값 체크
 
-            if (!NoteDataManager.CheckHash(_fileInfo.fileName, _fileInfo.sha256Hash))
-            {
+            if (!NoteDataManager.CheckHash(_fileInfo.fileName, _fileInfo.sha256Hash)) {
                 return false;
             }
         }
@@ -117,6 +100,10 @@ public class StageSceneLoader : MonoBehaviour
         return true;
     }
 
+    /// <summary>
+    /// 전달받은 이름의 모든 파일 제거(안드로이드).
+    /// </summary>
+    /// <param name="_fileNames">제거할 파일 이름 목록(확장자 포함)</param>
     void RemoveFiles(List<string> _fileNames) {
 
         foreach (string _deleteName in _fileNames)//일부만 존재시 전부 제거.
@@ -125,6 +112,9 @@ public class StageSceneLoader : MonoBehaviour
         }
 
     }
+
+
+
 
     /// <summary>
     /// 제공 리스트에 제공되는 문자열 요소가 포함되는지 확인
@@ -145,6 +135,10 @@ public class StageSceneLoader : MonoBehaviour
     }
 
 
+    /// <summary>
+    /// 제공받은 기본 스테이지와 커스텀 스테이지를 읽어와 초기화
+    /// </summary>
+    /// <param name="_systemDefaultFileNames">기본 스테이지 파일의 이름들</param>
     private void InitElements(List<string> _systemDefaultFileNames) {
 
         string[] fileNames = Directory.GetFiles(Application.persistentDataPath);
@@ -155,7 +149,7 @@ public class StageSceneLoader : MonoBehaviour
 
             string fileName = _filePath.Substring(Application.persistentDataPath.Length + 1);
 
-            if (_filePath.EndsWith(".dat") && !CheckContainsString(_systemDefaultFileNames, fileName)) { 
+            if (_filePath.EndsWith(".dat") && !CheckContainsString(_systemDefaultFileNames, fileName)) {
                 customNoteFileNameL.Add(fileName);
             }
 
@@ -166,67 +160,86 @@ public class StageSceneLoader : MonoBehaviour
         fileNamesList.AddRange(customNoteFileNameL);
 
 
-        //버튼 세팅
-        swipeMenuScr.SettingSwipteButtons(fileNamesList);
+        //스테이지 버튼 세팅
+        swipeMenuScr.InitStageButtons(fileNamesList);
 
     }
 
 
 
 
-
-    IEnumerator AndroidUnpackingNoteFile(string _fileName)
-    {
+    /// <summary>
+    /// 기기의 persistancepersistentDataPath에 streamingAssets폴더로부터 파일을 다운로드.
+    /// </summary>
+    /// <param name="_fileName">다운로드할 파일명(확장자 포함)</param>
+    /// <returns></returns>
+    IEnumerator AndroidUnpackingFile(string _fileName) {
 
         // "StreamingAssets" 폴더에 있는 파일의 경로
         string streamingAssetsPath = Path.Combine(Application.streamingAssetsPath, _fileName);
+
+        
 
         // 파일을 UnityWebRequest를 사용하여 로드
         UnityWebRequest www = UnityWebRequest.Get(streamingAssetsPath);
         yield return www.SendWebRequest();
 
-        if (www.isNetworkError || www.isHttpError)
-        {
-            Debug.Log("네트워크 에러");
-        }
-        else
-        {
-            // UnityWebRequest를 통해 로드한 파일의 바이트 데이터
-            byte[] fileBytes = www.downloadHandler.data;
+        try {
 
-            // 파일을 "Application.persistentDataPath"에 저장
-            string persistentDataPath = Path.Combine(Application.persistentDataPath, _fileName);
-            File.WriteAllBytes(persistentDataPath, fileBytes);
+            if (www.isNetworkError || www.isHttpError) {
+                Debug.Log("네트워크 에러");
+            } else {
+                // UnityWebRequest를 통해 로드한 파일의 바이트 데이터
+                byte[] fileBytes = www.downloadHandler.data;
 
+                // 파일을 "Application.persistentDataPath"에 저장
+                string persistentDataPath = Path.Combine(Application.persistentDataPath, _fileName);
+                File.WriteAllBytes(persistentDataPath, fileBytes);
+
+            }
+
+        } catch (Exception _e) {
+            Debug.Log(_e);
+        } finally { 
+            www.Dispose();
         }
     }
 
+    /// <summary>
+    /// 기기에 유저데이터 파일이 다운로드 되었는지 체크[15초]
+    /// 다운로드가 완료된 경우에는 유저데이터 초기화.
+    /// </summary>
+    /// <param name="_fileName">확인할 파일명(확장자 포함)</param>
     IEnumerator AndroidUserdataDownloadCheck(string _fileName) {
 
         int downloadCount = 0;
 
-        while (!NoteDataManager.CheckAndroidFileExist(_fileName))
-        {
+        while (!NoteDataManager.CheckAndroidFileExist(_fileName)) {
 
             yield return new WaitForSeconds(3f);
             downloadCount++;
 
-            if (downloadCount > 5)
-            {
+            if (downloadCount > 5) {
                 yield break;
             }
 
         }
 
-        optionWindow.init();
+        optionWindow.Init();
 
     }
 
+
+    /// <summary>
+    /// 기기에 기본 제공 맵 파일들이 다운로드 완료되었는지 확인 [15초]
+    /// 완료된 경우에는 초기화 진행.
+    /// </summary>
+    /// <param name="_fileInfoSO">다운로드 확인할 제공 스테이지 파일 데이터</param>
     IEnumerator AndroidNoteFilesDownloadCheck(LoadFileNames _fileInfoSO) {
 
         int downloadCount = 0;
 
-        while (!checkDefaultFilesExist(_fileInfoSO)) {
+        while (!CheckDefaultFilesExist_Hash(_fileInfoSO)) {
 
             yield return new WaitForSeconds(3f);
             downloadCount++;

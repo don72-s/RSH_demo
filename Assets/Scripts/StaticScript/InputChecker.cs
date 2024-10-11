@@ -31,15 +31,36 @@ public static class InputChecker
     /// <param name="_field">읽어올 inputField</param>
     /// <param name="_includeZero">0을 포함할지의 여부</param>
     /// <returns>양의 실수 여부 반환.</returns>
-    public static bool IsPositiveFloat(InputField _field, bool _includeZero = false)
+    public static bool IsNeagtiveFloat(InputField _field, bool _includeZero = false)
     {
 
         float ret;
 
         if (float.TryParse(_field.text, out ret))
         {
-            if ((ret == 0 && _includeZero) || ret > 0)
+            if ((ret == 0 && _includeZero) || ret < 0)
             {
+                return true;
+            }
+        }
+
+        return false;
+
+    }
+
+
+    /// <summary>
+    /// inputField의 값이 음의 실수인지 확인.
+    /// </summary>
+    /// <param name="_field">읽어올 inputField</param>
+    /// <param name="_includeZero">0을 포함할지의 여부</param>
+    /// <returns>음의 실수 여부 반환.</returns>
+    public static bool IsPositiveFloat(InputField _field, bool _includeZero = false) {
+
+        float ret;
+
+        if (float.TryParse(_field.text, out ret)) {
+            if ((ret == 0 && _includeZero) || ret > 0) {
                 return true;
             }
         }

@@ -96,7 +96,7 @@ public static class NoteDataManager
         }
         else
         {
-            Debug.LogWarning("파일을 찾을수가 없습니다. - 바탕화면에 파일을 올려놓고 진행하세요.");
+            Debug.LogWarning("파일을 찾을수가 없습니다. - 바탕화면에 파일을 올려놓고 진행하세요._loadData");
             return null;
         }
 
@@ -115,7 +115,7 @@ public static class NoteDataManager
         }
         else
         {
-            Debug.LogWarning("파일을 찾을수가 없습니다. - 바탕화면에 파일을 올려놓고 진행하세요.");
+            Debug.LogWarning("파일을 찾을수가 없습니다. - 바탕화면에 파일을 올려놓고 진행하세요._LoadUserData");
             return null;
         }
 
@@ -188,6 +188,21 @@ public static class NoteDataManager
 
     }
 
+    public static bool AndroidDeleteFile(string _fileName) {
+
+        if(!CheckAndroidFileExist(_fileName))
+            return false;
+
+        try {
+            File.Delete(Path.Combine(Application.persistentDataPath, _fileName));
+        } catch (Exception _e) {
+            throw new Exception(_e.ToString());
+        }
+
+        return true;
+
+    }
+
     public static UserData AndroidLoadUserData()
     {
 
@@ -202,7 +217,7 @@ public static class NoteDataManager
         }
         else
         {
-            Debug.LogWarning("파일을 찾을수가 없습니다. - 바탕화면에 파일을 올려놓고 진행하세요.");
+            Debug.LogWarning("파일을 찾을수가 없습니다. - 바탕화면에 파일을 올려놓고 진행하세요._AndroidLoadUserData");
             return null;
         }
 

@@ -61,7 +61,7 @@ public class LoadMenuManager : MonoBehaviour
 
         }
         else{
-            resultText.text = "파일을 찾을수가 없습니다.";
+            resultText.text = "파일을 찾을수가 없습니다_loadfile.";
         }
 
     }
