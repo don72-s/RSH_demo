@@ -1,31 +1,30 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
 
-public class SectionInfoDis : MonoBehaviour
-{
+public class SectionInfoDis : MonoBehaviour {
 
     [SerializeField]
     Transform secInfoBlockParent;
     [SerializeField]
-    GameObject secInfoBlockInstance;
+    SectionInfoBlock secInfoBlockPrefab;
     List<SectionInfoBlock> secInfoBlockL = new List<SectionInfoBlock>();
 
     /// <summary>
     /// 구간 정보 출력 전광판 초기화.
     /// </summary>
     /// <param name="_stageInfo">참고할 스테이지 정보 객체</param>
-    public void SetupSecInfoDisplay(StageInfo _stageInfo)
-    {
-        if (_stageInfo != null) SetupSecInfoDisplay(_stageInfo.noteArray);
+    public void SetupSectionDisplay(StageInfo _stageInfo) {
+
+        if (_stageInfo != null) SetupSectionDisplay(_stageInfo.noteArray);
+
     }
 
     /// <summary>
     /// 구간 정보 출력 전광판 초기화.
     /// </summary>
     /// <param name="_noteArr">참고할 노트 배열</param>
-    public void SetupSecInfoDisplay(NoteInfo[] _noteArr) {
+    public void SetupSectionDisplay(NoteInfo[] _noteArr) {
 
         if (_noteArr == null) return;
 
@@ -35,17 +34,16 @@ public class SectionInfoDis : MonoBehaviour
         int noteIdx = 0;
 
         foreach (SectionInfoBlock _block in secInfoBlockL) {
+
             _block.gameObject.SetActive(false);
+
         }
 
-        foreach (NoteInfo _info in _noteArr)
-        {
+        foreach (NoteInfo _info in _noteArr) {
 
-            if (_info.waitScoreCount != 0)
-            {
+            if (_info.waitScoreCount != 0) {
 
-                if (counter % 2 == 0)
-                {
+                if (counter % 2 == 0) {
 
                     sb.Append("{ ");
                     sb.Append(noteIdx.ToString());
@@ -57,11 +55,10 @@ public class SectionInfoDis : MonoBehaviour
                     sb.Append(_info.waitScoreCount);
                     sb.Append(" ]");
 
-                    while (secInfoBlockL.Count <= counter / 2)
-                    {
-                        GameObject tmpObj = Instantiate(secInfoBlockInstance);
+                    while (secInfoBlockL.Count <= counter / 2) {
+                        SectionInfoBlock tmpObj = Instantiate(secInfoBlockPrefab);
                         tmpObj.transform.SetParent(secInfoBlockParent);
-                        secInfoBlockL.Add(tmpObj.GetComponent<SectionInfoBlock>());
+                        secInfoBlockL.Add(tmpObj);
                     }
 
                     secInfoBlockL[counter / 2].SetText(sb.ToString());
@@ -82,7 +79,9 @@ public class SectionInfoDis : MonoBehaviour
     public void ClearFocus() {
 
         foreach (SectionInfoBlock _block in secInfoBlockL) {
+
             _block.SetFocus(false);
+
         }
 
     }

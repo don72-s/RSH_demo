@@ -1,11 +1,9 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class ButtonScript : MonoBehaviour, IPointerClickHandler
-{
+public class ButtonScript : MonoBehaviour, IPointerClickHandler {
 
     protected Image myImg;
     private NoteType noteType;
@@ -31,8 +29,7 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
     //private static int idxCounter = 0;
 
     // Start is called before the first frame update
-    protected virtual void Awake()
-    {
+    protected virtual void Awake() {
         noteType = NoteType.NONE;
         myImg = gameObject.GetComponent<Image>();
 
@@ -53,12 +50,11 @@ public class ButtonScript : MonoBehaviour, IPointerClickHandler
         myImg.raycastTarget = _isIteract;
     }
 
-    public void SetBoarderImgActive(bool _isActive) { 
+    public void SetBoarderImgActive(bool _isActive) {
         boarderImg.gameObject.SetActive(_isActive);
     }
 
-    public void OnPointerClick(PointerEventData eventData)
-    {
+    public void OnPointerClick(PointerEventData eventData) {
         if (eventData.button == PointerEventData.InputButton.Left) {
 
             switch (noteType) {

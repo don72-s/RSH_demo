@@ -1,36 +1,21 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class LoadMenuManager : MonoBehaviour
-{
-    [SerializeField]
-    GameObject loadUIObject;
+public class LoadMenuManager : MonoBehaviour {
 
 
+    [Header("LoadName InputField")]
     [SerializeField]
     InputField fileNameInputField;
     [SerializeField]
     Text resultText;
 
-
+    [Header("Other Systems")]
     [SerializeField]
     MusicInfoSetter musicInfoSetter;
-
     [SerializeField]
     SectionInfoDis sectionInfoDisplayer;
-
-    public void btn_Active_Load_UI()
-    {
-        loadUIObject.SetActive(true);
-    }
-
-    public void btn_UnActive_Load_UI()
-    {
-        loadUIObject.SetActive(false);
-    }
 
 
 
@@ -41,7 +26,7 @@ public class LoadMenuManager : MonoBehaviour
 
         if (stageInfo != null) {
 
-            sectionInfoDisplayer.SetupSecInfoDisplay(stageInfo);
+            sectionInfoDisplayer.SetupSectionDisplay(stageInfo);
 
             StringBuilder sb = new StringBuilder();
 
@@ -59,9 +44,10 @@ public class LoadMenuManager : MonoBehaviour
 
             resultText.text = sb.ToString();
 
-        }
-        else{
+        } else {
+
             resultText.text = "파일을 찾을수가 없습니다_loadfile.";
+
         }
 
     }

@@ -204,7 +204,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 519420030}
-        m_MethodName: btn_changeScene
+        m_MethodName: Btn_ChangeScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -589,7 +589,7 @@ GameObject:
   m_Component:
   - component: {fileID: 278105909}
   m_Layer: 5
-  m_Name: Arrow
+  m_Name: HitLine
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -627,7 +627,7 @@ GameObject:
   - component: {fileID: 352276159}
   - component: {fileID: 352276158}
   m_Layer: 5
-  m_Name: DebugText
+  m_Name: HitText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -665,7 +665,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Debug Text
+  m_Text: 
 --- !u!222 &352276159
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -978,7 +978,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ffe9ada2fa7959449d95040c09c7f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneName: MenuScene
+  sceneName: MenuScene
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -1555,10 +1555,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0e25998c87702f4c97f8275dce74972, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  up: {fileID: 8300000, guid: c05eaf80354b2444f97a098cdd3e7914, type: 3}
-  down: {fileID: 8300000, guid: 78c8f2fee7ec09d4fba9df603393a8e2, type: 3}
-  audioPlayer: {fileID: 1421086794}
-  text: {fileID: 352276158}
+  upperSFX: {fileID: 8300000, guid: c05eaf80354b2444f97a098cdd3e7914, type: 3}
+  lowerSFX: {fileID: 8300000, guid: 78c8f2fee7ec09d4fba9df603393a8e2, type: 3}
   lowerOffset: 4
   upperOffset: 4
 --- !u!1 &1612143161
@@ -1678,8 +1676,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 326bde588dcc431478075627941cd477, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ArrowTransform: {fileID: 278105909}
-  ArrowIconParent: {fileID: 2095983790}
+  hitLineTrans: {fileID: 278105909}
+  arrowNotesTrans: {fileID: 2095983791}
   ArrowIconObject: {fileID: 8201833021030284240, guid: f2e01d7448dd2a848b745bb83705749d,
     type: 3}
   UpperIconImg: {fileID: 21300000, guid: f7e002bb501d9fd458b8498fe4e1705d, type: 3}
@@ -1700,7 +1698,7 @@ GameObject:
   - component: {fileID: 1757490860}
   - component: {fileID: 1757490859}
   m_Layer: 0
-  m_Name: SoundManager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1718,15 +1716,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 721a61dbf4e40564aaffae251976303a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmplayer: {fileID: 1757490860}
   inputm: {fileID: 1421086795}
   nDisplayer: {fileID: 1705935420}
-  t: {fileID: 352276158}
+  hitText: {fileID: 352276158}
   audioDic: {fileID: 11400000, guid: dc3b3d0ad402c844ea6b2c99c2846764, type: 2}
   effectAnimator: {fileID: 372958125}
   failAnimator: {fileID: 82705934}
   scoreDisplayer: {fileID: 1915482796}
-  DebugLoadFileName: stage1Note.dat
 --- !u!82 &1757490860
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2009,8 +2005,19 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1757490859}
-        m_MethodName: StartStage
+        m_MethodName: GameStart
         m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2035521818}
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2066,7 +2073,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2095983791}
   m_Layer: 5
-  m_Name: IconParent
+  m_Name: ArrowNotes
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

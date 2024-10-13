@@ -20,7 +20,7 @@ public class InfoWindow : MonoBehaviour
 
     private int curIdx = 0;
 
-    public void btn_LeftButton() {
+    public void Btn_LeftButton() {
 
         if (curIdx == 0) return;
         curIdx--;
@@ -28,7 +28,7 @@ public class InfoWindow : MonoBehaviour
 
     }
 
-    public void btn_RightButton() {
+    public void Btn_RightButton() {
 
         if (curIdx == infoBlockL.Count - 1) return;
         curIdx++;
@@ -36,11 +36,8 @@ public class InfoWindow : MonoBehaviour
 
     }
 
-    public void btn_ActiveWindow(bool _isActive) {
-        gameObject.SetActive(_isActive);
-    }
 
-    public void btn_InitInfo(InfoPageSO _pageSO) {
+    public void Btn_InitInfo(InfoPageSO _pageSO) {
 
         if (_pageSO == null) return;
 

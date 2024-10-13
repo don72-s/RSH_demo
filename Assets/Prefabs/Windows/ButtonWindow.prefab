@@ -273,7 +273,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 285388571905046207}
-        m_MethodName: btn_RightButton
+        m_MethodName: Btn_RightButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -481,7 +481,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 285388571905046207}
-        m_MethodName: btn_LeftButton
+        m_MethodName: Btn_LeftButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -763,8 +763,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 285388571905046207}
-        m_MethodName: btn_ActiveWindow
+      - m_Target: {fileID: 285388571905046147}
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

@@ -280,16 +280,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 911248334}
-        m_MethodName: btn_Active_Load_UI
-        m_Mode: 1
+      - m_Target: {fileID: 366785031}
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
 --- !u!114 &32960110
 MonoBehaviour:
@@ -1118,7 +1118,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1112805552}
-        m_MethodName: btn_changeScene
+        m_MethodName: Btn_ChangeScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1248,7 +1248,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1180091603}
-        m_MethodName: btn_Save_Custom_Note
+        m_MethodName: Btn_Save_NoteMap
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 750788303}
@@ -2409,7 +2409,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1180091603}
-        m_MethodName: btn_ClearSection
+        m_MethodName: Btn_ClearSection
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2538,8 +2538,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1180091603}
-        m_MethodName: btn_Export_Window
+      - m_Target: {fileID: 1928543852}
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2900,7 +2900,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1180091603}
-        m_MethodName: btn_Create_New_Score
+        m_MethodName: Btn_Create_New_Score
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 366785031}
@@ -3166,9 +3166,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   upperScoreBoard: {fileID: 1692636158}
   lowerScoreBoard: {fileID: 1715637215}
-  inputUpperBtnObj: {fileID: 7351159003081890568, guid: 3f6673a9e5d26164c9c5ec4777cda5d8,
+  upperNotePrefab: {fileID: 5829211566683186951, guid: 3f6673a9e5d26164c9c5ec4777cda5d8,
     type: 3}
-  inputLowerBtnObj: {fileID: 7351159003081890568, guid: b5dfccd67367973498055ada2f10910a,
+  lowerNotePrefab: {fileID: 5225019758563935851, guid: b5dfccd67367973498055ada2f10910a,
     type: 3}
 --- !u!4 &503480849
 Transform:
@@ -3197,7 +3197,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   secInfoBlockParent: {fileID: 1104114725}
-  secInfoBlockInstance: {fileID: 6957965285000359865, guid: 0408878b0bf50804386b9377b0556a7e,
+  secInfoBlockPrefab: {fileID: 1718815822761782047, guid: 0408878b0bf50804386b9377b0556a7e,
     type: 3}
 --- !u!1 &515852485
 GameObject:
@@ -5300,7 +5300,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: -18, y: 0}
+  m_SizeDelta: {x: -17, y: 0}
   m_Pivot: {x: 0, y: 1}
 --- !u!114 &893231851
 MonoBehaviour:
@@ -5381,7 +5381,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81e51c1ba007f91448e702b677da2a6a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  loadUIObject: {fileID: 366785031}
   fileNameInputField: {fileID: 812787210}
   resultText: {fileID: 1497863093}
   musicInfoSetter: {fileID: 1180091603}
@@ -6154,7 +6153,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 458213006}
-        m_MethodName: btn_InitInfo
+        m_MethodName: Btn_InitInfo
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 11400000, guid: 548fb44ca07dd54449191163cae02650,
@@ -6392,7 +6391,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1180091603}
-        m_MethodName: btn_TestPlay
+        m_MethodName: Btn_TestPlay
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -6635,9 +6634,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 911248334}
-        m_MethodName: btn_UnActive_Load_UI
-        m_Mode: 1
+      - m_Target: {fileID: 366785031}
+        m_MethodName: SetActive
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -7165,7 +7164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ffe9ada2fa7959449d95040c09c7f0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SceneName: MenuScene
+  sceneName: MenuScene
 --- !u!224 &1122761989 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 285388571905046204, guid: 94b16eedba9b8f44fac003eb29121a72,
@@ -7340,7 +7339,7 @@ GameObject:
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
+  m_StaticEditorFlags: 4294967295
   m_IsActive: 1
 --- !u!82 &1180091602
 AudioSource:
@@ -7450,23 +7449,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 11c139ef1ba65ec478faeef72c8e37fe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bgmType: 0
-  upperSeType: 0
-  lowerSeType: 1
   audioClipDic: {fileID: 11400000, guid: dc3b3d0ad402c844ea6b2c99c2846764, type: 2}
   BoarderSystem: {fileID: 503480848}
-  sectionInfoDisplayer: {fileID: 503480850}
+  sectionDisplayer: {fileID: 503480850}
   alertWindow: {fileID: 1794237067}
   exportWindow: {fileID: 1928543852}
   sectionNumInputter: {fileID: 1348875326}
   sectionLengthInputter: {fileID: 1937315635}
-  debugText: {fileID: 1562045182}
-  offsetSecond: 0.19
-  BPM: 128
-  BPM_Multiplyer: 8
-  scoreUnit: 4
-  loadFileName: stage1Note.dat
-  saveFileName: 
+  stateText: {fileID: 1562045182}
   BGM_Dropdown: {fileID: 706815037}
   LowerSE_Dropdown: {fileID: 787194812}
   UpperSE_Dropdown: {fileID: 1044604214}
@@ -7605,7 +7595,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1180091603}
-        m_MethodName: btn_BGM_Pause
+        m_MethodName: Btn_BGM_Pause
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -7735,7 +7725,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1180091603}
-        m_MethodName: btn_Load_Section
+        m_MethodName: Btn_Load_Section
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -8049,7 +8039,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.2}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -8907,7 +8897,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 1282936620}
   m_Direction: 2
   m_Value: 0
-  m_Size: 0.2
+  m_Size: 1
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -9173,7 +9163,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1180091603}
-        m_MethodName: btn_Save_Section
+        m_MethodName: Btn_Apply_Section
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -9745,8 +9735,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1180091603}
-        m_MethodName: btn_Export_Window
+      - m_Target: {fileID: 1928543852}
+        m_MethodName: SetActive
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13577,6 +13567,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: AlertPadder
       objectReference: {fileID: 0}
+    - target: {fileID: 8742862942378833446, guid: 13e022905f4d1e641bbae6894f71dfa2,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8742862942378833449, guid: 13e022905f4d1e641bbae6894f71dfa2,
         type: 3}
       propertyPath: m_Pivot.x
@@ -13681,6 +13676,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742862942779835518, guid: 13e022905f4d1e641bbae6894f71dfa2,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: -46.721054
+      objectReference: {fileID: 0}
+    - target: {fileID: 8742862942779835518, guid: 13e022905f4d1e641bbae6894f71dfa2,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.200012
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13e022905f4d1e641bbae6894f71dfa2, type: 3}

@@ -5,13 +5,23 @@ using UnityEngine.SceneManagement;
 
 public class SceneLoader : MonoBehaviour
 {
-    public string SceneName;
+    public string sceneName;
 
-    public void btn_changeScene() {
+    public void Btn_ChangeScene() {
 
         Time.timeScale = 1;
         StopAllCoroutines();
-        SceneManager.LoadScene(SceneName);
+        SceneManager.LoadScene(sceneName);
 
     }
+
+    public void Btn_ChangeScene(string _destSceneName) {
+
+        Time.timeScale = 1;
+        StopAllCoroutines();
+        SceneManager.LoadScene(_destSceneName);
+
+    }
+
+
 }

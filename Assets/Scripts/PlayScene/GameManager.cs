@@ -1,58 +1,69 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 using UnityEngine;
-using UnityEngine.Networking;
 using UnityEngine.UI;
 
-public class SoundManager : MonoBehaviour
-{
+[RequireComponent(typeof(AudioSource))]
+public class GameManager : MonoBehaviour {
 
-    public AudioSource bgmplayer;
+    AudioSource bgmplayer;
 
-    public InputManager inputm;
-    public NoteDisplayere nDisplayer;
-
-    public Text t;
+    [Header("Other Manager")]
+    [SerializeField]
+    InputManager inputm;
+    [SerializeField]
+    NoteDisplayere nDisplayer;
 
     [SerializeField]
-    AudioDictonary audioDic;
+    Text hitText;
 
-    private AudioClip upperClip;
-    private AudioClip lowerClip;
+    [Header("sfx DataSet")]
+    [SerializeField]
+    AudioDictonary audioDic;
 
     [SerializeField]
     Animator effectAnimator;
     [SerializeField]
     Animator failAnimator;
-
     [SerializeField]
     ScoreDisplayer scoreDisplayer;
 
     StageInfo stageData;
+    NoteInfo[] stageNoteArr;
 
-    private NoteInfo[] stageNoteArr;
+
+    AudioClip upperClip;
+    AudioClip lowerClip;
+    float bpmUnitSecond;
 
 
-    private bool bgmPause = false;
+    private void Awake() {
 
-    public void Pause()
-    {
+        bgmplayer = GetComponent<AudioSource>();
 
-        if (!bgmPause)
-        {
-            bgmPause = true;
-            Time.timeScale = 0;
-            bgmplayer.Pause();
-        }
-        else {
-            bgmPause = false;
+    }
+
+    private void Start() {
+
+        LoadNodeData();
+        scoreDisplayer.ResetBoard();
+
+    }
+
+
+    public void Pause() {
+
+        if (Time.timeScale == 0) {
+
             Time.timeScale = 1;
             bgmplayer.Play();
-        }
 
-        //nDisplayer.setPause(bgmPause);
+        } else {
+
+            Time.timeScale = 0;
+            bgmplayer.Pause();
+
+        }
 
     }
 
@@ -60,10 +71,9 @@ public class SoundManager : MonoBehaviour
     /// <summary>
     /// 스테이지를 시작시키는 함수.
     /// </summary>
-    public void StartStage() {
+    public void GameStart() {
 
-        if (stageData == null)
-        {
+        if (stageData == null) {
             Debug.LogWarning("스테이지가 제대로 로드되지 않음.");
             return;
         }
@@ -75,34 +85,15 @@ public class SoundManager : MonoBehaviour
 
         bgmplayer.Stop();
 
-        StartCoroutine(playBGMReader());
+        StartCoroutine(StageStartCO());
 
     }
 
 
-    private void Start()
-    {
-        LoadNodeData();
-        scoreDisplayer.ResetBoard();
-    }
-
-
-
-    //에디터 디버그용 불러오는 파일 이름.
-    [SerializeField]
-    string DebugLoadFileName;
-
-
-
-    float bpmUnitSecond;
 
     public void LoadNodeData() {
 
-#if UNITY_EDITOR
-        stageData = NoteDataManager.LoadData(PlayerPrefs.GetString("StageFileName"));
-#elif UNITY_ANDROID
-        stageData = NoteDataManager.AndroidLoadData(PlayerPrefs.GetString("StageFileName"));
-#endif
+        stageData = FileIOSystem.LoadData(PlayerPrefs.GetString("StageFileName"));
 
         if (stageData == null) {
 
@@ -120,9 +111,8 @@ public class SoundManager : MonoBehaviour
         upperClip = audioDic.GetSEClip(stageData.upperSeType);
         lowerClip = audioDic.GetSEClip(stageData.lowerSeType);
 
-        inputm.initSeClip(upperClip, lowerClip);
+        inputm.InitSeClip(upperClip, lowerClip);
 
-        Debug.Log("loaded");
     }
 
 
@@ -131,21 +121,18 @@ public class SoundManager : MonoBehaviour
     /// 실질적인 플레이 시작
     /// </summary>
     /// <returns></returns>
-    private IEnumerator playBGMReader() {
+    private IEnumerator StageStartCO() {
 
         float countDelay = bpmUnitSecond * stageData.bpmMultiplier;
         float playTime;
 
         bgmplayer.time = 0;
 
-
-        //시작 카운트 다운 구현.
-
-        t.text = "3";
+        //시작 카운트 다운
+        hitText.text = "3";
 
         //카운트 도중 재생
-        if (countDelay * 4 - stageData.offsetSecond > 0)
-        {
+        if (countDelay * 4 - stageData.offsetSecond > 0) {
             playTime = countDelay * 4 - stageData.offsetSecond;
 
             int cnt = 0;
@@ -160,11 +147,11 @@ public class SoundManager : MonoBehaviour
 
                 if (curTime > cmpTime) {
 
-                    if (cnt == 3) { 
-                        break; 
+                    if (cnt == 3) {
+                        break;
                     }
 
-                    t.text = cnt == 2 ? "Go!" : (2 - cnt).ToString();
+                    hitText.text = cnt == 2 ? "Go!" : (2 - cnt).ToString();
 
                     bgmplayer.PlayOneShot(lowerClip);
 
@@ -182,8 +169,8 @@ public class SoundManager : MonoBehaviour
 
             }
 
-        }
-        else {//카운트에 들어가기 전부터 재생 => 테스트 안됨.
+        } else {//카운트에 들어가기 전부터 재생
+
             playTime = stageData.offsetSecond - countDelay * 4;
 
             bgmplayer.Play();
@@ -191,23 +178,23 @@ public class SoundManager : MonoBehaviour
             yield return new WaitForSeconds(playTime);
 
             bgmplayer.PlayOneShot(lowerClip);
-            t.text = "3";
+            hitText.text = "3";
             yield return new WaitForSeconds(countDelay);
 
             bgmplayer.PlayOneShot(lowerClip);
-            t.text = "2";
+            hitText.text = "2";
             yield return new WaitForSeconds(countDelay);
 
             bgmplayer.PlayOneShot(lowerClip);
-            t.text = "1";
+            hitText.text = "1";
             yield return new WaitForSeconds(countDelay);
 
             bgmplayer.PlayOneShot(lowerClip);
-            t.text = "Go!";
+            hitText.text = "Go!";
             yield return new WaitForSeconds(countDelay);
 
         }
-        
+
 
         int bpmIndexer = 0;
         float bpmStacker = 0;
@@ -226,7 +213,7 @@ public class SoundManager : MonoBehaviour
                 //마디가 넘어갈 때 할 행동.
                 if (stageNoteArr[bpmIndexer].waitScoreCount != 0) {
 
-                    if(displayeIndexer % 2 == 0) nDisplayer.ClearDisplayedNotes();
+                    if (displayeIndexer % 2 == 0) nDisplayer.ClearDisplayedNotes();
 
                     curEffectTimeUnit = stageNoteArr[bpmIndexer].waitScoreCount;
                     nDisplayer.StartMovingMethod(stageNoteArr[bpmIndexer].waitScoreCount * bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit);
@@ -237,8 +224,7 @@ public class SoundManager : MonoBehaviour
 
 
                 //노트 분기
-                switch (stageNoteArr[bpmIndexer].noteType)
-                {
+                switch (stageNoteArr[bpmIndexer].noteType) {
 
                     case NoteType.NONE:
                         break;
@@ -264,7 +250,7 @@ public class SoundManager : MonoBehaviour
                 }
 
                 bpmIndexer++;
-                
+
 
             }
 
@@ -284,8 +270,8 @@ public class SoundManager : MonoBehaviour
     /// <param name="_watingUnit">다음 마디까지의 대기 단위</param>
     /// <param name="_swipeSnd">디스플레이 시 플레이 될 사운드</param>
     /// <param name="_displayNote">디스플레이 노트 종류</param>
-    /// <param name="_checkInput">체크할 입력 종류</param>
-    /// <param name="_useInput">사용할 입력 종류</param>
+    /// <param name="_checkInput">올바른 입력 판정 확인 함수</param>
+    /// <param name="_useInput">사용할 입력 종류(중복입력 방지용)</param>
     /// <param name="_playSnd">입력 성공시 플레이 될 사운드</param>
     /// <returns></returns>
     IEnumerator PlayNote(int _watingUnit, Action _swipeSnd, Action _displayNote, Func<bool> _checkInput, Action _useInput, Action _playSnd) {
@@ -296,31 +282,27 @@ public class SoundManager : MonoBehaviour
         float curTime = 0;
         float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
 
-        yield return new WaitForSeconds(waitTime);
+        yield return new WaitForSeconds(waitTime);//판정영역까지 대기
 
         float duringTime = bpmUnitSecond * 4;
         float goodEndDuringTime = bpmUnitSecond * 3;
 
-        while (curTime < duringTime)
-        {
+        while (curTime < duringTime) {
             curTime += Time.deltaTime;
 
-            if (_checkInput())
+            if (_checkInput())//노트에 대응하는 입력인 경우.
             {
 
-                _useInput?.Invoke();
-                _playSnd?.Invoke();
+                _useInput?.Invoke();//입력한 플래그를 사용
+                _playSnd?.Invoke();//노트 히트 사운드 재생
 
 
-                if (curTime > bpmUnitSecond && curTime < goodEndDuringTime)
-                {
-                    t.text = "correct";
+                if (curTime > bpmUnitSecond && curTime < goodEndDuringTime) {
+                    hitText.text = "correct";
                     effectAnimator.SetTrigger("Correct");
                     scoreDisplayer.AddCorrect();
-                }
-                else
-                {
-                    t.text = "good";
+                } else {
+                    hitText.text = "good";
                     effectAnimator.SetTrigger("Good");
                     scoreDisplayer.AddGood();
                 }
@@ -337,7 +319,7 @@ public class SoundManager : MonoBehaviour
         failAnimator.SetTrigger("Fail");
         Handheld.Vibrate();
         scoreDisplayer.AddFail();
-        t.text = " failied ";
+        hitText.text = " failied ";
     }
 
 

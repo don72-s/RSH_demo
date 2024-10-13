@@ -34,7 +34,7 @@ public class StageSceneLoader : MonoBehaviour {
         swipeMenuScr.InitStageButtons(nameList);
 
 
-        if (NoteDataManager.CheckHash(fileInfoSO)) {
+        if (FileIOSystem.CheckHash(fileInfoSO)) {
             Debug.Log("해시 일치");
         } else {
             Debug.Log("불일치");
@@ -43,7 +43,7 @@ public class StageSceneLoader : MonoBehaviour {
 #elif UNITY_ANDROID
 
         //sav파일이 없다면 새로 생성.
-        if (!NoteDataManager.CheckAndroidFileExist("userData.sav"))
+        if (!FileIOSystem.CheckFileExist("userData.sav"))
             StartCoroutine(AndroidUnpackingFile("userData.sav"));
 
         //sav파일 다운로드 완료까지 대기.
@@ -92,7 +92,7 @@ public class StageSceneLoader : MonoBehaviour {
 
         foreach (LoadFileNames.FileInfo _fileInfo in fileInfoL) {//해시값 체크
 
-            if (!NoteDataManager.CheckHash(_fileInfo.fileName, _fileInfo.sha256Hash)) {
+            if (!FileIOSystem.CheckHash(_fileInfo.fileName, _fileInfo.sha256Hash)) {
                 return false;
             }
         }
@@ -214,7 +214,7 @@ public class StageSceneLoader : MonoBehaviour {
 
         int downloadCount = 0;
 
-        while (!NoteDataManager.CheckAndroidFileExist(_fileName)) {
+        while (!FileIOSystem.CheckFileExist(_fileName)) {
 
             yield return new WaitForSeconds(3f);
             downloadCount++;

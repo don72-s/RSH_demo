@@ -95,7 +95,7 @@ public class SwiptBtnScript : MonoBehaviour {
         window.ShowDoubleAlertWindow("정말로 해당 스테이지를 삭제하시겠습니까?", "네", () => {
 
             //'네'가 눌렸을 경우 파일이 있으면 스테이지를 삭제하고 리로드.
-            if (NoteDataManager.AndroidDeleteFile($"{childText.text}.dat")) {
+            if (FileIOSystem.DeleteFile($"{childText.text}.dat")) {
 
                 SceneManager.LoadScene("MenuScene");
 

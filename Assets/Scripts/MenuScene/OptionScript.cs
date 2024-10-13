@@ -31,6 +31,7 @@ public class OptionScript : MonoBehaviour {
 
     }
 
+
     /// <summary>
     /// 유저세팅(감도) 적용. 파일이 없었을경우 -4,4로 세팅된 파일을 다운로드해옴.
     /// </summary>
@@ -38,58 +39,41 @@ public class OptionScript : MonoBehaviour {
 
 #if UNITY_EDITOR
 
-        if (!NoteDataManager.CheckFileExist("userData.sav")) {
-            NoteDataManager.SaveData(new UserData(-4, 4), "userData.sav");
+        if (!FileIOSystem.CheckFileExist("userData.sav")) {
+            FileIOSystem.SaveData(new UserData(-4, 4), "userData.sav");
         }
 
-        userData = NoteDataManager.LoadUserData();
-        PlayerPrefs.SetFloat("UpperSensitivity", userData.upperOffset);
-        PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
-
-        DisplayUserSetting();
-
-#elif UNITY_ANDROID
-
-        userData = NoteDataManager.AndroidLoadUserData();
-
-        PlayerPrefs.SetFloat("UpperSensitivity", userData.upperOffset);
-        PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
-
-        DisplayUserSetting();
-
 #endif
+        userData = FileIOSystem.LoadUserData();
+        PlayerPrefs.SetFloat("UpperSensitivity", userData.upperOffset);
+        PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
+
+        DisplayUserSetting();
+
 
     }
 
 
+
     private void Update() {
 
-        Vector3 vec = Input.gyro.rotationRate;
-        sensitivityText.text = vec.z.ToString("F4");
+        float z = Input.gyro.rotationRate.z;
 
-#if UNITY_EDITOR
-
-        if (userData == null) { sensitivityText.text = "Loading..."; return; }
-
-#elif UNITY_ANDROID
-
-
-
-        if (!isLowerPlaying && vec.z > userData.lowerOffset) {
+        if (!isLowerPlaying && z > userData.lowerOffset) {
 
             StartCoroutine(playLowerSnd());
 
         }
 
-        if (!isUpperPlaying && vec.z < userData.upperOffset) {
+        if (!isUpperPlaying && z < userData.upperOffset) {
 
             StartCoroutine(playUpperSnd());
 
         }
 
-#endif
-
     }
+
+
 
     #region 소리 재생 코루틴
 
@@ -135,7 +119,7 @@ public class OptionScript : MonoBehaviour {
     /// </summary>
     void DisplayUserSetting() {
 
-        curSensInfoText.text = "upper : " + userData.upperOffset + " / lower : " + userData.lowerOffset;
+        curSensInfoText.text = $"upper : {userData.upperOffset} \nlower : {userData.lowerOffset}";
 
     }
 
@@ -143,15 +127,11 @@ public class OptionScript : MonoBehaviour {
     //외부 버튼 콜백 함수
     public void Btn_SetUpperOffset(InputField _upperInputField) {
 
-        if (!InputChecker.IsPositiveFloat(_upperInputField, true)) {
+        if (InputChecker.IsNeagtiveFloat(_upperInputField)) {
 
             userData.upperOffset = InputChecker.GetFloat(_upperInputField);
             PlayerPrefs.SetFloat("UpperSensitivity", userData.upperOffset);
-#if UNITY_EDITOR
-            NoteDataManager.SaveData(userData, "userData.sav");
-#elif UNITY_ANDROID
-            NoteDataManager.AndroidSaveData(userData, "userData.sav");
-#endif
+            FileIOSystem.SaveData(userData, "userData.sav");
             DisplayUserSetting();
 
         } else {
@@ -168,11 +148,7 @@ public class OptionScript : MonoBehaviour {
 
             userData.lowerOffset = InputChecker.GetFloat(_lowerInputField);
             PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
-#if UNITY_EDITOR
-            NoteDataManager.SaveData(userData, "userData.sav");
-#elif UNITY_ANDROID
-            NoteDataManager.AndroidSaveData(userData, "userData.sav");
-#endif
+            FileIOSystem.SaveData(userData, "userData.sav");
             DisplayUserSetting();
 
         } else {
@@ -189,11 +165,7 @@ public class OptionScript : MonoBehaviour {
         PlayerPrefs.SetFloat("UpperSensitivity", userData.upperOffset);
         PlayerPrefs.SetFloat("LowerSensitivity", userData.lowerOffset);
 
-#if UNITY_EDITOR
-        NoteDataManager.SaveData(userData, "userData.sav");
-#elif UNITY_ANDROID
-        NoteDataManager.AndroidSaveData(userData, "userData.sav");
-#endif
+        FileIOSystem.SaveData(userData, "userData.sav");
         DisplayUserSetting();
 
     }
