@@ -18,7 +18,7 @@
 
 <hr>
 
-### [시연연]([https://github.com/don72-s/RSH_demo/releases/tag/v1.0.1-alpha](https://www.youtube.com/watch?v=VxldF20RD24))
+### [시연영상]([https://github.com/don72-s/RSH_demo/releases/tag/v1.0.1-alpha](https://www.youtube.com/watch?v=VxldF20RD24))
 
 <hr>
 <br>
