@@ -87,7 +87,7 @@ public class MusicInfoSetter : MonoBehaviour {
 
         StopAllCoroutines();
 
-        if (noteArray == null) { alertWindow.ShowSingleAlertWindow("로드된 맵이 없습니다.\n 맵을 생성하거나 로드하세요."); return; }
+        if (noteArray == null) { alertWindow.ShowSingleAlertWindow("note map doesn't exist. \n Please load or create it first."); return; }
 
         unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer);
 
@@ -146,12 +146,12 @@ public class MusicInfoSetter : MonoBehaviour {
 
         StopAllCoroutines();
 
-        if (LoadedSectionList == null) { alertWindow.ShowSingleAlertWindow("로드된 구간이 없습니다.\n 수정할 구간을 먼저 불러와주세요."); return; }
+        if (LoadedSectionList == null) { alertWindow.ShowSingleAlertWindow("Section not loaded.\n Please load the section to be edited first."); return; }
 
         unitBPMSecond = (double)60 / (BPM * BPM_Multiplyer);
 
-        if (!InputChecker.IsPositiveInt(sectionNumInputter, true)) { alertWindow.ShowSingleAlertWindow("sectionNum은 0과 양의 정수만 입력 가능합니다."); return; }
-        if (!InputChecker.IsPositiveInt(sectionLengthInputter)) { alertWindow.ShowSingleAlertWindow("sectionLength는 양의 정수만 입력 가능합니다."); return; }
+        if (!InputChecker.IsPositiveInt(sectionNumInputter, true)) { alertWindow.ShowSingleAlertWindow("sectionNum must be positive number or 0."); return; }
+        if (!InputChecker.IsPositiveInt(sectionLengthInputter)) { alertWindow.ShowSingleAlertWindow("sectionLength must be positive number."); return; }
 
         int sectionNum = InputChecker.GetInt(sectionNumInputter);
         int sectionLength = InputChecker.GetInt(sectionLengthInputter);
@@ -176,10 +176,10 @@ public class MusicInfoSetter : MonoBehaviour {
 
         StopAllCoroutines();
 
-        if (noteArray == null) { alertWindow.ShowSingleAlertWindow("로드된 맵이 없습니다.\n 맵을 생성하거나 로드하세요."); return false; }
+        if (noteArray == null) { alertWindow.ShowSingleAlertWindow("note map doesn't exist. \n Please load or create it first."); return false; }
 
-        if (!InputChecker.IsPositiveInt(sectionNumInputter, true)) { alertWindow.ShowSingleAlertWindow("sectionNum은 0과 양의 정수만 입력 가능합니다."); return false; }
-        if (!InputChecker.IsPositiveInt(sectionLengthInputter)) { alertWindow.ShowSingleAlertWindow("sectionLength는 양의 정수만 입력 가능합니다."); return false; }
+        if (!InputChecker.IsPositiveInt(sectionNumInputter, true)) { alertWindow.ShowSingleAlertWindow("sectionNum must be positive number or 0."); return false; }
+        if (!InputChecker.IsPositiveInt(sectionLengthInputter)) { alertWindow.ShowSingleAlertWindow("sectionLength must be positive number."); return false; }
 
         int sectionNum = InputChecker.GetInt(sectionNumInputter);
         int sectionLength = InputChecker.GetInt(sectionLengthInputter);
@@ -188,7 +188,7 @@ public class MusicInfoSetter : MonoBehaviour {
         int endIdx = startIdx + sectionLength * BPM_Multiplyer * scoreUnit;
 
         int curEndIdx = startIdx + ((endIdx - startIdx) * 2);
-        if (curEndIdx > noteArray.Length) { alertWindow.ShowSingleAlertWindow("음원이 끝난 뒤의 부분은 채보할 수 없습니다."); return false; }
+        if (curEndIdx > noteArray.Length) { alertWindow.ShowSingleAlertWindow("cannot notate after the music has finished."); return false; }
 
         stateText.text = $"Section {{ {sectionNum} ~ {(sectionNum + (sectionLength * 2) - 1) } }} [ L : {sectionLength} ]";
 
@@ -209,26 +209,26 @@ public class MusicInfoSetter : MonoBehaviour {
 
     public void Btn_Save_NoteMap(InputField _fileNameInputField) {
 
-        if (noteArray == null) { alertWindow.ShowSingleAlertWindow("저장할 노트맵이 없습니다. \n 먼저 맵을 생성하거나 로드하세요."); return; }
+        if (noteArray == null) { alertWindow.ShowSingleAlertWindow("note map doesn't exist. \n Please load or create it first."); return; }
 
         saveFileName = _fileNameInputField.text;
 
-        if (saveFileName.StartsWith("stage")) { alertWindow.ShowSingleAlertWindow("저장 파일명은 stage로 시작할 수 없습니다."); return; }
-        if (!saveFileName.EndsWith(".dat")) { alertWindow.ShowSingleAlertWindow("저장 파일명은 [.dat]으로 끝나야 합니다."); return; }
-        if (saveFileName.Equals(".dat")) { alertWindow.ShowSingleAlertWindow("저장 파일명은 공백일 수 없습니다."); return; }
+        if (saveFileName.StartsWith("stage")) { alertWindow.ShowSingleAlertWindow("file name cannot start with 'stage'"); return; }
+        if (!saveFileName.EndsWith(".dat")) { alertWindow.ShowSingleAlertWindow("file name must end with [.dat]"); return; }
+        if (saveFileName.Equals(".dat")) { alertWindow.ShowSingleAlertWindow("file name cannot be empty."); return; }
 
 
         if (FileIOSystem.CheckFileExist(saveFileName)) {
-            alertWindow.ShowDoubleAlertWindow($"[ {saveFileName} ] 같은 이름의 파일이 존재합니다.\n덮어쓰시겠습니까?", "OK!", () => {
+            alertWindow.ShowDoubleAlertWindow($"[ {saveFileName} ] already exists.\nDo you want to overwrite it?", "OK!", () => {
 
                 FileIOSystem.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
-                alertWindow.ShowSingleAlertWindow($"노트 파일 [ {saveFileName} ] 이 저장되었습니다!");
+                alertWindow.ShowSingleAlertWindow($"file [ {saveFileName} ] has been saved!");
                 exportWindow.SetActive(false);
 
             });
         } else {
             FileIOSystem.SaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
-            alertWindow.ShowSingleAlertWindow($"노트 파일 [ {saveFileName} ] 이 저장되었습니다!");
+            alertWindow.ShowSingleAlertWindow($"file [ {saveFileName} ] has been saved!");
             exportWindow.SetActive(false);
 
         }
@@ -240,10 +240,10 @@ public class MusicInfoSetter : MonoBehaviour {
     /// </summary>
     public void Btn_Apply_Section() {
 
-        if (LoadedSectionList == null) { alertWindow.ShowSingleAlertWindow("로드된 구간이 없습니다.\n 수정할 구간을 먼저 불러와주세요."); return; }
+        if (LoadedSectionList == null) { alertWindow.ShowSingleAlertWindow("Section not loaded.\n Please load the section to be edited first."); return; }
 
-        if (!InputChecker.IsPositiveInt(sectionNumInputter, true)) { alertWindow.ShowSingleAlertWindow("sectionNum은 0과 양의 정수만 입력 가능합니다."); return; }
-        if (!InputChecker.IsPositiveInt(sectionLengthInputter)) { alertWindow.ShowSingleAlertWindow("sectionLength는 양의 정수만 입력 가능합니다."); return; }
+        if (!InputChecker.IsPositiveInt(sectionNumInputter, true)) { alertWindow.ShowSingleAlertWindow("sectionNum must be positive number or 0."); return; }
+        if (!InputChecker.IsPositiveInt(sectionLengthInputter)) { alertWindow.ShowSingleAlertWindow("sectionLength must be positive number."); return; }
 
         int sectionNum = InputChecker.GetInt(sectionNumInputter);
         int sectionLength = InputChecker.GetInt(sectionLengthInputter);
@@ -300,7 +300,7 @@ public class MusicInfoSetter : MonoBehaviour {
 
     public void ClearBoarderImg() {
 
-        if (LoadedSectionList == null) { alertWindow.ShowSingleAlertWindow("로드된 구간이 없습니다.\n 수정할 구간을 먼저 불러와주세요."); return; }
+        if (LoadedSectionList == null) { alertWindow.ShowSingleAlertWindow("Section not loaded.\n Please load the section to be edited first."); return; }
 
         foreach (ButtonScript _btnScr in LoadedSectionList) {
 
@@ -512,8 +512,8 @@ public class MusicInfoSetter : MonoBehaviour {
 
     public void Btn_Create_New_Score(GameObject _loadWindow) {
 
-        if (!InputChecker.IsPositiveInt(BPM_Multiplyer_Inputfield)) { alertWindow.ShowSingleAlertWindow("BPM계수는 양수여야 합니다."); return; }
-        if (!InputChecker.IsPositiveInt(ScoreUnit_Inputfield)) { alertWindow.ShowSingleAlertWindow("지속 마디 계수는 양수여야 합니다."); return; }
+        if (!InputChecker.IsPositiveInt(BPM_Multiplyer_Inputfield)) { alertWindow.ShowSingleAlertWindow("BPM Multiplyer must be a positive number."); return; }
+        if (!InputChecker.IsPositiveInt(ScoreUnit_Inputfield)) { alertWindow.ShowSingleAlertWindow("Score Unit must be a positive number. "); return; }
 
         BPM_Multiplyer = InputChecker.GetInt(BPM_Multiplyer_Inputfield);
         scoreUnit = InputChecker.GetInt(ScoreUnit_Inputfield);
@@ -545,7 +545,7 @@ public class MusicInfoSetter : MonoBehaviour {
         }
 
 
-        alertWindow.ShowSingleAlertWindow("새로운 맵 생성에 성공했습니다!");
+        alertWindow.ShowSingleAlertWindow("create success!");
         _loadWindow.SetActive(false);
         sectionDisplayer.SetupSectionDisplay(noteArray);
 

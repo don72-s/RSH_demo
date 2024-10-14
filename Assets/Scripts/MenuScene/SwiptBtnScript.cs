@@ -92,7 +92,7 @@ public class SwiptBtnScript : MonoBehaviour {
     /// </summary>
     void DeleteStage() {
 
-        window.ShowDoubleAlertWindow("정말로 해당 스테이지를 삭제하시겠습니까?", "네", () => {
+        window.ShowDoubleAlertWindow("Really delete this stage?", "Yes", () => {
 
             //'네'가 눌렸을 경우 파일이 있으면 스테이지를 삭제하고 리로드.
             if (FileIOSystem.DeleteFile($"{childText.text}.dat")) {
@@ -101,7 +101,7 @@ public class SwiptBtnScript : MonoBehaviour {
 
             } else {
 
-                window.ShowSingleAlertWindow("스테이지 파일이 존재하지 않습니다.[error]");
+                window.ShowSingleAlertWindow("file is not exist.[error]");
 
             }
 

@@ -1,17 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class AlertWindow : MonoBehaviour
-{
+public class AlertWindow : MonoBehaviour {
 
     public delegate void AlertButtonCallback();
 
     private AlertButtonCallback callback = null;
 
     [SerializeField]
-    Text alertText;
+    TextMeshProUGUI tmpText;
 
     [SerializeField]
     GameObject singleButtonGroup;
@@ -21,11 +19,11 @@ public class AlertWindow : MonoBehaviour
     Text optionalButtonText;
 
 
-    public void SetAlertMessage(string _message) { 
-        alertText.text = _message;
+    public void SetAlertMessage(in string _message) {
+        tmpText.text = _message;
     }
 
-    public void CloseAlertWindow() { 
+    public void CloseAlertWindow() {
         gameObject.SetActive(false);
     }
 
@@ -34,15 +32,14 @@ public class AlertWindow : MonoBehaviour
         doubleButtonGroup.SetActive(false);
     }
 
-    public void ShowSingleAlertWindow(string _message) { 
+    public void ShowSingleAlertWindow(in string _message) {
         SetAlertMessage(_message);
         DisableAllButtonGroup();
         gameObject.SetActive(true);
         singleButtonGroup.SetActive(true);
     }
 
-
-    public void ShowDoubleAlertWindow(string _message, string _optionalBtnText, AlertButtonCallback _callback) {
+    public void ShowDoubleAlertWindow(in string _message, in string _optionalBtnText, AlertButtonCallback _callback) {
         SetAlertMessage(_message);
 
         DisableAllButtonGroup();
@@ -58,7 +55,7 @@ public class AlertWindow : MonoBehaviour
         callback?.Invoke();
     }
 
-    private void SetCallbackMethod(AlertButtonCallback _callbackMethod) { 
+    private void SetCallbackMethod(AlertButtonCallback _callbackMethod) {
         callback = _callbackMethod;
     }
 

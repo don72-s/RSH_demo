@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.IO;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Networking;
 using UnityEngine.UI;
@@ -9,10 +10,7 @@ public class OptionScript : MonoBehaviour {
     public UserData userData = null;
 
     [SerializeField]
-    Text sensitivityText;
-
-    [SerializeField]
-    Text curSensInfoText;
+    TextMeshProUGUI curSensInfoText;
 
     [SerializeField]
     AudioSource audioPlayer;
@@ -125,7 +123,7 @@ public class OptionScript : MonoBehaviour {
 
 
     //외부 버튼 콜백 함수
-    public void Btn_SetUpperOffset(InputField _upperInputField) {
+    public void Btn_SetUpperOffset(TMP_InputField _upperInputField) {
 
         if (InputChecker.IsNeagtiveFloat(_upperInputField)) {
 
@@ -136,13 +134,13 @@ public class OptionScript : MonoBehaviour {
 
         } else {
 
-            alertWindow.ShowSingleAlertWindow("Upper값은 음수여야 합니다.");
+            alertWindow.ShowSingleAlertWindow("UpperOffset must be a negative number.");
 
         }
 
 
     }
-    public void Btn_SetLowerOffset(InputField _lowerInputField) {
+    public void Btn_SetLowerOffset(TMP_InputField _lowerInputField) {
 
         if (InputChecker.IsPositiveFloat(_lowerInputField)) {
 
@@ -153,7 +151,7 @@ public class OptionScript : MonoBehaviour {
 
         } else {
 
-            alertWindow.ShowSingleAlertWindow("Lower값은 양수여야 합니다.");
+            alertWindow.ShowSingleAlertWindow("LowerOffset must be a positive number.");
 
         }
 
