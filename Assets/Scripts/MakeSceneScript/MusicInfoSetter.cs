@@ -114,6 +114,10 @@ public class MusicInfoSetter : MonoBehaviour {
         noteArray = stageInfo.noteArray;
 
         bgmClip = audioClipDic.GetBGMClip(stageInfo.bgmType);
+
+        upperSeType = stageInfo.upperSeType;
+        lowerSeType = stageInfo.lowerSeType;
+
         upperSEClip = audioClipDic.GetSEClip(stageInfo.upperSeType);
         lowerSEClip = audioClipDic.GetSEClip(stageInfo.lowerSeType);
 
