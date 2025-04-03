@@ -21,6 +21,10 @@
 ### [시연영상](https://www.youtube.com/watch?v=VxldF20RD24)
 
 <hr>
+
+### [코드](https://github.com/don72-s/RSH_demo/tree/main/Assets/Scripts)
+
+<hr>
 <br>
 
 ### 프로젝트를 유니티 에디터에서 테스트 및 실행할 경우.  
