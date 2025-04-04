@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections;
+using System.Diagnostics;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 
 [RequireComponent(typeof(AudioSource))]
@@ -56,11 +58,15 @@ public class GameManager : MonoBehaviour {
         if (Time.timeScale == 0) {
 
             Time.timeScale = 1;
+            AudioListener.pause = false;
+
             bgmplayer.Play();
 
         } else {
 
             Time.timeScale = 0;
+            AudioListener.pause = true;
+
             bgmplayer.Pause();
 
         }
@@ -74,7 +80,7 @@ public class GameManager : MonoBehaviour {
     public void GameStart() {
 
         if (stageData == null) {
-            Debug.LogWarning("스테이지가 제대로 로드되지 않음.");
+            UnityEngine.Debug.LogWarning("스테이지가 제대로 로드되지 않음.");
             return;
         }
 
@@ -97,7 +103,7 @@ public class GameManager : MonoBehaviour {
 
         if (stageData == null) {
 
-            Debug.LogWarning("파일을 읽어올 수 없음.");
+            UnityEngine.Debug.LogWarning("파일을 읽어올 수 없음.");
             return;
 
         }
@@ -116,12 +122,12 @@ public class GameManager : MonoBehaviour {
     }
 
 
-
     /// <summary>
     /// 실질적인 플레이 시작
     /// </summary>
     /// <returns></returns>
     private IEnumerator StageStartCO() {
+
 
         float countDelay = bpmUnitSecond * stageData.bpmMultiplier;
         float playTime;
@@ -197,18 +203,21 @@ public class GameManager : MonoBehaviour {
 
 
         int bpmIndexer = 0;
-        float bpmStacker = 0;
         int displayeIndexer = 0;
-        float curBpmComparer = 0;
+        double curBpmComparer = 0;
+
+
+        //여러가지 시도의 흔적
+        double testBaseCurTime = AudioSettings.dspTime;
 
         int curEffectTimeUnit = 0;
 
-        while (bpmStacker < bgmplayer.clip.length + 5) {//노래 길이 + 5초
+        while (/*Stacking*/AudioSettings.dspTime - testBaseCurTime < bgmplayer.clip.length + 5) {//노래 길이 + 5초
 
 
-            while (curBpmComparer < bpmStacker && bpmIndexer < stageNoteArr.Length) {
+            while (curBpmComparer < /*bpmStacker*/AudioSettings.dspTime - testBaseCurTime && bpmIndexer < stageNoteArr.Length) {
 
-                curBpmComparer += bpmUnitSecond;
+                curBpmComparer = bpmUnitSecond * (bpmIndexer + 1);
 
                 //마디가 넘어갈 때 할 행동.
                 if (stageNoteArr[bpmIndexer].waitScoreCount != 0) {
@@ -251,10 +260,18 @@ public class GameManager : MonoBehaviour {
 
                 bpmIndexer++;
 
-
             }
-
-            bpmStacker += Time.deltaTime;
+            
+/*            bpmStacker += Time.deltaTime;
+            UnityEngine.Debug.Log("========================================");
+            UnityEngine.Debug.Log("deltaTime : " + bpmStacker);
+            UnityEngine.Debug.Log("StopWatch : " + (testStopWatch.Elapsed.TotalSeconds - 1));
+            UnityEngine.Debug.Log("AudioDsp : " + (AudioSettings.dspTime - testBaseCurTime));
+            UnityEngine.Debug.Log("audioTime : " + (bgmplayer.time - 1));
+            UnityEngine.Debug.Log("================ diffs =================");
+            UnityEngine.Debug.Log("deltaTime Diff : " + (bpmStacker - (bgmplayer.time - 1)));
+            UnityEngine.Debug.Log("StopWatch Diff : " + (testStopWatch.Elapsed.TotalSeconds - 1 - (bgmplayer.time - 1)));
+            UnityEngine.Debug.Log("AudioDsp Diff : " + (AudioSettings.dspTime - testBaseCurTime - (bgmplayer.time - 1)) );*/
 
             yield return null;
 
