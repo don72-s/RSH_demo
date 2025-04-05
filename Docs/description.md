@@ -17,34 +17,11 @@
 
 <h3>
 
-  ### [0. 사전지식](#사전지식)
   ### [1. 리듬게임](#리듬게임)
   ### [2. 에디터](#에디터)
   ### [3. 데이터](#데이터)
   
 </h3>
-
-<br>
-
-# 사전지식
-해당 프로젝트에서 사용될 용어에 관하여 설명한다.  
-<br>
-
-기본적으로 노래의 **BPM**에 기반하여 정의된다.
-<br>
-
-**기본 비트** - 노래 자체의 **BPM**에 기반한 비트. **하나의 기본 비트**는 한박자에 해당한다.  
-<br>
-**비트 세분화 계수** - **기본 비트**사이를 몇개의 **단위 비트**로 쪼갤지를 결정하는 수치. 계수가 **8**이라면 기본 비트 사이를 **8개**로 쪼갠다는 것을
-의미한다.  
-<br>
-**단위비트** - 비트 세분화 계수로 인해 쪼개진 비트를 의미한다.  
-<br>
-**단위비트간 시간** - 단위비트에서 다음 단위비트까지 걸리는 시간을 의미한다.  
-<br>
-**사용자 지정 마디 박자** - 한 마디가 가지고 있는 기본 비트의 갯수. **사용자가 정의한 하나의 마디**에 몇개의 **기본 비트**가 있는지를 의미한다.  
-<br>
-
 
 <hr><br>
 
@@ -126,42 +103,23 @@ public void Pause()
 
 ### 판정 대기
 
-우선 각 노트는 생성된 후에 다음과 같은 대기시간 뒤 시점을 **정확한 판정 시점**으로 가진다.  
-<br>
-
-**단위비트간 시간** * **비트 세분화 계수** * **사용자 지정 마디 박자** * **대기 마디**수  
-용어에 관해서는 [여기](#사전지식)를 참고한다.  
-<br>
-
-이를 시각화하면 다음과 같다.  
+각 노트는 생성된 후에 다음과 같은 대기시간 뒤의 시점을 **정확한 판정 시점**으로 가진다.
+이를 그림과 식으로 표현하면 아래와 같은 구성이 된다.
 <br>
 ![마디설명](https://github.com/don72-s/RSH_demo/assets/66211881/efd9a627-04bf-4c88-95a4-58071d1da009)
 
+**단위비트간 시간(사각형 사이 시간)** <br>
+x **비트 세분화 계수(큰 사각형 사이의 사각형 갯수)** <br>
+x **사용자 지정 마디 박자(가로 한 줄의 큰 사각형 갯수)** <br>
+x **대기마디 수(채보 영역의 가로줄 갯수)** <br>
+
+=> 1 * 4 * 2 * 2 = 16 <br>
+즉, 특정 노트로부터 판정 시점까지의 시간은 **사각형 16개** 분량의 시간이 지난 뒤로 계산된다.
+
 <br>
 
-큰 사각형이 **기본 비트**, 작은 사각형이 **세분화된 비트**를 의미한다.  
-<br>
+해당 내용에 대응되는 코드는 다음과 같다.
 
-예시를 위해 **3번 노트**를 기준으로 잡는다면, 대응되는 판정 시점은 **19번 노트**가 된다.  
-<br>
-
-●우선, **단위비트간 시간** = 1을 대기하면 3 -> 4 [**4번 노트**]가 판정선이 된다.  
-<br>
-
-●다음으로 **비트 세분화 계수**를 곱하여 다음 **기본 비트**의 같은 **세분화 비트**로 위치하게 한다.  
-&nbsp;&nbsp;이를 계산하면 **비트 세분화 계수**는 4이므로 **단위비트간 시간** * **4** = 4가 되어 판정선은 3 -> 7 즉 [**7번 노트**]가 된다.  
-<br>
-
-●이번에는 판정선을 다음 마디로 옮기기 위해 **사용자 지정 마디 박자**를 곱한다. 위의 예시에서는 하나의 마디에 **기본 비트**가 2개 있으므로  
- &nbsp;&nbsp;**사용자 지정 마디 박자**는 2가 되며, 이를 계산식에 적용하여 **단위비트간 시간** * **4** * **2** = 8 을 대기하게 되어 판정선은 3 -> 11 [**11번 노트**]가 된다.  
-<br>
-
-●현재까지는 한마디 뒤의 같은 시점까지 대기시간을 구했다. 따라서 마지막으로 **몇 마디**를 대기할지 정한다.  
- &nbsp;&nbsp;예시를 보면 **노트 생성**과 **노트 판정**은 2마디 차이가 난다. 따라서 해당 구간의 **대기 마디**수는 2가 되며, 계산식을 적용하면 다음과 같이 된다.  
- &nbsp;&nbsp;**단위비트간 시간** * **4** * **2** * **2** = 16이 되며 판정선은 3 -> 19 [**19번 노트**]가 되어 올바른 대기 시간을 계산해 낼 수 있다.
-<br><br>
-
-노트 생명주기 코드
 ```cpp
 IEnumerator PlayNote(int _watingUnit, Action _swipeSnd, Action _displayNote, Func<bool> _checkInput, Action _useInput, Action _playSnd) {
 
@@ -175,6 +133,7 @@ IEnumerator PlayNote(int _watingUnit, Action _swipeSnd, Action _displayNote, Fun
     //...노트 판정 구간 후술...
 }
 ```
+<br>
 
 ### 판정 세분화
 
@@ -183,64 +142,6 @@ IEnumerator PlayNote(int _watingUnit, Action _swipeSnd, Action _displayNote, Fun
 <br>
 
 ![판정](https://github.com/don72-s/RSH_demo/assets/66211881/dc86cdbb-7401-43e0-a7e8-590e87ace566)
-
-
-<br>
-
-대응하는 코드는 다음과 같다.  
-<br>
-
-```cpp
-
-IEnumerator PlayNote(int _watingUnit, Action _swipeSnd, Action _displayNote, Func<bool> _checkInput, Action _useInput, Action _playSnd) {
-
-    //...노트 대기시간 상술...
-
-    float curTime = 0;
-
-    float duringTime = bpmUnitSecond * 4;
-    float goodEndDuringTime = bpmUnitSecond * 3;
-
-    //유효 판정 구간동안 반복.
-    while (curTime < duringTime)
-    {
-        curTime += Time.deltaTime;
-
-        if (_checkInput())
-        {
-
-            _useInput?.Invoke();
-            _playSnd?.Invoke();
-
-            if (curTime > bpmUnitSecond && curTime < goodEndDuringTime)//정확 판정 영역
-            {
-                t.text = "correct";
-                effectAnimator.SetTrigger("Correct");
-                scoreDisplayer.AddCorrect();
-            }
-            else//보통 판정 영역
-            {
-                t.text = "good";
-                effectAnimator.SetTrigger("Good");
-                scoreDisplayer.AddGood();
-            }
-
-            yield break;
-
-        }
-
-        yield return null;
-
-    }
-
-    //실패 판정 영역
-    effectAnimator.SetTrigger("Fail");
-    failAnimator.SetTrigger("Fail");
-    Handheld.Vibrate();
-    scoreDisplayer.AddFail();
-    t.text = " failied ";
-}
-```  
 
 <br>
 
@@ -283,6 +184,7 @@ public class StageInfo {
 
 }
 ```
+<br>
 
 ### 채보 방식 구현
 
@@ -302,54 +204,6 @@ NoteInfo[] 타입의 임시 노트 배열을 선언한 뒤. 모든 채보가 완
 ![제작](https://github.com/don72-s/RSH_demo/assets/66211881/e9a5bbe9-ceaa-4e21-860a-21c50187ef41)
 
 
-<br>
-
-적용하는 방식은 **비트 세분화 계수**와 **채보 마디 수**에 근거하여 **채보 마디 수**의 두배에 해당하는 노트 배열 데이터를 설정한다.  
-<br>
-
-```cpp
-public void btn_Save_Section() {
-
-    //입력 데이터를 받아옴.
-    int sectionNum = InputChecker.GetInt(sectionNumInputter);
-    int sectionLength = InputChecker.GetInt(sectionLengthInputter);
-    int idx = sectionNum * BPM_Multiplyer * scoreUnit;
-
-    //사용자가 설정한 영역 채보를 적용
-    for (int i = 0; i < LoadedSectionList.Count / 2; i++)
-    {
-        NoteType type = LoadedSectionList[i].GetNoteType();
-
-        noteArray[idx].noteType = type;
-        noteArray[idx].waitingUnit = sectionLength * scoreUnit;
-        noteArray[idx].waitScoreCount = 0;
-
-        idx++;
-    }
-    noteArray[sectionNum * BPM_Multiplyer * scoreUnit].waitScoreCount = sectionLength;
-
-
-    //사용자가 설정한 채보 영역에 대응하는 플레이 영역의 채보를 자동으로 적용
-    if (idx < noteArray.Length)
-    {
-        noteArray[idx].waitScoreCount = sectionLength;
-        noteArray[idx].noteType = NoteType.NONE;
-        noteArray[idx].waitingUnit = 0;
-    }
-
-    for (int i = idx + 1; i - idx < LoadedSectionList.Count / 2 && i < noteArray.Length; i++)
-    {
-        noteArray[i].waitScoreCount = 0;
-        noteArray[i].noteType = NoteType.NONE;
-        noteArray[i].waitingUnit = 0;
-    }
-
-    //구간을 다시 불러오고 테스트플레이 진행.
-    LoadSection();
-    btn_BGM_SectionPlay();
-
-}
-```
 
 <br>
 
