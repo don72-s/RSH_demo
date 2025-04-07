@@ -56,12 +56,12 @@
 자이로센서 벡터의 z값에 따라 대응 행동을 실행.
 ```cpp
 if (!isLowerPlaying && vec.z > lowerOffset) {
-    StartCoroutine(playLowerSnd());
+    //기기 왼쪽 기울임 대응행동 실행
 }
 
 if (!isUpperPlaying && vec.z < upperOffset)
 {
-    StartCoroutine(playUpperSnd());
+    //기기 오른쪽 기울임 대응행동 실행행
 }
 ```
 
@@ -131,7 +131,6 @@ IEnumerator PlayNote(int _watingUnit, Action _swipeSnd, Action _displayNote, Fun
 
     //판정선의 직전까지 대기시간을 계산한 뒤 대기한다.
     float waitTime = bpmUnitSecond * stageData.bpmMultiplier * stageData.scoreUnit * _watingUnit - (bpmUnitSecond * 2);
-
     yield return new WaitForSeconds(waitTime);
 
     //...노트 판정 구간 후술...
@@ -169,22 +168,18 @@ IEnumerator PlayNote(int _watingUnit, Action _swipeSnd, Action _displayNote, Fun
 [System.Serializable]
 public class StageInfo {
 
-    public readonly float offsetSecond;//bgm플레이 전 대기시간
-    public readonly int bpm;
-    public readonly int bpmMultiplier;
-    public readonly int scoreUnit;//기본 마디수 지정
+    public readonly float offsetSecond;  //bgm플레이 전 대기시간
+    public readonly int bpm;             //해당 곡의 bpm
+    public readonly int bpmMultiplier;   //bpm간 세부 비트를 만드는 비트 세분화 계수
+    public readonly int scoreUnit;       //기본 마디수 지정
 
-    //사운드 타입 지정
-    public readonly BGM_TYPE bgmType;
-    public readonly SE_TYPE upperSeType;
-    public readonly SE_TYPE lowerSeType;
+    //사운드 타입 지정(enum)
+    public readonly BGM_TYPE bgmType;    //BGM 타입
+    public readonly SE_TYPE upperSeType; //상단 스윕 효과음 타입
+    public readonly SE_TYPE lowerSeType; //하단 스윕 효과음 타입
 
-    //노트 배열 저장
+    //채보된 노트들의 배열 저장
     public readonly NoteInfo[] noteArray;
-
-    public StageInfo(NoteInfo[] _noteArr, float _offsetSecond, int _bpm, int _bpmMultiplier, int _scoreUnit, BGM_TYPE _bgm, SE_TYPE _upper, SE_TYPE _lower) { 
-        //생성자 생략
-    }
 
 }
 ```
@@ -219,16 +214,7 @@ NoteInfo[] 타입의 임시 노트 배열을 선언한 뒤. 모든 채보가 완
 serializable로 선언한 클래스들을 이용하여 직렬화시키는 코드를 작성한다.  
 <br>
 
-파일을 Application.persistentDataPath에 저장.  
-```cpp
-public static void AndroidSaveData(StageInfo _stageInfo, string _fileName = "noteData.dat")
-{
-    BinaryFormatter formatter = new BinaryFormatter();
-    FileStream fileStream = new FileStream(Path.Combine(Application.persistentDataPath, _fileName), FileMode.Create);
-    formatter.Serialize(fileStream, _stageInfo);
-    fileStream.Close();
-}
-```
+FileStream을 통해 스트림을 생성한 뒤, 위에서 정의한 **StageInfo**타입의 스테이지 데이터파일을 직렬화한 뒤 Application.persistentDataPath에 저장한다.
 
 <br>
 
@@ -236,21 +222,16 @@ public static void AndroidSaveData(StageInfo _stageInfo, string _fileName = "not
 <br>
 
 ```cpp
+//파일의 존재 확인
 if (NoteDataManager.CheckAndroidFileExist(saveFileName))
 {
-    alertWindow.ShowDoubleAlertWindow("[ " + saveFileName + " ] 같은 이름의 파일이 존재합니다.\n덮어쓰시겠습니까?", "OK!", () => {
-    
-        NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
-        alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
-        btn_Export_Window(false);
-
-    });
+    if(/*덮어쓰기를 원하는 경우 파일을 저장.*/)
+      NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
 }
-else {
+else
+{
+    //파일의 저장.
     NoteDataManager.AndroidSaveData(noteArray, offsetSecond, (int)BPM, BPM_Multiplyer, scoreUnit, bgmType, upperSeType, lowerSeType, saveFileName);
-    alertWindow.ShowSingleAlertWindow("노트 파일 [ " + saveFileName + " ] 이 저장되었습니다!");
-    btn_Export_Window(false);
-
 }
 ```
 
@@ -277,11 +258,6 @@ else {
 <br>
 
 이를 위해 데이터 저장 시 **Stage**로 시작하는 파일명으로 저장할 경우 저장 불가 창을 띄운다.  
-<br>
-
-```cpp
-if (saveFileName.StartsWith("stage")) { alertWindow.ShowSingleAlertWindow("저장 파일명은 stage로 시작할 수 없습니다."); return; }
-```
 <br>
 
 ### 데이터의 무결성 확인
@@ -320,6 +296,7 @@ foreach (string _fileName in nameList)
     StartCoroutine(AndroidUnpackingNoteFile(_fileName));
 }
 
+//필요 파일들의 다운로드 완 대기 시작.
 StartCoroutine(AndroidNoteFilesDownloadCheck(fileInfoSO));
 ```
 <br>
