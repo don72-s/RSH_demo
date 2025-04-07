@@ -14,7 +14,7 @@
 
 
 
-### [프로젝트의 구조 설명으로 이동](https://github.com/don72-s/RSH_demo/blob/main/Docs/description.md)
+### [기술문서](https://github.com/don72-s/RSH_demo/blob/main/Docs/description.md)
 
 <hr>
 
